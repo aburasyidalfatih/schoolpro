@@ -1,0 +1,12 @@
+
+C:\grafity project\SISPRO\src\components\layout\AdminHeader.tsx
+  29:36  warning  'i' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\grafity project\SISPRO\src\components\ui\Card.tsx
+  3:18  error  An interface declaring no members is equivalent to its supertype  @typescript-eslint/no-empty-object-type
+
+C:\grafity project\SISPRO\src\components\ui\Input.tsx
+  12:27  error  React Hook "React.useId" is called conditionally. React Hooks must be called in the exact same order in every component render  react-hooks/rules-of-hooks
+
+Γ£û 3 problems (2 errors, 1 warning)
+

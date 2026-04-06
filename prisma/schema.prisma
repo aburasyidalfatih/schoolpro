@@ -8,7 +8,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "sqlite"
 }
 
 // ============================================================
@@ -20,7 +20,7 @@ model Tenant {
   slug            String   @unique
   domainKustom    String?  @map("domain_kustom")
   logoUrl         String?  @map("logo_url")
-  alamat          String?  @db.Text
+  alamat          String?
   telepon         String?
   email           String?
   website         String?
@@ -187,7 +187,7 @@ model Siswa {
   jenisKelamin  JenisKelamin? @map("jenis_kelamin")
   tempatLahir   String?     @map("tempat_lahir")
   tanggalLahir  DateTime?   @map("tanggal_lahir")
-  alamat        String?     @db.Text
+  alamat        String?
   telepon       String?
   fotoUrl       String?     @map("foto_url")
   namaWali      String?     @map("nama_wali")
@@ -271,12 +271,12 @@ model Tagihan {
   kategoriId    String        @map("kategori_id")
   tahunAjaranId String        @map("tahun_ajaran_id")
   bulan         String?
-  nominal       Decimal       @db.Decimal(15, 2)
-  potongan      Decimal       @default(0) @db.Decimal(15, 2)
-  total         Decimal       @db.Decimal(15, 2)
+  nominal       Decimal
+  potongan      Decimal       @default(0)
+  total         Decimal
   status        StatusTagihan @default(BELUM_LUNAS)
   jatuhTempo    DateTime?     @map("jatuh_tempo")
-  keterangan    String?       @db.Text
+  keterangan    String?
   createdAt     DateTime      @default(now()) @map("created_at")
   updatedAt     DateTime      @updatedAt @map("updated_at")
 
@@ -305,12 +305,12 @@ model Pembayaran {
   petugasId     String?          @map("petugas_id")
   rekeningId    String?          @map("rekening_id")
   noTransaksi   String           @map("no_transaksi")
-  jumlahBayar   Decimal          @map("jumlah_bayar") @db.Decimal(15, 2)
+  jumlahBayar   Decimal          @map("jumlah_bayar")
   metode        MetodeBayar      @default(TUNAI)
   status        StatusPembayaran @default(BERHASIL)
   buktiUrl      String?          @map("bukti_url")
   tanggalBayar  DateTime         @default(now()) @map("tanggal_bayar")
-  keterangan    String?          @db.Text
+  keterangan    String?
   createdAt     DateTime         @default(now()) @map("created_at")
   updatedAt     DateTime         @updatedAt @map("updated_at")
 
@@ -371,8 +371,8 @@ model TransaksiKas {
   akunKasId    String   @map("akun_kas_id")
   pembayaranId String?  @unique @map("pembayaran_id")
   jenis        TipeKas
-  nominal      Decimal  @db.Decimal(15, 2)
-  keterangan   String?  @db.Text
+  nominal      Decimal
+  keterangan   String?
   tanggal      DateTime @default(now())
   isOtomatis   Boolean  @default(false) @map("is_otomatis")
   createdAt    DateTime @default(now()) @map("created_at")
@@ -392,7 +392,7 @@ model Tabungan {
   id       String  @id @default(uuid())
   tenantId String  @map("tenant_id")
   siswaId  String  @unique @map("siswa_id")
-  saldo    Decimal @default(0) @db.Decimal(15, 2)
+  saldo    Decimal @default(0)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -412,11 +412,11 @@ model TransaksiTabungan {
   tabunganId   String        @map("tabungan_id")
   petugasId    String?       @map("petugas_id")
   jenis        JenisTabungan
-  nominal      Decimal       @db.Decimal(15, 2)
-  saldoSebelum Decimal       @map("saldo_sebelum") @db.Decimal(15, 2)
-  saldoSesudah Decimal       @map("saldo_sesudah") @db.Decimal(15, 2)
+  nominal      Decimal
+  saldoSebelum Decimal       @map("saldo_sebelum")
+  saldoSesudah Decimal       @map("saldo_sesudah")
   tanggal      DateTime      @default(now())
-  keterangan   String?       @db.Text
+  keterangan   String?
   createdAt    DateTime      @default(now()) @map("created_at")
   updatedAt    DateTime      @updatedAt @map("updated_at")
 
@@ -521,7 +521,7 @@ model BerkasPpdb {
   persyaratanId  String       @map("persyaratan_id")
   fileUrl        String?      @map("file_url")
   status         StatusBerkas @default(MENUNGGU)
-  catatan        String?      @db.Text
+  catatan        String?
   createdAt      DateTime     @default(now()) @map("created_at")
   updatedAt      DateTime     @updatedAt @map("updated_at")
 
@@ -546,7 +546,7 @@ model TagihanPpdb {
   tenantId    String          @map("tenant_id")
   pendaftarId String          @map("pendaftar_id")
   jenis       JenisTagihanPpdb
-  nominal     Decimal         @db.Decimal(15, 2)
+  nominal     Decimal
   status      StatusTagihan   @default(BELUM_LUNAS)
   createdAt   DateTime        @default(now()) @map("created_at")
   updatedAt   DateTime        @updatedAt @map("updated_at")
@@ -571,7 +571,7 @@ model Berita {
   userId       String       @map("user_id")
   judul        String
   slug         String
-  konten       String       @db.LongText
+  konten       String
   gambarUrl    String?      @map("gambar_url")
   status       StatusBerita @default(DRAFT)
   tanggalTerbit DateTime?   @map("tanggal_terbit")
@@ -598,7 +598,7 @@ model Pengumuman {
   tenantId    String   @map("tenant_id")
   userId      String   @map("user_id")
   judul       String
-  konten      String   @db.Text
+  konten      String
   targetKelas Json?    @map("target_kelas")
   kirimWa     Boolean  @default(false) @map("kirim_wa")
   tanggal     DateTime @default(now())
@@ -620,7 +620,7 @@ model LogAktivitas {
   userId    String?  @map("user_id")
   aksi      String
   modul     String
-  detail    String?  @db.Text
+  detail    String?
   ipAddress String?  @map("ip_address")
   createdAt DateTime @default(now()) @map("created_at")
 
@@ -640,7 +640,7 @@ model PengaturanNotifikasi {
   viaApp       Boolean @default(true) @map("via_app")
   viaWa        Boolean @default(false) @map("via_wa")
   viaEmail     Boolean @default(false) @map("via_email")
-  templatePesan String? @map("template_pesan") @db.Text
+  templatePesan String? @map("template_pesan")
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 

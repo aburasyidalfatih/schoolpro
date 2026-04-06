@@ -1,6 +1,9 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
+import { signOut } from 'next-auth/react'
+import { Home, Search, Bell, LogOut } from 'lucide-react'
+import ThemeToggle from './ThemeToggle'
 import styles from './AdminHeader.module.css'
 
 export default function AdminHeader() {
@@ -24,9 +27,9 @@ export default function AdminHeader() {
     <header className={styles.header}>
       <div className={styles.left}>
         <div className={styles.breadcrumbs}>
-          <span className={styles.crumbItem}>🏠</span>
-          {breadcrumbs.map((crumb, i) => (
-            <span key={crumb.href}>
+          <span className={styles.crumbItem}><Home size={16} /></span>
+          {breadcrumbs.map((crumb) => (
+            <span key={crumb.href} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
               <span className={styles.separator}>/</span>
               <span
                 className={
@@ -43,7 +46,7 @@ export default function AdminHeader() {
       <div className={styles.right}>
         {/* Search */}
         <div className={styles.search}>
-          <span className={styles.searchIcon}>🔍</span>
+          <span className={styles.searchIcon}><Search size={16} /></span>
           <input
             type="text"
             placeholder="Cari menu, siswa, tagihan..."
@@ -54,9 +57,12 @@ export default function AdminHeader() {
 
         {/* Notifications */}
         <button className={styles.iconBtn} title="Notifikasi">
-          🔔
+          <Bell size={20} />
           <span className={styles.badge}>3</span>
         </button>
+
+        {/* Theme Toggle */}
+        <ThemeToggle />
 
         {/* Profile */}
         <div className={styles.profile}>
@@ -66,6 +72,16 @@ export default function AdminHeader() {
             <span className={styles.profileRole}>Administrator</span>
           </div>
         </div>
+
+        {/* Sign Out */}
+        <button
+          className={styles.iconBtn}
+          title="Keluar"
+          onClick={() => signOut({ callbackUrl: '/login' })}
+          style={{ color: 'var(--danger-500)', marginLeft: 'var(--space-2)' }}
+        >
+          <LogOut size={20} />
+        </button>
       </div>
     </header>
   )
