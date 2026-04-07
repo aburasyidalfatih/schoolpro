@@ -1,6 +1,8 @@
 'use client'
 
-import { GraduationCap, FileWarning, CreditCard, PiggyBank, TrendingUp, TrendingDown, Plus, CalendarDays, ArrowUpRight, Receipt, Users, BarChart3 } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { GraduationCap, FileWarning, CreditCard, PiggyBank, TrendingUp, TrendingDown, Plus, CalendarDays, ArrowUpRight, Receipt, Users, BarChart3, Loader2 } from 'lucide-react'
+import Link from 'next/link'
 
 function getGreeting() {
   const hour = new Date().getHours()
@@ -17,26 +19,41 @@ function formatToday() {
 }
 
 export default function DashboardPage() {
-  const stats = [
-    { label: 'Total Siswa', value: '1.247', icon: <GraduationCap size={24} />, variant: 'primary', change: '+12', changeDir: 'up' },
-    { label: 'Tagihan Belum Lunas', value: 'Rp 45.6 Jt', icon: <FileWarning size={24} />, variant: 'warning', change: '-8%', changeDir: 'down' },
-    { label: 'Pembayaran Hari Ini', value: 'Rp 8.2 Jt', icon: <CreditCard size={24} />, variant: 'success', change: '+23%', changeDir: 'up' },
-    { label: 'Saldo Tabungan', value: 'Rp 124.3 Jt', icon: <PiggyBank size={24} />, variant: 'accent', change: '+5%', changeDir: 'up' },
+  const [data, setData] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+
+  const fetchStats = async () => {
+    try {
+      const res = await fetch('/api/keuangan/dashboard/stats')
+      const json = await res.json()
+      if (json.stats) {
+        setData(json)
+      }
+    } catch (e) {
+      console.error('Error fetching dashboard stats', e)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchStats()
+  }, [])
+
+  const stats = data?.stats || [
+    { label: 'Total Siswa', value: '...', icon: <GraduationCap size={24} />, variant: 'primary' },
+    { label: 'Tagihan Belum Lunas', value: '...', icon: <FileWarning size={24} />, variant: 'warning' },
+    { label: 'Pembayaran Hari Ini', value: '...', icon: <CreditCard size={24} />, variant: 'success' },
+    { label: 'Saldo Tabungan', value: '...', icon: <PiggyBank size={24} />, variant: 'accent' },
   ]
 
-  const recentPayments = [
-    { siswa: 'Ahmad Fauzi', kelas: 'X-IPA-1', jenis: 'SPP', nominal: 'Rp 500.000', status: 'Lunas', waktu: '08:30' },
-    { siswa: 'Siti Nurhaliza', kelas: 'XI-IPS-2', jenis: 'Buku', nominal: 'Rp 350.000', status: 'Lunas', waktu: '09:15' },
-    { siswa: 'Budi Santoso', kelas: 'XII-IPA-3', jenis: 'SPP', nominal: 'Rp 500.000', status: 'Pending', waktu: '10:00' },
-    { siswa: 'Dewi Anggraini', kelas: 'X-IPS-1', jenis: 'Kegiatan', nominal: 'Rp 200.000', status: 'Lunas', waktu: '10:30' },
-    { siswa: 'Rizky Pratama', kelas: 'XI-IPA-1', jenis: 'SPP', nominal: 'Rp 500.000', status: 'Lunas', waktu: '11:00' },
-  ]
+  const recentPayments = data?.recentPayments || []
 
   const quickActions = [
-    { label: 'Pembayaran Baru', icon: <Plus size={18} />, color: 'var(--primary-600)', bg: 'var(--primary-50)' },
-    { label: 'Input Transaksi', icon: <Receipt size={18} />, color: 'var(--success-600)', bg: 'var(--success-50)' },
-    { label: 'Data Siswa', icon: <Users size={18} />, color: 'var(--accent-600)', bg: 'var(--accent-50)' },
-    { label: 'Laporan', icon: <BarChart3 size={18} />, color: 'var(--warning-600)', bg: 'var(--warning-50)' },
+    { label: 'Buat Tagihan', href: '/tagihan', icon: <Plus size={18} />, color: 'var(--primary-600)', bg: 'var(--primary-50)' },
+    { label: 'Data Siswa', href: '/data-master/siswa', icon: <Users size={18} />, color: 'var(--accent-600)', bg: 'var(--accent-50)' },
+    { label: 'Kategori Tagihan', href: '/data-master/kategori-tagihan', icon: <Receipt size={18} />, color: 'var(--success-600)', bg: 'var(--success-50)' },
+    { label: 'Pengaturan', href: '/pengaturan/umum', icon: <BarChart3 size={18} />, color: 'var(--warning-600)', bg: 'var(--warning-50)' },
   ]
 
   return (
@@ -48,32 +65,33 @@ export default function DashboardPage() {
           <p className="subtitle">{formatToday()} — Berikut ringkasan aktivitas hari ini.</p>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <button className="btn btn-secondary btn-sm">
-            <CalendarDays size={16} />
-            Hari Ini
+          <button className="btn btn-secondary btn-sm" onClick={fetchStats}>
+            {loading ? <Loader2 size={16} className="animate-spin" /> : <CalendarDays size={16} />}
+            Refresh
           </button>
-          <button className="btn btn-primary btn-sm">
+          <Link href="/tagihan" className="btn btn-primary btn-sm">
             <Plus size={16} />
-            Pembayaran Baru
-          </button>
+            Buat Tagihan
+          </Link>
         </div>
       </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-4" style={{ marginBottom: 'var(--space-6)' }}>
-        {stats.map((stat, i) => (
+        {stats.map((stat: any, i: number) => (
           <div
             key={stat.label}
             className={`stat-card ${stat.variant} animate-fade-in stagger-${i + 1}`}
           >
-            <div className="stat-icon">{stat.icon}</div>
+            <div className="stat-icon">
+              {stat.label === 'Total Siswa' && <GraduationCap size={24} />}
+              {stat.label === 'Tagihan Belum Lunas' && <FileWarning size={24} />}
+              {stat.label === 'Pembayaran Hari Ini' && <CreditCard size={24} />}
+              {stat.label === 'Saldo Tabungan' && <PiggyBank size={24} />}
+            </div>
             <div className="stat-content">
               <div className="stat-label">{stat.label}</div>
               <div className="stat-value">{stat.value}</div>
-              <div className={`stat-change ${stat.changeDir === 'up' ? 'up' : 'down'}`}>
-                {stat.changeDir === 'up' ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
-                {stat.change}
-              </div>
             </div>
           </div>
         ))}
@@ -86,13 +104,14 @@ export default function DashboardPage() {
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 'var(--space-3)' }}>
           {quickActions.map((action) => (
-            <button
+            <Link
               key={action.label}
+              href={action.href}
               style={{
                 display: 'flex', alignItems: 'center', gap: '0.75rem',
                 padding: '0.875rem 1rem',
                 background: action.bg,
-                border: 'none',
+                textDecoration: 'none',
                 borderRadius: 'var(--radius-lg)',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
@@ -101,8 +120,6 @@ export default function DashboardPage() {
                 fontWeight: 600,
                 color: action.color,
               }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--shadow-md)' }}
-              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none' }}
             >
               <span style={{
                 width: '36px', height: '36px', borderRadius: 'var(--radius-md)',
@@ -111,7 +128,7 @@ export default function DashboardPage() {
               }}>{action.icon}</span>
               {action.label}
               <ArrowUpRight size={14} style={{ marginLeft: 'auto', opacity: 0.5 }} />
-            </button>
+            </Link>
           ))}
         </div>
       </div>
@@ -120,10 +137,10 @@ export default function DashboardPage() {
       <div className="card animate-fade-in stagger-5">
         <div className="card-header">
           <h3 className="card-title">Transaksi Pembayaran Terbaru</h3>
-          <button className="btn btn-ghost btn-sm">
+          <Link href="/pembayaran" className="btn btn-ghost btn-sm">
             Lihat Semua
             <ArrowUpRight size={14} />
-          </button>
+          </Link>
         </div>
         <div className="table-container" style={{ border: 'none', boxShadow: 'none' }}>
           <table>
@@ -138,20 +155,28 @@ export default function DashboardPage() {
               </tr>
             </thead>
             <tbody>
-              {recentPayments.map((p, i) => (
-                <tr key={i}>
-                  <td style={{ fontWeight: 600 }}>{p.siswa}</td>
-                  <td><span className="badge badge-gray">{p.kelas}</span></td>
-                  <td>{p.jenis}</td>
-                  <td style={{ fontWeight: 600, fontFamily: 'var(--font-heading)' }}>{p.nominal}</td>
-                  <td>
-                    <span className={`badge ${p.status === 'Lunas' ? 'badge-success' : 'badge-warning'}`}>
-                      {p.status}
-                    </span>
-                  </td>
-                  <td style={{ color: 'var(--text-tertiary)' }}>{p.waktu}</td>
+              {recentPayments.length === 0 ? (
+                <tr>
+                   <td colSpan={6} style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>
+                      Belum ada transaksi pembayaran.
+                   </td>
                 </tr>
-              ))}
+              ) : (
+                recentPayments.map((p: any, i: number) => (
+                  <tr key={i}>
+                    <td style={{ fontWeight: 600 }}>{p.siswa}</td>
+                    <td><span className="badge badge-gray">{p.kelas}</span></td>
+                    <td>{p.jenis}</td>
+                    <td style={{ fontWeight: 600, fontFamily: 'var(--font-heading)' }}>{p.nominal}</td>
+                    <td>
+                      <span className={`badge badge-success`}>
+                        {p.status}
+                      </span>
+                    </td>
+                    <td style={{ color: 'var(--text-tertiary)' }}>{p.waktu}</td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
