@@ -1,18 +1,13 @@
-import { PrismaClient } from '.prisma/client'
-import { PrismaLibSql } from '@prisma/adapter-libsql'
+import { PrismaClient } from '@prisma/client'
 
-function createPrismaClient() {
-  const adapter = new PrismaLibSql({
-    url: process.env.DATABASE_URL || 'file:./dev.db',
-  })
-  return new PrismaClient({ adapter })
-}
-
+// Singleton pattern untuk mencegah kebocoran koneksi di Next.js development
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
 }
 
-export const prisma = globalForPrisma.prisma ?? createPrismaClient()
+export const prisma = globalForPrisma.prisma ?? new PrismaClient()
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 

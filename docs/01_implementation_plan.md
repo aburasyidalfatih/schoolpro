@@ -14,7 +14,7 @@ SISPRO adalah aplikasi Sistem Informasi Sekolah berbasis web yang mencakup penge
 ## User Review Required
 
 > [!IMPORTANT]
-> **Keputusan Teknologi** — Next.js 15 (App Router + TypeScript) + **MySQL** (siap migrasi ke PostgreSQL) + Prisma ORM. ✅ Disetujui
+> **Keputusan Teknologi** — Next.js 15 (App Router + TypeScript) + **SQLite** (dev) / **PostgreSQL** (prod) + Prisma ORM. ✅ Disetujui
 
 > [!IMPORTANT]
 > **Arsitektur** — SaaS-Ready dengan multi-tenant (Shared DB + Tenant ID). ✅ Disetujui (Opsi B)
@@ -31,7 +31,7 @@ SISPRO adalah aplikasi Sistem Informasi Sekolah berbasis web yang mencakup penge
 | **Framework** | Next.js 15 (App Router) | Fullstack, SSR/SSG, API Routes, Server Actions |
 | **Bahasa** | TypeScript | Type safety, DX terbaik |
 | **Styling** | Vanilla CSS + CSS Modules | Kontrol penuh, performa tinggi |
-| **Database** | **MySQL** (dev) → PostgreSQL (prod-ready) | MySQL untuk development, Prisma abstraksi switching |
+| **Database** | **SQLite** (dev) → PostgreSQL (prod-ready) | SQLite untuk development cepat, Prisma abstraksi switching |
 | **ORM** | Prisma | Type-safe queries, migrasi otomatis, **DB-agnostic** |
 | **Auth** | NextAuth.js v5 | Multi-role + multi-tenant auth |
 | **PDF** | @react-pdf/renderer + jsPDF | Cetak laporan & kwitansi |
@@ -44,19 +44,20 @@ SISPRO adalah aplikasi Sistem Informasi Sekolah berbasis web yang mencakup penge
 | **Rich Editor** | TipTap | Editor konten portal berita |
 | **Fonts** | Google Fonts (Inter, Plus Jakarta Sans) | Tipografi premium |
 
-### Strategi Database: MySQL → PostgreSQL
+### Strategi Database: SQLite → PostgreSQL
 
 ```
 📂 prisma/schema.prisma
 ┌─────────────────────────────────────────┐
 │ // Ganti 1 baris ini untuk switch DB:   │
-│ provider = "mysql"      ← Sekarang      │
+│ provider = "sqlite"     ← Sekarang      │
 │ provider = "postgresql" ← Nanti         │
 └─────────────────────────────────────────┘
 ```
 
 > [!NOTE]
-> Prisma ORM mengabstraksi perbedaan SQL dialect. Kita hanya menggunakan fitur yang kompatibel di **kedua** database (hindari MySQL-only atau PG-only features). Migrasi cukup: ganti provider → `npx prisma migrate dev`.
+> Prisma ORM mengabstraksi perbedaan SQL dialect. Kita hanya menggunakan fitur yang kompatibel di **kedua** database (hindari MySQL-only atau PG-only features).
+> **Update Stabilitas (Prisma 6.2.1)**: Kita sengaja menggunakan Prisma 6.2.1 alih-alih v7 untuk menjaga stabilitas koneksi SQLite pada environment development tertentu (Windows).
 
 ---
 
@@ -94,7 +95,7 @@ graph TB
     end
     
     subgraph "Database & Storage"
-        N[("MySQL / PostgreSQL<br/>Shared DB + tenant_id")]
+        N[("SQLite / PostgreSQL<br/>Shared DB + tenant_id")]
         O[("File Storage<br/>/tenants/{id}/")]
     end
     
@@ -119,7 +120,7 @@ sequenceDiagram
     participant Browser
     participant Middleware as Tenant Middleware
     participant App as Next.js App
-    participant DB as MySQL/PostgreSQL
+    participant DB as SQLite/PostgreSQL
     
     User->>Browser: Akses sekolah1.sispro.id
     Browser->>Middleware: Request + subdomain
@@ -317,7 +318,7 @@ erDiagram
         string email
         string username
         string password_hash
-        enum role "SUPER_ADMIN|ADMIN|KEUANGAN|TU|STAF|PPDB|WALI|SISWA"
+        enum role "SUPER_ADMIN|ADMIN|KEUANGAN|TU|STAF|PPDB|USER"
         boolean is_active
         timestamp last_login
     }
@@ -464,6 +465,7 @@ erDiagram
         uuid id PK
         uuid tenant_id FK "🔑 TENANT"
         uuid periode_id FK
+        uuid user_id FK "Akun pendaftar"
         string no_pendaftaran
         string nama_lengkap
         json data_formulir
@@ -576,6 +578,7 @@ erDiagram
     PEMBAYARAN ||--o| TRANSAKSI_KAS : "menghasilkan"
     SISWA ||--o| TABUNGAN : "memiliki"
     TABUNGAN ||--o{ TRANSAKSI_TABUNGAN : "riwayat"
+    USER ||--o{ PENDAFTAR_PPDB : "mendaftar"
     PERIODE_PPDB ||--o{ PENDAFTAR_PPDB : "periode"
     PENDAFTAR_PPDB ||--o{ BERKAS_PPDB : "upload"
     PENDAFTAR_PPDB ||--o{ TAGIHAN_PPDB : "tagihan"
@@ -599,7 +602,7 @@ erDiagram
 
 ### Pencapaian Premium UI (Telah Diimplementasikan) ✅
 - **Full-Width Layout** — Pemanfaatan ruang layar 100% tanpa batas `max-width`, ideal untuk dasbor data padat.
-- **Adaptive Dark/Light Mode** — Implementasi sistem-aware tema dengan CSS Variables dan toggle tersimpan (`localStorage`), termasuk sidebar yang adaptif ke mode terang/gelap.
+- **Adaptive Dark/Light Mode** — Implementasi sistem-aware tema dengan CSS Variables dan toggle terseimpan (`localStorage`), termasuk sidebar yang adaptif ke mode terang/gelap.
 - **Glassmorphism & Glow Effects** — Penggunaan backdrop-blur pada header dan efek *glow/shimmering* pada stat cards.
 - **Professional Iconography** — Seluruh *placeholder* emoji telah diganti menggunakan set ikon premium dari `lucide-react`.
 - **Micro-animations** — Animasi pulse pada notifikasi, spring animation pada toggle, dan transisi hover yang solid di seluruh antarmuka interaktif.
@@ -624,32 +627,29 @@ erDiagram
 
 | # | Task | Detail | Status |
 |:--|:--|:--|:--|
-| 1.1 | Inisialisasi Next.js 15 | TypeScript, ESLint, Prisma, SQLite (sementara) | ✅ Selesai |
+| 1.1 | Inisialisasi Next.js 15 | TypeScript, ESLint, Prisma, SQLite (dev) | ✅ Selesai |
 | 1.2 | Setup Database | Schema Prisma + **tenant_id di semua tabel**, migrasi awal, seeder | ✅ Selesai |
 | 1.3 | **Premium UI Upgrade** | Design System, full-width layout, Light/Dark mode, CSS Variables | ✅ Selesai |
 | 1.4 | Layout Admin & Wali | Header glassmorphism, adaptive sidebar, stat cards premium | ✅ Selesai |
-| 1.5 | Authentication | Login page premium, struktur route siap auth | 🔄 Menunggu Integrasi |
-| 1.6 | Multi-Tenant Core | Tenant middleware, subdomain parsing, tenant context provider | ⏳ Pending |
-| 1.7 | DB Abstraction Layer | Helper functions yang auto-inject tenant_id di setiap query | ⏳ Pending |
+| 1.5 | Authentication (NextAuth v5) | Login page premium, middleware protection, tenant role check | ✅ Terpasang |
+| 1.6 | Multi-Tenant Core | Tenant middleware, subdomain parsing, tenant context provider | ✅ Terpasang |
+| 1.7 | Infrastructure Stabilization | Downgrade Prisma to 6.2.1 (Stability fix for Windows/LibSQL) | ✅ Terpasang |
 
 ---
 
 ### Fase 2: Data Master (Minggu 2)
 > Modul pengelolaan data inti sekolah
 
-| # | Task | Detail |
-|:--|:--|:--|
-| 2.1 | CRUD Petugas | Tambah, edit, hapus, filter + role assignment |
-| 2.2 | Ekspor/Impor Petugas | Upload Excel, download template |
-| 2.3 | CRUD Unit/Jenjang | Kelola unit sekolah |
-| 2.4 | CRUD Tahun Ajaran | Aktifkan/nonaktifkan tahun ajaran |
-| 2.5 | CRUD Kelas | Per unit & tahun ajaran, kapasitas |
-| 2.6 | CRUD Siswa | Data lengkap + foto, filter by kelas |
-| 2.7 | Kenaikan/Pindah Kelas | Bulk move siswa antar kelas |
-| 2.8 | Ekspor/Impor Siswa | Excel template |
-| 2.9 | Kelola Akun Siswa | Auto-generate akun + password |
-| 2.10 | CRUD Kategori Tagihan | SPP, Buku, Kegiatan, dll |
-| 2.11 | CRUD Rekening | Data rekening pembayaran |
+| # | Task | Detail | Status |
+|:--|:--|:--|:--|
+| 2.1 | CRUD Petugas | Tambah, edit, hapus, filter + role assignment | ✅ Selesai |
+| 2.2 | Ekspor/Impor Petugas | Upload Excel, download template | ⏳ Pending |
+| 2.3 | CRUD Unit/Jenjang | Kelola unit sekolah | ✅ Selesai |
+| 2.4 | CRUD Tahun Ajaran | Aktifkan/nonaktifkan tahun ajaran | ✅ Selesai |
+| 2.5 | CRUD Kelas | Per unit & tahun ajaran, kapasitas | ✅ Selesai |
+| 2.6 | CRUD Siswa | Data lengkap + foto, filter by kelas | ✅ Dasar Selesai |
+| 2.10 | CRUD Kategori Tagihan | SPP, Buku, Kegiatan, dll | ✅ Selesai |
+| 2.11 | CRUD Rekening | Data rekening pembayaran | ✅ Selesai |
 
 ---
 
@@ -766,7 +766,7 @@ erDiagram
 Dependencies utama: next, react, prisma, @prisma/client, next-auth, exceljs, jspdf, qrcode.react, recharts, @tiptap/react, bcryptjs
 
 #### [NEW] prisma/schema.prisma
-Schema lengkap semua tabel **dengan tenant_id**, provider = "mysql"
+Schema lengkap semua tabel **dengan tenant_id**, provider = "sqlite" (dev ready)
 
 #### [NEW] src/app/globals.css
 Design system: CSS variables, utility classes, animations, responsive breakpoints

@@ -1,6 +1,6 @@
 // ============================================================
 // SISPRO — Prisma Schema (Multi-Tenant SaaS-Ready)
-// Database: MySQL (siap migrasi ke PostgreSQL)
+// Database: SQLite (dev) / PostgreSQL (prod)
 // ============================================================
 
 generator client {
@@ -9,6 +9,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 // ============================================================
@@ -90,6 +91,7 @@ model User {
   beritas      Berita[]
   pengumumans  Pengumuman[]
   logAktivitas LogAktivitas[]
+  pendaftarPpdbs PendaftarPpdb[]
 
   @@unique([tenantId, email])
   @@unique([tenantId, username])
@@ -103,8 +105,7 @@ enum Role {
   TU
   STAF
   PPDB
-  WALI
-  SISWA
+  USER
 }
 
 // ============================================================
@@ -464,6 +465,7 @@ model PendaftarPpdb {
   id              String         @id @default(uuid())
   tenantId        String         @map("tenant_id")
   periodeId       String         @map("periode_id")
+  userId          String?        @map("user_id")
   noPendaftaran   String         @map("no_pendaftaran")
   namaLengkap     String         @map("nama_lengkap")
   dataFormulir    Json?          @map("data_formulir")
@@ -477,6 +479,7 @@ model PendaftarPpdb {
 
   tenant      Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
   periode     PeriodePpdb   @relation(fields: [periodeId], references: [id], onDelete: Cascade)
+  user        User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
   berkas      BerkasPpdb[]
   tagihanPpdbs TagihanPpdb[]
 

@@ -59,7 +59,7 @@ const navSections: NavSection[] = [
         children: [
           { label: 'Pendaftar', href: '/ppdb/pendaftar' },
           { label: 'Tagihan PPDB', href: '/ppdb/tagihan' },
-          { label: 'Berkas', href: '/ppdb/berkas' },
+          { label: 'Persyaratan Berkas', href: '/ppdb/persyaratan' },
           { label: 'Periode', href: '/ppdb/periode' },
           { label: 'Pengaturan', href: '/ppdb/pengaturan' },
         ],
