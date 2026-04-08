@@ -1,28 +1,29 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Plus, Search, Loader2, Pencil, Trash2, Key, ShieldCheck, UserPlus, RefreshCw, User, GraduationCap } from 'lucide-react'
+import { Loader2, Pencil, Trash2, Key, ShieldCheck, UserPlus, RefreshCw, GraduationCap } from 'lucide-react'
+import { toast } from 'sonner'
 import { DataTable, Column } from '@/components/ui/DataTable'
 import { Modal } from '@/components/ui/Modal'
-import { cn } from '@/lib/utils'
-import styles from './page.module.css'
+import { Button } from '@/components/ui/Button'
+import { SearchInput } from '@/components/ui/SearchInput'
+import shared from '@/styles/page.module.css'
 
 export default function AkunSiswaPage() {
   const [data, setData] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [filterAccount, setFilterAccount] = useState('all')
-
-  // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isGenerating, setIsGenerating] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
   const [selectedSiswaId, setSelectedSiswaId] = useState<string | null>(null)
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null)
   const [selectedSiswaName, setSelectedSiswaName] = useState('')
-
-  // Form State
   const [password, setPassword] = useState('')
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; nama: string } | null>(null)
+  const [confirmGenerate, setConfirmGenerate] = useState(false)
 
   const fetchAkunSiswa = async () => {
     setLoading(true)
@@ -30,48 +31,26 @@ export default function AkunSiswaPage() {
       let url = `/api/data-master/akun-siswa?search=${encodeURIComponent(searchQuery)}`
       if (filterAccount === 'has') url += '&hasAccount=true'
       if (filterAccount === 'no') url += '&hasAccount=false'
-      
       const res = await fetch(url)
       const json = await res.json()
-      if (json.data) {
-        setData(json.data)
-      }
-    } catch (e) {
-      console.error(e)
-    } finally {
-      setLoading(false)
-    }
+      if (json.data) setData(json.data)
+    } catch { toast.error('Gagal memuat data') } finally { setLoading(false) }
   }
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      fetchAkunSiswa()
-    }, 300)
-    return () => clearTimeout(timer)
-  }, [searchQuery, filterAccount])
+  useEffect(() => { const t = setTimeout(fetchAkunSiswa, 300); return () => clearTimeout(t) }, [searchQuery, filterAccount])
 
   const openCreateModal = (siswa: any) => {
-    setSelectedSiswaId(siswa.id)
-    setSelectedUserId(null)
-    setSelectedSiswaName(siswa.namaLengkap)
-    setPassword(siswa.nis) // Default password = NIS
-    setErrorMsg('')
-    setIsModalOpen(true)
+    setSelectedSiswaId(siswa.id); setSelectedUserId(null); setSelectedSiswaName(siswa.namaLengkap)
+    setPassword(siswa.nis); setErrorMsg(''); setIsModalOpen(true)
   }
 
   const openResetModal = (siswa: any) => {
-    setSelectedSiswaId(null)
-    setSelectedUserId(siswa.user.id)
-    setSelectedSiswaName(siswa.namaLengkap)
-    setPassword('')
-    setErrorMsg('')
-    setIsModalOpen(true)
+    setSelectedSiswaId(null); setSelectedUserId(siswa.user.id); setSelectedSiswaName(siswa.namaLengkap)
+    setPassword(''); setErrorMsg(''); setIsModalOpen(true)
   }
 
   const handleGenerateAll = async () => {
-    if (!window.confirm('Apakah Anda ingin membuat akun secara otomatis untuk semua siswa yang belum memiliki akun?\n\nPassword standar akan disetel ke: "Siswa123!"')) return
-
-    setIsSubmitting(true)
+    setIsGenerating(true)
     try {
       const res = await fetch('/api/data-master/akun-siswa', {
         method: 'POST',
@@ -79,145 +58,74 @@ export default function AkunSiswaPage() {
         body: JSON.stringify({ action: 'generate-all' }),
       })
       const json = await res.json()
-      if (res.ok) {
-        alert(json.message)
-        fetchAkunSiswa()
-      } else {
-        alert(json.error || 'Gagal generate akun')
-      }
-    } catch (e) {
-      alert('Terjadi kesalahan server.')
-    } finally {
-      setIsSubmitting(false)
-    }
+      if (res.ok) { toast.success(json.message); fetchAkunSiswa() }
+      else toast.error(json.error || 'Gagal generate akun')
+    } catch { toast.error('Terjadi kesalahan server') }
+    finally { setIsGenerating(false); setConfirmGenerate(false) }
   }
 
-  const handleDeleteAccount = async (id: string, name: string) => {
-    if (!window.confirm(`Apakah Anda yakin ingin menghapus AKUN (login) untuk siswa "${name}"?\nData profil siswa TIDAK akan terhapus.`)) return
-
+  const handleDeleteAccount = async () => {
+    if (!deleteTarget) return
     try {
-        const res = await fetch(`/api/data-master/akun-siswa/${id}`, { method: 'DELETE' })
-        const json = await res.json()
-
-        if (!res.ok) {
-            alert(json.error || 'Gagal menghapus akun')
-        } else {
-            alert('Akun berhasil dihapus')
-            fetchAkunSiswa()
-        }
-    } catch (error) {
-        alert('Terjadi kesalahan server.')
-    }
+      const res = await fetch(`/api/data-master/akun-siswa/${deleteTarget.id}`, { method: 'DELETE' })
+      const json = await res.json()
+      if (!res.ok) toast.error(json.error || 'Gagal menghapus akun')
+      else { toast.success('Akun berhasil dihapus'); fetchAkunSiswa() }
+    } catch { toast.error('Terjadi kesalahan server') }
+    finally { setDeleteTarget(null) }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    setErrorMsg('')
-
+    e.preventDefault(); setIsSubmitting(true); setErrorMsg('')
     try {
       const isReset = !!selectedUserId
-      const url = isReset ? `/api/data-master/akun-siswa/${selectedUserId}` : '/api/data-master/akun-siswa'
-      const method = isReset ? 'PUT' : 'POST'
-      const payload = isReset ? { password } : { siswaId: selectedSiswaId, password }
-
-      const res = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
-
+      const res = await fetch(
+        isReset ? `/api/data-master/akun-siswa/${selectedUserId}` : '/api/data-master/akun-siswa',
+        { method: isReset ? 'PUT' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(isReset ? { password } : { siswaId: selectedSiswaId, password }) }
+      )
       const json = await res.json()
-
-      if (!res.ok) {
-        setErrorMsg(json.error || 'Terjadi kesalahan')
-      } else {
-        setIsModalOpen(false)
-        fetchAkunSiswa()
-        alert(json.message)
-      }
-    } catch (e) {
-      setErrorMsg('Gagal terhubung ke server')
-    } finally {
-      setIsSubmitting(false)
-    }
+      if (!res.ok) setErrorMsg(json.error || 'Terjadi kesalahan')
+      else { setIsModalOpen(false); fetchAkunSiswa(); toast.success(json.message) }
+    } catch { setErrorMsg('Gagal terhubung ke server') }
+    finally { setIsSubmitting(false) }
   }
 
   const columns: Column<any>[] = [
     {
       header: 'Nama Siswa',
       accessor: (row) => (
-        <div className={styles.userCell}>
-          <div className={styles.avatar}>
-            <GraduationCap size={18} />
-          </div>
+        <div className={shared.userCell}>
+          <div className={shared.avatar}><GraduationCap size={16} /></div>
           <div>
-            <div className={styles.name}>{row.namaLengkap}</div>
-            <div className={styles.username}>NIS: {row.nis} • {row.kelas?.nama || 'No Kelas'}</div>
+            <div className={shared.cellName}>{row.namaLengkap}</div>
+            <div className={shared.cellSub}>NIS: {row.nis} • {row.kelas?.nama || 'No Kelas'}</div>
           </div>
         </div>
       ),
     },
     {
       header: 'Username Akun',
-      accessor: (row) => (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          {row.user ? (
-            <span className={styles.roleBadge} style={{ background: 'var(--success-50)', color: 'var(--success-700)', textTransform: 'none' }}>
-                <ShieldCheck size={12} style={{ marginRight: '4px' }} />
-                {row.user.username}
-            </span>
-          ) : (
-            <span className={styles.roleBadge} style={{ background: 'var(--warning-50)', color: 'var(--warning-700)', textTransform: 'none' }}>
-                Belum Ada Akun
-            </span>
-          )}
-        </div>
-      )
+      accessor: (row) => row.user
+        ? <span className="badge badge-success"><ShieldCheck size={11} style={{ marginRight: 4 }} />{row.user.username}</span>
+        : <span className="badge badge-warning">Belum Ada Akun</span>,
     },
     {
       header: 'Status',
-      accessor: (row) => row.user ? (
-        <span className={styles.statusBadge} data-active={row.user.isActive}>
-          {row.user.isActive ? 'Aktif' : 'Blokir'}
-        </span>
-      ) : '-',
+      accessor: (row) => row.user
+        ? <span className={`${shared.statusBadge} ${row.user.isActive ? shared.statusActive : shared.statusInactive}`}>{row.user.isActive ? 'Aktif' : 'Diblokir'}</span>
+        : <span style={{ color: 'var(--text-tertiary)', fontSize: 'var(--text-sm)' }}>—</span>,
     },
     {
-      header: 'Aksi Keamanan',
-      align: 'center',
-      width: '200px',
+      header: 'Aksi', align: 'center', width: '200px',
       accessor: (row) => (
         <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
           {row.user ? (
             <>
-              <button 
-                className={styles.actionBtn} 
-                title="Reset Password"
-                onClick={() => openResetModal(row)}
-                style={{ backgroundColor: 'var(--bg-hover)' }}
-              >
-                <Key size={14} />
-              </button>
-              <button 
-                className={styles.actionBtn} 
-                style={{ color: 'var(--danger-500)', backgroundColor: 'var(--danger-50)' }}
-                title="Hapus Akun"
-                onClick={() => handleDeleteAccount(row.user.id, row.namaLengkap)}
-              >
-                <Trash2 size={14} />
-              </button>
+              <button className={shared.actionBtn} title="Reset Password" onClick={() => openResetModal(row)}><Key size={14} /></button>
+              <button className={`${shared.actionBtn} ${shared.actionBtnDanger}`} title="Hapus Akun" onClick={() => setDeleteTarget({ id: row.user.id, nama: row.namaLengkap })}><Trash2 size={14} /></button>
             </>
           ) : (
-            <button 
-                className={styles.actionBtn} 
-                onClick={() => openCreateModal(row)}
-                title="Buat Akun"
-                style={{ width: 'auto', padding: '0.25rem 0.75rem', gap: '0.4rem', border: '1px solid var(--primary-100)', color: 'var(--primary-700)', background: 'var(--primary-50)' }}
-            >
-                <UserPlus size={14} />
-                <span style={{ fontSize: '11px', fontWeight: 600 }}>AKTIVASI</span>
-            </button>
+            <Button size="sm" variant="secondary" leftIcon={<UserPlus size={13} />} onClick={() => openCreateModal(row)}>Aktivasi</Button>
           )}
         </div>
       ),
@@ -225,111 +133,74 @@ export default function AkunSiswaPage() {
   ]
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
+    <div className={shared.container}>
+      <div className={shared.header}>
         <div>
-          <h1 className={styles.title}>Manajemen Akun Siswa</h1>
-          <p className={styles.subtitle}>Kelola login dan keamanan akses portal siswa</p>
+          <h1 className={shared.title}>Manajemen Akun Siswa</h1>
+          <p className={shared.subtitle}>Kelola login dan keamanan akses portal siswa</p>
         </div>
-        <button 
-          className={cn(styles.addBtn, isSubmitting && styles.btnLoading)} 
-          onClick={handleGenerateAll}
-          disabled={isSubmitting}
-          style={{ background: 'var(--success-600)', boxShadow: '0 4px 12px rgba(22, 163, 74, 0.2)' }}
-        >
-          {isSubmitting ? <Loader2 size={18} className={styles.spinner} /> : <RefreshCw size={18} />}
-          <span>Generate Massal</span>
-        </button>
+        <Button variant="success" leftIcon={isGenerating ? <Loader2 size={16} className={shared.spinner} /> : <RefreshCw size={16} />} onClick={() => setConfirmGenerate(true)} isLoading={isGenerating}>
+          Generate Massal
+        </Button>
       </div>
 
-      <div className={styles.toolbar}>
-        <div className={styles.search}>
-          <Search size={18} className={styles.searchIcon} />
-          <input
-            type="text"
-            placeholder="Cari siswa..."
-            className={styles.searchInput}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-        <div className={styles.filters}>
-          <select 
-            className={styles.filterBtn}
-            value={filterAccount}
-            onChange={(e) => setFilterAccount(e.target.value)}
-          >
-            <option value="all">Semua Siswa</option>
-            <option value="has">Sudah Berakun</option>
-            <option value="no">Belum Berakun</option>
-          </select>
-        </div>
+      <div className={shared.toolbar}>
+        <SearchInput placeholder="Cari siswa..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+        <select className="form-input" style={{ width: 'auto' }} value={filterAccount} onChange={(e) => setFilterAccount(e.target.value)}>
+          <option value="all">Semua Siswa</option>
+          <option value="has">Sudah Berakun</option>
+          <option value="no">Belum Berakun</option>
+        </select>
       </div>
 
-      <DataTable
-        columns={columns}
-        data={data}
-        isLoading={loading}
-        emptyMessage="Data siswa tidak ditemukan"
-      />
+      <DataTable columns={columns} data={data} isLoading={loading} emptyMessage="Data siswa tidak ditemukan" />
 
-      <Modal 
-        isOpen={isModalOpen} 
-        onClose={() => !isSubmitting && setIsModalOpen(false)}
-        title={selectedUserId ? "Reset Password Siswa" : "Buat Akun Siswa"}
-      >
-        <form className={styles.form} onSubmit={handleSubmit}>
-          {errorMsg && (
-            <div className={styles.errorText} style={{ padding: '0.8rem', background: 'rgba(239,68,68,0.1)', borderRadius: '8px', color: '#b91c1c' }}>
-              {errorMsg}
-            </div>
-          )}
-          
-          <div style={{ background: 'var(--bg-hover)', padding: '1rem', borderRadius: '8px', marginBottom: '1.5rem' }}>
-              <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '4px' }}>Nama Siswa</div>
-              <div style={{ fontWeight: 600, fontSize: '15px' }}>{selectedSiswaName}</div>
+      {/* Form Modal */}
+      <Modal isOpen={isModalOpen} onClose={() => !isSubmitting && setIsModalOpen(false)} title={selectedUserId ? 'Reset Password Siswa' : 'Buat Akun Siswa'}>
+        <form className={shared.form} onSubmit={handleSubmit}>
+          {errorMsg && <div className={shared.errorAlert}>{errorMsg}</div>}
+          <div style={{ background: 'var(--bg-tertiary)', padding: '1rem', borderRadius: 'var(--radius-lg)', marginBottom: 'var(--space-2)' }}>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginBottom: '4px' }}>Nama Siswa</div>
+            <div style={{ fontWeight: 600 }}>{selectedSiswaName}</div>
           </div>
-
-          <div className={styles.formGroup}>
-            <label className={styles.label}>
-                {selectedUserId ? "Password Baru" : "Setel Password"}
-            </label>
-            <div style={{ position: 'relative' }}>
-                <input 
-                    required
-                    name="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    type="text" // Plain text for clarity in this master tool
-                    className={styles.input} 
-                    placeholder="Minimal 6 karakter" 
-                    disabled={isSubmitting}
-                />
-                <Key size={16} style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', opacity: 0.3 }} />
-            </div>
-            {!selectedUserId && <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '6px' }}>Default password disarankan menggunakan NIS siswa.</p>}
+          <div className={shared.formGroup}>
+            <label className={shared.formLabel}>{selectedUserId ? 'Password Baru' : 'Setel Password'} <span className="required">*</span></label>
+            <input required name="password" value={password} onChange={(e) => setPassword(e.target.value)} type="text" className={shared.formInput} placeholder="Minimal 6 karakter" disabled={isSubmitting} />
+            {!selectedUserId && <span className="form-hint">Default: gunakan NIS siswa sebagai password awal.</span>}
           </div>
-
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1rem' }}>
-            <button 
-              type="button" 
-              className={styles.actionBtn} 
-              onClick={() => setIsModalOpen(false)}
-              disabled={isSubmitting}
-              style={{ background: 'var(--bg-hover)', color: 'var(--text-color)', padding: '0.625rem 1rem', borderRadius: 'var(--radius-md)', width: 'auto' }}
-            >
-              Batal
-            </button>
-            <button 
-              type="submit" 
-              className={styles.submitBtn}
-              disabled={isSubmitting}
-              style={{ width: 'auto', paddingLeft: '1.5rem', paddingRight: '1.5rem' }}
-            >
-              {isSubmitting ? <Loader2 className={styles.spinner} /> : (selectedUserId ? 'Perbarui Password' : 'Aktifkan Akun')}
-            </button>
+          <div className={shared.modalFooter}>
+            <Button variant="secondary" type="button" onClick={() => setIsModalOpen(false)} disabled={isSubmitting}>Batal</Button>
+            <Button type="submit" isLoading={isSubmitting}>{selectedUserId ? 'Perbarui Password' : 'Aktifkan Akun'}</Button>
           </div>
         </form>
+      </Modal>
+
+      {/* Confirm Generate Modal */}
+      <Modal isOpen={confirmGenerate} onClose={() => setConfirmGenerate(false)} title="Generate Akun Massal">
+        <p style={{ color: 'var(--text-secondary)', marginBottom: 'var(--space-4)' }}>
+          Buat akun secara otomatis untuk semua siswa yang belum memiliki akun?
+        </p>
+        <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-tertiary)', marginBottom: 'var(--space-6)' }}>
+          Password standar: <strong>Siswa123!</strong>
+        </p>
+        <div className={shared.modalFooter}>
+          <Button variant="secondary" onClick={() => setConfirmGenerate(false)}>Batal</Button>
+          <Button variant="success" onClick={handleGenerateAll} isLoading={isGenerating}>Ya, Generate Sekarang</Button>
+        </div>
+      </Modal>
+
+      {/* Confirm Delete Modal */}
+      <Modal isOpen={!!deleteTarget} onClose={() => setDeleteTarget(null)} title="Hapus Akun Siswa">
+        <p style={{ color: 'var(--text-secondary)', marginBottom: 'var(--space-2)' }}>
+          Hapus akun login untuk <strong style={{ color: 'var(--text-primary)' }}>{deleteTarget?.nama}</strong>?
+        </p>
+        <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-tertiary)', marginBottom: 'var(--space-6)' }}>
+          Data profil siswa tidak akan terhapus.
+        </p>
+        <div className={shared.modalFooter}>
+          <Button variant="secondary" onClick={() => setDeleteTarget(null)}>Batal</Button>
+          <Button variant="danger" onClick={handleDeleteAccount}>Ya, Hapus Akun</Button>
+        </div>
       </Modal>
     </div>
   )

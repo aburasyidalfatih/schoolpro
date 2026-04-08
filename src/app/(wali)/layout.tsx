@@ -1,12 +1,25 @@
+import { auth } from '@/lib/auth'
+import { redirect } from 'next/navigation'
 import WaliSidebar from '@/components/layout/WaliSidebar'
-import AdminHeader from '@/components/layout/AdminHeader' // We can reuse the header
+import AdminHeader from '@/components/layout/AdminHeader'
 import styles from '../(admin)/layout.module.css'
 
-export default function WaliLayout({
+export default async function WaliLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const session = await auth()
+
+  if (!session?.user) {
+    redirect('/login')
+  }
+
+  const role = (session.user as any).role
+  if (role !== 'WALI' && role !== 'SISWA' && role !== 'USER') {
+    redirect('/dashboard')
+  }
+
   return (
     <div className={styles.wrapper}>
       <WaliSidebar />

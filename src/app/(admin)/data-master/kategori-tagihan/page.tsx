@@ -1,337 +1,168 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Plus, Search, Loader2, Pencil, Trash2, CreditCard, History, CircleCheck, CircleX } from 'lucide-react'
+import { Plus, Pencil, Trash2, CreditCard, History, CircleCheck, CircleX } from 'lucide-react'
+import { toast } from 'sonner'
 import { DataTable, Column } from '@/components/ui/DataTable'
 import { Modal } from '@/components/ui/Modal'
-import { cn } from '@/lib/utils'
-import styles from './page.module.css'
+import { Button } from '@/components/ui/Button'
+import { SearchInput } from '@/components/ui/SearchInput'
+import shared from '@/styles/page.module.css'
 
 export default function KategoriTagihanPage() {
   const [data, setData] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-
-  // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
   const [editId, setEditId] = useState<string | null>(null)
-
-  // Form State
-  const [formData, setFormData] = useState({
-    nama: '',
-    kode: '',
-    isBulanan: false,
-    isActive: true,
-  })
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; nama: string } | null>(null)
+  const [formData, setFormData] = useState({ nama: '', kode: '', isBulanan: false, isActive: true })
 
   const fetchKategori = async () => {
     setLoading(true)
     try {
-      const url = searchQuery 
-        ? `/api/data-master/kategori-tagihan?search=${encodeURIComponent(searchQuery)}` 
-        : '/api/data-master/kategori-tagihan'
+      const url = searchQuery ? `/api/data-master/kategori-tagihan?search=${encodeURIComponent(searchQuery)}` : '/api/data-master/kategori-tagihan'
       const res = await fetch(url)
       const json = await res.json()
-      if (json.data) {
-        setData(json.data)
-      }
-    } catch (e) {
-      console.error(e)
-    } finally {
-      setLoading(false)
-    }
+      if (json.data) setData(json.data)
+    } catch { toast.error('Gagal memuat data') } finally { setLoading(false) }
   }
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      fetchKategori()
-    }, 300)
-    return () => clearTimeout(timer)
-  }, [searchQuery])
+  useEffect(() => { const t = setTimeout(fetchKategori, 300); return () => clearTimeout(t) }, [searchQuery])
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target
-    if (type === 'checkbox') {
-        const checked = (e.target as HTMLInputElement).checked
-        setFormData(prev => ({ ...prev, [name]: checked }))
-    } else {
-        setFormData(prev => ({ ...prev, [name]: value }))
-    }
+    setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value }))
   }
 
   const openAddModal = () => {
-    setEditId(null)
-    setFormData({ 
-        nama: '', 
-        kode: '', 
-        isBulanan: false, 
-        isActive: true 
-    })
-    setErrorMsg('')
-    setIsModalOpen(true)
+    setEditId(null); setFormData({ nama: '', kode: '', isBulanan: false, isActive: true }); setErrorMsg(''); setIsModalOpen(true)
   }
 
   const openEditModal = (row: any) => {
-    setEditId(row.id)
-    setFormData({
-        nama: row.nama,
-        kode: row.kode,
-        isBulanan: row.isBulanan,
-        isActive: row.isActive,
-    })
-    setErrorMsg('')
-    setIsModalOpen(true)
+    setEditId(row.id); setFormData({ nama: row.nama, kode: row.kode, isBulanan: row.isBulanan, isActive: row.isActive }); setErrorMsg(''); setIsModalOpen(true)
   }
 
-  const handleDelete = async (id: string, name: string) => {
-    if (!window.confirm(`Apakah Anda yakin ingin menghapus kategori "${name}"?`)) return
-
+  const handleDelete = async () => {
+    if (!deleteTarget) return
     try {
-        const res = await fetch(`/api/data-master/kategori-tagihan/${id}`, { method: 'DELETE' })
-        const json = await res.json()
-
-        if (!res.ok) {
-            alert(json.error || 'Gagal menghapus data')
-        } else {
-            alert('Kategori berhasil dihapus')
-            fetchKategori()
-        }
-    } catch (error) {
-        alert('Terjadi kesalahan server.')
-    }
+      const res = await fetch(`/api/data-master/kategori-tagihan/${deleteTarget.id}`, { method: 'DELETE' })
+      const json = await res.json()
+      if (!res.ok) toast.error(json.error || 'Gagal menghapus')
+      else { toast.success('Kategori berhasil dihapus'); fetchKategori() }
+    } catch { toast.error('Terjadi kesalahan server') }
+    finally { setDeleteTarget(null) }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    setErrorMsg('')
-
+    e.preventDefault(); setIsSubmitting(true); setErrorMsg('')
     try {
       const isEditing = !!editId
-      const url = isEditing ? `/api/data-master/kategori-tagihan/${editId}` : '/api/data-master/kategori-tagihan'
-      const method = isEditing ? 'PUT' : 'POST'
-
-      const res = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      })
-
+      const res = await fetch(
+        isEditing ? `/api/data-master/kategori-tagihan/${editId}` : '/api/data-master/kategori-tagihan',
+        { method: isEditing ? 'PUT' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) }
+      )
       const json = await res.json()
-
-      if (!res.ok) {
-        setErrorMsg(json.error || 'Terjadi kesalahan')
-      } else {
-        setIsModalOpen(false)
-        fetchKategori()
-        alert(json.message)
-      }
-    } catch (e) {
-      setErrorMsg('Gagal terhubung ke server')
-    } finally {
-      setIsSubmitting(false)
-    }
+      if (!res.ok) setErrorMsg(json.error || 'Terjadi kesalahan')
+      else { setIsModalOpen(false); fetchKategori(); toast.success(json.message) }
+    } catch { setErrorMsg('Gagal terhubung ke server') }
+    finally { setIsSubmitting(false) }
   }
 
   const columns: Column<any>[] = [
     {
       header: 'Kategori Tagihan',
       accessor: (row) => (
-        <div className={styles.userCell}>
-          <div className={styles.avatar}>
-            <CreditCard size={18} />
-          </div>
+        <div className={shared.userCell}>
+          <div className={shared.avatar}><CreditCard size={16} /></div>
           <div>
-            <div className={styles.name}>{row.nama}</div>
-            <div className={styles.username}>ID: {row.kode}</div>
+            <div className={shared.cellName}>{row.nama}</div>
+            <div className={shared.cellSub}>Kode: {row.kode}</div>
           </div>
         </div>
       ),
     },
     {
-      header: 'Tipe Tagihan',
-      accessor: (row) => (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-          {row.isBulanan ? (
-            <span className={styles.roleBadge} style={{ background: 'var(--primary-50)', color: 'var(--primary-700)' }}>
-              <History size={12} style={{ marginRight: '4px' }} />
-              Tagihan Bulanan
-            </span>
-          ) : (
-            <span className={styles.roleBadge} style={{ background: 'var(--bg-hover)', color: 'var(--text-muted)' }}>
-              Sekali Bayar
-            </span>
-          )}
-        </div>
-      )
+      header: 'Tipe',
+      accessor: (row) => row.isBulanan
+        ? <span className="badge badge-primary"><History size={11} style={{ marginRight: 4 }} />Bulanan</span>
+        : <span className="badge badge-gray">Sekali Bayar</span>,
     },
     {
-      header: 'Status Kontrol',
+      header: 'Status',
       accessor: (row) => (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-          {row.isActive ? (
-             <><CircleCheck size={14} style={{ color: 'var(--success-500)' }} /> <span style={{ fontSize: 'var(--text-xs)', fontWeight: 500 }}>Aktif</span></>
-          ) : (
-             <><CircleX size={14} style={{ color: 'var(--danger-500)' }} /> <span style={{ fontSize: 'var(--text-xs)', fontWeight: 500 }}>Non-Aktif</span></>
-          )}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: 'var(--text-sm)' }}>
+          {row.isActive
+            ? <><CircleCheck size={14} style={{ color: 'var(--success-500)' }} /><span>Aktif</span></>
+            : <><CircleX size={14} style={{ color: 'var(--danger-500)' }} /><span>Non-Aktif</span></>}
         </div>
       ),
     },
     {
-      header: 'Aksi',
-      align: 'center',
-      width: '180px',
+      header: 'Aksi', align: 'center', width: '120px',
       accessor: (row) => (
         <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
-          <button 
-            className={styles.actionBtn} 
-            title="Edit"
-            onClick={() => openEditModal(row)}
-            style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', backgroundColor: 'var(--bg-hover)', padding: '0.25rem 0.625rem', borderRadius: 'var(--radius-md)' }}
-          >
-            <Pencil size={14} />
-            <span style={{ fontSize: '0.75rem', fontWeight: 500 }}>Edit</span>
-          </button>
-          <button 
-            className={styles.actionBtn} 
-            style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'var(--danger-500)', backgroundColor: 'var(--danger-50)', padding: '0.25rem 0.625rem', borderRadius: 'var(--radius-md)' }}
-            title="Hapus"
-            onClick={() => handleDelete(row.id, row.nama)}
-          >
-            <Trash2 size={14} />
-          </button>
+          <button className={shared.actionBtn} onClick={() => openEditModal(row)} title="Edit"><Pencil size={14} /></button>
+          <button className={`${shared.actionBtn} ${shared.actionBtnDanger}`} onClick={() => setDeleteTarget({ id: row.id, nama: row.nama })} title="Hapus"><Trash2 size={14} /></button>
         </div>
       ),
     },
   ]
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
+    <div className={shared.container}>
+      <div className={shared.header}>
         <div>
-          <h1 className={styles.title}>Kategori Tagihan</h1>
-          <p className={styles.subtitle}>Atur jenis-jenis komponen biaya pendidikan siswa</p>
+          <h1 className={shared.title}>Kategori Tagihan</h1>
+          <p className={shared.subtitle}>Atur jenis-jenis komponen biaya pendidikan siswa</p>
         </div>
-        <button 
-          className={styles.addBtn} 
-          onClick={openAddModal}
-        >
-          <Plus size={18} />
-          <span>Kategori Baru</span>
-        </button>
+        <Button leftIcon={<Plus size={16} />} onClick={openAddModal}>Kategori Baru</Button>
       </div>
-
-      <div className={styles.toolbar}>
-        <div className={styles.search}>
-          <Search size={18} className={styles.searchIcon} />
-          <input
-            type="text"
-            placeholder="Cari kategori atau kode..."
-            className={styles.searchInput}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
+      <div className={shared.toolbar}>
+        <SearchInput placeholder="Cari kategori atau kode..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
       </div>
+      <DataTable columns={columns} data={data} isLoading={loading} emptyMessage="Belum ada kategori tagihan" />
 
-      <DataTable
-        columns={columns}
-        data={data}
-        isLoading={loading}
-        emptyMessage="Belum ada kategori tagihan"
-      />
-
-      <Modal 
-        isOpen={isModalOpen} 
-        onClose={() => !isSubmitting && setIsModalOpen(false)}
-        title={editId ? "Edit Kategori Tagihan" : "Tambah Kategori Tagihan"}
-      >
-        <form className={styles.form} onSubmit={handleSubmit}>
-          {errorMsg && (
-            <div className={styles.errorText} style={{ padding: '0.5rem', background: 'rgba(239,68,68,0.1)', borderRadius: '4px' }}>
-              {errorMsg}
-            </div>
-          )}
-          
-          <div className={styles.formGroup}>
-            <label className={styles.label}>Nama Kategori</label>
-            <input 
-              required
-              name="nama"
-              value={formData.nama}
-              onChange={handleInputChange}
-              type="text" 
-              className={styles.input} 
-              placeholder="Contoh: SPP Bulanan, Uang Buku" 
-              disabled={isSubmitting}
-            />
+      <Modal isOpen={isModalOpen} onClose={() => !isSubmitting && setIsModalOpen(false)} title={editId ? 'Edit Kategori Tagihan' : 'Tambah Kategori Tagihan'}>
+        <form className={shared.form} onSubmit={handleSubmit}>
+          {errorMsg && <div className={shared.errorAlert}>{errorMsg}</div>}
+          <div className={shared.formGroup}>
+            <label className={shared.formLabel}>Nama Kategori <span className="required">*</span></label>
+            <input required name="nama" value={formData.nama} onChange={handleInputChange} className={shared.formInput} placeholder="Contoh: SPP Bulanan, Uang Buku" disabled={isSubmitting} />
           </div>
-
-          <div className={styles.formGroup}>
-            <label className={styles.label}>Kode Kategori</label>
-            <input 
-              required
-              name="kode"
-              value={formData.kode}
-              onChange={handleInputChange}
-              type="text" 
-              className={styles.input} 
-              placeholder="Contoh: SPP, BK1" 
-              disabled={isSubmitting}
-            />
+          <div className={shared.formGroup}>
+            <label className={shared.formLabel}>Kode Kategori <span className="required">*</span></label>
+            <input required name="kode" value={formData.kode} onChange={handleInputChange} className={shared.formInput} placeholder="Contoh: SPP, BK1" disabled={isSubmitting} />
           </div>
-
-          <div className={styles.formRow} style={{ marginTop: '0.5rem' }}>
-              <div className="form-group" style={{ flexDirection: 'row', alignItems: 'center', gap: '0.75rem' }}>
-                  <label className="toggle-switch">
-                    <input 
-                        type="checkbox" 
-                        name="isBulanan" 
-                        checked={formData.isBulanan}
-                        onChange={handleInputChange}
-                        className="toggle-input"
-                    />
-                    <div className="toggle-slider"></div>
-                    <span className="toggle-label">Tagihan Bulanan</span>
-                  </label>
-              </div>
-
-              <div className="form-group" style={{ flexDirection: 'row', alignItems: 'center', gap: '0.75rem' }}>
-                  <label className="toggle-switch">
-                    <input 
-                        type="checkbox" 
-                        name="isActive" 
-                        checked={formData.isActive}
-                        onChange={handleInputChange}
-                        className="toggle-input"
-                    />
-                    <div className="toggle-slider"></div>
-                    <span className="toggle-label">Aktif</span>
-                  </label>
-              </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', marginTop: 'var(--space-2)' }}>
+            <label className="toggle-switch">
+              <input type="checkbox" name="isBulanan" checked={formData.isBulanan} onChange={handleInputChange} className="toggle-input" />
+              <div className="toggle-slider" />
+              <span className="toggle-label">Tagihan Bulanan</span>
+            </label>
+            <label className="toggle-switch">
+              <input type="checkbox" name="isActive" checked={formData.isActive} onChange={handleInputChange} className="toggle-input" />
+              <div className="toggle-slider" />
+              <span className="toggle-label">Aktif</span>
+            </label>
           </div>
-
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1.5rem' }}>
-            <button 
-              type="button" 
-              className={styles.actionBtn} 
-              onClick={() => setIsModalOpen(false)}
-              disabled={isSubmitting}
-              style={{ background: 'var(--bg-hover)', color: 'var(--text-color)', padding: '0.625rem 1rem', borderRadius: 'var(--radius-md)' }}
-            >
-              Batal
-            </button>
-            <button 
-              type="submit" 
-              className={styles.submitBtn}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? <Loader2 className={styles.spinner} /> : 'Simpan Kategori'}
-            </button>
+          <div className={shared.modalFooter}>
+            <Button variant="secondary" type="button" onClick={() => setIsModalOpen(false)} disabled={isSubmitting}>Batal</Button>
+            <Button type="submit" isLoading={isSubmitting}>Simpan Kategori</Button>
           </div>
         </form>
+      </Modal>
+
+      <Modal isOpen={!!deleteTarget} onClose={() => setDeleteTarget(null)} title="Konfirmasi Hapus">
+        <p style={{ color: 'var(--text-secondary)', marginBottom: 'var(--space-6)' }}>
+          Hapus kategori <strong style={{ color: 'var(--text-primary)' }}>{deleteTarget?.nama}</strong>?
+        </p>
+        <div className={shared.modalFooter}>
+          <Button variant="secondary" onClick={() => setDeleteTarget(null)}>Batal</Button>
+          <Button variant="danger" onClick={handleDelete}>Ya, Hapus</Button>
+        </div>
       </Modal>
     </div>
   )

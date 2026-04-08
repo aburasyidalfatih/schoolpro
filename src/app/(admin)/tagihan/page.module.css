@@ -254,11 +254,17 @@
 .cancelBtn {
   padding: 0.625rem 1.25rem;
   border: 1px solid var(--border-color);
-  background: white;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
   border-radius: var(--radius-md);
   font-size: var(--text-sm);
   font-weight: 500;
   cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.cancelBtn:hover {
+  background: var(--bg-hover);
 }
 
 .spinner {

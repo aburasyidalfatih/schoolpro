@@ -19,22 +19,23 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     const { id } = await params
     const body = await req.json()
     const { 
-      nama, 
-      tahunAjaranId, 
-      unitId, 
-      tanggalBuka, 
-      tanggalTutup, 
-      biayaPendaftaran,
-      isActive 
+      nama, tahunAjaranId, unitId, tanggalBuka, tanggalTutup,
+      biayaPendaftaran, isActive, pengaturan
     } = body
 
-    const existing = await prisma.periodePpdb.findFirst({
-      where: { id, tenantId }
-    })
+    const existing = await prisma.periodePpdb.findFirst({ where: { id, tenantId } })
+    if (!existing) return NextResponse.json({ error: 'Gelombang tidak ditemukan' }, { status: 404 })
 
-    if (!existing) {
-      return NextResponse.json({ error: 'Gelombang tidak ditemukan' }, { status: 404 })
-    }
+    // Merge pengaturan — support update partial atau full object
+    const existingPengaturan = (existing.pengaturan as object) || {}
+    const newPengaturan = pengaturan
+      ? { ...existingPengaturan, ...pengaturan }
+      : {
+          ...existingPengaturan,
+          biayaPendaftaran: biayaPendaftaran !== undefined
+            ? Number(biayaPendaftaran)
+            : (existing.pengaturan as any)?.biayaPendaftaran,
+        }
 
     const updated = await prisma.periodePpdb.update({
       where: { id },
@@ -45,11 +46,8 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
         tanggalBuka: tanggalBuka ? new Date(tanggalBuka) : existing.tanggalBuka,
         tanggalTutup: tanggalTutup ? new Date(tanggalTutup) : existing.tanggalTutup,
         isActive: isActive !== undefined ? isActive : existing.isActive,
-        pengaturan: {
-          ...(existing.pengaturan as object),
-          biayaPendaftaran: biayaPendaftaran !== undefined ? Number(biayaPendaftaran) : (existing.pengaturan as any)?.biayaPendaftaran
-        }
-      }
+        pengaturan: newPengaturan,
+      },
     })
 
     return NextResponse.json({ 

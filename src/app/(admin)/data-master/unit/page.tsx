@@ -1,150 +1,88 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Plus, Search, Loader2, Pencil, Trash2, Building2 } from 'lucide-react'
+import { Plus, Loader2, Pencil, Trash2, Building2 } from 'lucide-react'
+import { toast } from 'sonner'
 import { DataTable, Column } from '@/components/ui/DataTable'
 import { Modal } from '@/components/ui/Modal'
-import styles from './page.module.css'
+import { Button } from '@/components/ui/Button'
+import { SearchInput } from '@/components/ui/SearchInput'
+import shared from '@/styles/page.module.css'
 
 export default function UnitPage() {
   const [data, setData] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-
-  // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
   const [editId, setEditId] = useState<string | null>(null)
-
-  // Form State
-  const [formData, setFormData] = useState({
-    nama: '',
-    kode: '',
-    isActive: true,
-  })
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; nama: string } | null>(null)
+  const [formData, setFormData] = useState({ nama: '', kode: '', isActive: true })
 
   const fetchUnits = async () => {
     setLoading(true)
     try {
-      const url = searchQuery 
-        ? `/api/data-master/unit?search=${encodeURIComponent(searchQuery)}` 
-        : '/api/data-master/unit'
+      const url = searchQuery ? `/api/data-master/unit?search=${encodeURIComponent(searchQuery)}` : '/api/data-master/unit'
       const res = await fetch(url)
       const json = await res.json()
-      if (json.data) {
-        setData(json.data)
-      }
-    } catch (e) {
-      console.error(e)
-    } finally {
-      setLoading(false)
-    }
+      if (json.data) setData(json.data)
+    } catch { toast.error('Gagal memuat data') } finally { setLoading(false) }
   }
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      fetchUnits()
-    }, 300)
-    return () => clearTimeout(timer)
+    const t = setTimeout(fetchUnits, 300)
+    return () => clearTimeout(t)
   }, [searchQuery])
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target
-    if (type === 'checkbox') {
-        const checked = (e.target as HTMLInputElement).checked
-        setFormData(prev => ({ ...prev, [name]: checked }))
-    } else {
-        setFormData(prev => ({ ...prev, [name]: value }))
-    }
+    setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value }))
   }
 
   const openAddModal = () => {
-    setEditId(null)
-    setFormData({ nama: '', kode: '', isActive: true })
-    setErrorMsg('')
-    setIsModalOpen(true)
+    setEditId(null); setFormData({ nama: '', kode: '', isActive: true }); setErrorMsg(''); setIsModalOpen(true)
   }
 
   const openEditModal = (row: any) => {
-    setEditId(row.id)
-    setFormData({
-        nama: row.nama,
-        kode: row.kode,
-        isActive: row.isActive,
-    })
-    setErrorMsg('')
-    setIsModalOpen(true)
+    setEditId(row.id); setFormData({ nama: row.nama, kode: row.kode, isActive: row.isActive }); setErrorMsg(''); setIsModalOpen(true)
   }
 
-  const handleDelete = async (id: string, name: string) => {
-    console.log('Delete requested for:', id, name)
-    if (!window.confirm(`Apakah Anda yakin ingin menghapus unit "${name}"?`)) {
-        console.log('Delete cancelled by user')
-        return
-    }
-
+  const handleDelete = async () => {
+    if (!deleteTarget) return
     try {
-        console.log('Executing DELETE request...')
-        const res = await fetch(`/api/data-master/unit/${id}`, { method: 'DELETE' })
-        const json = await res.json()
-
-        if (!res.ok) {
-            alert(json.error || 'Gagal menghapus data')
-        } else {
-            alert('Unit berhasil dihapus')
-            fetchUnits()
-        }
-    } catch (error) {
-        console.error('Delete error:', error)
-        alert('Terjadi kesalahan server.')
-    }
+      const res = await fetch(`/api/data-master/unit/${deleteTarget.id}`, { method: 'DELETE' })
+      const json = await res.json()
+      if (!res.ok) toast.error(json.error || 'Gagal menghapus')
+      else { toast.success('Unit berhasil dihapus'); fetchUnits() }
+    } catch { toast.error('Terjadi kesalahan server') }
+    finally { setDeleteTarget(null) }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    setErrorMsg('')
-
+    e.preventDefault(); setIsSubmitting(true); setErrorMsg('')
     try {
       const isEditing = !!editId
-      const url = isEditing ? `/api/data-master/unit/${editId}` : '/api/data-master/unit'
-      const method = isEditing ? 'PUT' : 'POST'
-
-      const res = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      })
-
+      const res = await fetch(
+        isEditing ? `/api/data-master/unit/${editId}` : '/api/data-master/unit',
+        { method: isEditing ? 'PUT' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) }
+      )
       const json = await res.json()
-
-      if (!res.ok) {
-        setErrorMsg(json.error || 'Terjadi kesalahan')
-      } else {
-        // Success
-        setIsModalOpen(false)
-        fetchUnits() // Refresh table
-        alert(json.message)
-      }
-    } catch (e) {
-      setErrorMsg('Gagal terhubung ke server')
-    } finally {
-      setIsSubmitting(false)
-    }
+      if (!res.ok) setErrorMsg(json.error || 'Terjadi kesalahan')
+      else { setIsModalOpen(false); fetchUnits(); toast.success(json.message) }
+    } catch { setErrorMsg('Gagal terhubung ke server') }
+    finally { setIsSubmitting(false) }
   }
 
   const columns: Column<any>[] = [
     {
-      header: 'Nama Unit Info',
+      header: 'Unit / Jenjang',
       accessor: (row) => (
-        <div className={styles.userCell}>
-          <div className={styles.avatar}>
-            <Building2 size={16} />
-          </div>
+        <div className={shared.userCell}>
+          <div className={shared.avatar}><Building2 size={16} /></div>
           <div>
-            <div className={styles.name}>{row.nama}</div>
-            <div className={styles.username}>Kode: {row.kode}</div>
+            <div className={shared.cellName}>{row.nama}</div>
+            <div className={shared.cellSub}>Kode: {row.kode}</div>
           </div>
         </div>
       ),
@@ -152,157 +90,69 @@ export default function UnitPage() {
     {
       header: 'Status',
       accessor: (row) => (
-        <span className={styles.statusBadge} data-active={row.isActive}>
+        <span className={`${shared.statusBadge} ${row.isActive ? shared.statusActive : shared.statusInactive}`}>
           {row.isActive ? 'Aktif' : 'Non-Aktif'}
         </span>
       ),
     },
     {
-      header: 'Aksi',
-      align: 'center',
-      width: '180px',
+      header: 'Aksi', align: 'center', width: '120px',
       accessor: (row) => (
         <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
-          <button 
-            className={styles.actionBtn} 
-            title="Edit Unit"
-            onClick={() => openEditModal(row)}
-            style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', backgroundColor: 'var(--bg-hover)', padding: '0.25rem 0.625rem', borderRadius: 'var(--radius-md)' }}
-          >
-            <Pencil size={14} />
-            <span style={{ fontSize: '0.75rem', fontWeight: 500 }}>Edit</span>
-          </button>
-          <button 
-            className={styles.actionBtn} 
-            style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'var(--danger-500)', backgroundColor: 'var(--danger-50)', padding: '0.25rem 0.625rem', borderRadius: 'var(--radius-md)' }}
-            title="Hapus Unit"
-            onClick={() => handleDelete(row.id, row.nama)}
-          >
-            <Trash2 size={14} />
-            <span style={{ fontSize: '0.75rem', fontWeight: 500 }}>Hapus</span>
-          </button>
+          <button className={shared.actionBtn} onClick={() => openEditModal(row)} title="Edit"><Pencil size={14} /></button>
+          <button className={`${shared.actionBtn} ${shared.actionBtnDanger}`} onClick={() => setDeleteTarget({ id: row.id, nama: row.nama })} title="Hapus"><Trash2 size={14} /></button>
         </div>
       ),
     },
   ]
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
+    <div className={shared.container}>
+      <div className={shared.header}>
         <div>
-          <h1 className={styles.title}>Data Unit / Jenjang</h1>
-          <p className={styles.subtitle}>Kelola unit sekolah (SD, SMP, SMA, dll)</p>
+          <h1 className={shared.title}>Data Unit / Jenjang</h1>
+          <p className={shared.subtitle}>Kelola unit sekolah (SD, SMP, SMA, dll)</p>
         </div>
-        <button 
-          className={styles.addBtn} 
-          onClick={openAddModal}
-        >
-          <Plus size={18} />
-          <span>Tambah Unit</span>
-        </button>
+        <Button leftIcon={<Plus size={16} />} onClick={openAddModal}>Tambah Unit</Button>
       </div>
-
-      <div className={styles.toolbar}>
-        <div className={styles.search}>
-          <Search size={18} className={styles.searchIcon} />
-          <input
-            type="text"
-            placeholder="Cari unit atau kode..."
-            className={styles.searchInput}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-        <div className={styles.filters}>
-          {/* We can add filter dropdowns here later */}
-        </div>
+      <div className={shared.toolbar}>
+        <SearchInput placeholder="Cari unit atau kode..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
       </div>
+      <DataTable columns={columns} data={data} isLoading={loading} emptyMessage="Belum ada data unit/jenjang" />
 
-      <DataTable
-        columns={columns}
-        data={data}
-        isLoading={loading}
-        emptyMessage="Belum ada data unit/jenjang"
-      />
-
-      {/* Modal Tambah/Edit Unit */}
-      <Modal 
-        isOpen={isModalOpen} 
-        onClose={() => !isSubmitting && setIsModalOpen(false)}
-        title={editId ? "Edit Data Unit" : "Tambah Unit Baru"}
-      >
-        <form className={styles.form} onSubmit={handleSubmit}>
-          {errorMsg && (
-            <div className={styles.errorText} style={{ padding: '0.5rem', background: 'rgba(239,68,68,0.1)', borderRadius: '4px' }}>
-              {errorMsg}
+      <Modal isOpen={isModalOpen} onClose={() => !isSubmitting && setIsModalOpen(false)} title={editId ? 'Edit Data Unit' : 'Tambah Unit Baru'}>
+        <form className={shared.form} onSubmit={handleSubmit}>
+          {errorMsg && <div className={shared.errorAlert}>{errorMsg}</div>}
+          <div className={shared.formRow}>
+            <div className={shared.formGroup}>
+              <label className={shared.formLabel}>Nama Unit <span className="required">*</span></label>
+              <input required name="nama" value={formData.nama} onChange={handleInputChange} className={shared.formInput} placeholder="Contoh: SD IT Al-Hanifah" disabled={isSubmitting} />
             </div>
-          )}
-          
-          <div className={styles.formRow}>
-            <div className={styles.formGroup}>
-              <label className={styles.label}>Nama Unit</label>
-              <input 
-                required
-                name="nama"
-                value={formData.nama}
-                onChange={handleInputChange}
-                type="text" 
-                className={styles.input} 
-                placeholder="Contoh: SD IT Al-Hanifah" 
-                disabled={isSubmitting}
-              />
-            </div>
-            <div className={styles.formGroup}>
-              <label className={styles.label}>Kode Unit</label>
-              <input 
-                required
-                name="kode"
-                value={formData.kode}
-                onChange={handleInputChange}
-                type="text" 
-                className={styles.input} 
-                placeholder="Contoh: SD" 
-                disabled={isSubmitting}
-                style={{ textTransform: 'uppercase' }}
-              />
+            <div className={shared.formGroup}>
+              <label className={shared.formLabel}>Kode Unit <span className="required">*</span></label>
+              <input required name="kode" value={formData.kode} onChange={handleInputChange} className={shared.formInput} placeholder="Contoh: SD" disabled={isSubmitting} style={{ textTransform: 'uppercase' }} />
             </div>
           </div>
-
-          <div className={styles.formRow}>
-              <div className="form-group" style={{ flexDirection: 'row', alignItems: 'center', gap: '0.75rem', marginTop: '1rem' }}>
-                  <label className="toggle-switch">
-                    <input 
-                        type="checkbox" 
-                        name="isActive" 
-                        checked={formData.isActive}
-                        onChange={handleInputChange}
-                        className="toggle-input"
-                    />
-                    <div className="toggle-slider"></div>
-                    <span className="toggle-label">Unit Aktif</span>
-                  </label>
-              </div>
-          </div>
-
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1rem' }}>
-            <button 
-              type="button" 
-              className={styles.actionBtn} 
-              onClick={() => setIsModalOpen(false)}
-              disabled={isSubmitting}
-              style={{ background: 'var(--bg-hover)', color: 'var(--text-color)', padding: '0.625rem 1rem', borderRadius: 'var(--radius-md)' }}
-            >
-              Batal
-            </button>
-            <button 
-              type="submit" 
-              className={styles.submitBtn}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? <Loader2 className={styles.spinner} /> : 'Simpan Unit'}
-            </button>
+          <label className="toggle-switch">
+            <input type="checkbox" name="isActive" checked={formData.isActive} onChange={handleInputChange} className="toggle-input" />
+            <div className="toggle-slider" />
+            <span className="toggle-label">Unit Aktif</span>
+          </label>
+          <div className={shared.modalFooter}>
+            <Button variant="secondary" type="button" onClick={() => setIsModalOpen(false)} disabled={isSubmitting}>Batal</Button>
+            <Button type="submit" isLoading={isSubmitting}>Simpan Unit</Button>
           </div>
         </form>
+      </Modal>
+
+      <Modal isOpen={!!deleteTarget} onClose={() => setDeleteTarget(null)} title="Konfirmasi Hapus">
+        <p style={{ color: 'var(--text-secondary)', marginBottom: 'var(--space-6)' }}>
+          Hapus unit <strong style={{ color: 'var(--text-primary)' }}>{deleteTarget?.nama}</strong>? Semua kelas di unit ini juga akan terpengaruh.
+        </p>
+        <div className={shared.modalFooter}>
+          <Button variant="secondary" onClick={() => setDeleteTarget(null)}>Batal</Button>
+          <Button variant="danger" onClick={handleDelete}>Ya, Hapus</Button>
+        </div>
       </Modal>
     </div>
   )

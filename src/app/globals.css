@@ -79,6 +79,18 @@
   --text-inverse: #ffffff;
   --text-link: var(--primary-600);
 
+  /* Semantic Color Extras */
+  --success-700: #047857;
+  --danger-700: #b91c1c;
+  --warning-700: #b45309;
+
+  /* Alias Variables (compatibility layer for CSS modules) */
+  --text-color: var(--text-primary);
+  --text-muted: var(--text-tertiary);
+  --bg-color: var(--bg-secondary);
+  --bg-hover: var(--gray-100);
+  --hover-color: var(--primary-50);
+
   /* Borders */
   --border-color: #e2e8f0;
   --border-focus: var(--primary-500);
@@ -107,7 +119,7 @@
   --sidebar-hover-bg: var(--primary-50);
   --sidebar-active-text: var(--primary-700);
   --sidebar-active-bg: var(--primary-50);
-  --sidebar-active-shadow: inset 4px 0 0 var(--primary-500);
+  --sidebar-active-shadow: inset 3px 0 0 var(--primary-500);
   --sidebar-line: var(--gray-200);
 
   /* Typography */
@@ -187,6 +199,13 @@
   --dot-color: #1e293b;
   --header-bg: rgba(11,15,26,0.85);
 
+  /* Alias Variables - Dark Mode */
+  --text-color: var(--text-primary);
+  --text-muted: var(--text-tertiary);
+  --bg-color: var(--bg-secondary);
+  --bg-hover: rgba(255,255,255,0.06);
+  --hover-color: rgba(99,102,241,0.08);
+
   /* Sidebar - Dark Mode */
   --sidebar-bg: #0b0f1a;
   --sidebar-text: var(--text-inverse);
@@ -198,9 +217,9 @@
   --sidebar-item-hover: rgba(255,255,255,0.9);
   --sidebar-hover-bg: rgba(255,255,255,0.06);
   --sidebar-active-text: #ffffff;
-  --sidebar-active-bg: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(99,102,241,0.08));
-  --sidebar-active-shadow: 0 0 20px rgba(99,102,241,0.1), inset 0 0 0 1px rgba(99,102,241,0.15);
-  --sidebar-line: #374151;
+  --sidebar-active-bg: linear-gradient(135deg, rgba(99,102,241,0.18), rgba(99,102,241,0.08));
+  --sidebar-active-shadow: inset 3px 0 0 var(--primary-500), 0 1px 8px rgba(99,102,241,0.08);
+  --sidebar-line: rgba(255,255,255,0.08);
 
   --shadow-xs: 0 1px 2px rgba(0,0,0,0.3);
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
@@ -335,6 +354,11 @@ img { max-width: 100%; height: auto; }
 
 @keyframes countUp {
   from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -825,54 +849,7 @@ select.form-input {
 .stat-card .stat-change.down { color: var(--danger-600); background: var(--danger-50); }
 
 /* ---------- Modal / Dialog ---------- */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: var(--space-4);
-  animation: fadeIn 0.15s ease-out;
-}
-
-.modal {
-  background: var(--bg-secondary);
-  border-radius: var(--radius-2xl);
-  box-shadow: var(--shadow-xl);
-  width: 100%;
-  max-width: 560px;
-  max-height: 90vh;
-  overflow-y: auto;
-  animation: fadeInScale 0.2s ease-out;
-}
-
-.modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--space-6);
-  border-bottom: 1px solid var(--border-color);
-}
-
-.modal-header h2 {
-  font-size: var(--text-lg);
-  font-weight: 700;
-}
-
-.modal-body { padding: var(--space-6); }
-.modal-footer {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: var(--space-3);
-  padding: var(--space-4) var(--space-6);
-  border-top: 1px solid var(--border-color);
-  background: var(--gray-50);
-  border-radius: 0 0 var(--radius-2xl) var(--radius-2xl);
-}
+/* Definisi lengkap ada di bagian Standar Komponen Global di bawah */
 
 /* ---------- Toast / Notification ---------- */
 .toast-container {

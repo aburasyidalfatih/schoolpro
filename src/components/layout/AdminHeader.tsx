@@ -1,13 +1,14 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import { signOut } from 'next-auth/react'
-import { Home, Search, Bell, LogOut } from 'lucide-react'
+import { useSession, signOut } from 'next-auth/react'
+import { Home, Search, Bell, LogOut, User as UserIcon } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
 import styles from './AdminHeader.module.css'
 
 export default function AdminHeader() {
   const pathname = usePathname()
+  const { data: session } = useSession()
 
   const getBreadcrumbs = () => {
     const paths = pathname.split('/').filter(Boolean)
@@ -22,6 +23,7 @@ export default function AdminHeader() {
   }
 
   const breadcrumbs = getBreadcrumbs()
+  const user = session?.user as any
 
   return (
     <header className={styles.header}>
@@ -66,10 +68,12 @@ export default function AdminHeader() {
 
         {/* Profile */}
         <div className={styles.profile}>
-          <div className={styles.avatar}>A</div>
+          <div className={styles.avatar}>
+            {user?.name ? user.name.charAt(0).toUpperCase() : <UserIcon size={18} />}
+          </div>
           <div className={styles.profileInfo}>
-            <span className={styles.profileName}>Admin</span>
-            <span className={styles.profileRole}>Administrator</span>
+            <span className={styles.profileName}>{user?.name || 'User'}</span>
+            <span className={styles.profileRole}>{user?.role || 'Guest'}</span>
           </div>
         </div>
 

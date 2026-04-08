@@ -1,324 +1,165 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Plus, Search, Loader2, Pencil, Trash2, Calendar } from 'lucide-react'
+import { Plus, Pencil, Trash2, Calendar } from 'lucide-react'
+import { toast } from 'sonner'
 import { DataTable, Column } from '@/components/ui/DataTable'
 import { Modal } from '@/components/ui/Modal'
+import { Button } from '@/components/ui/Button'
+import { SearchInput } from '@/components/ui/SearchInput'
 import { formatDate } from '@/lib/utils'
-import styles from './page.module.css'
+import shared from '@/styles/page.module.css'
 
 export default function TahunAjaranPage() {
   const [data, setData] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-
-  // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
   const [editId, setEditId] = useState<string | null>(null)
-
-  // Form State
-  const [formData, setFormData] = useState({
-    nama: '',
-    tanggalMulai: '',
-    tanggalSelesai: '',
-    isActive: false,
-  })
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; nama: string } | null>(null)
+  const [formData, setFormData] = useState({ nama: '', tanggalMulai: '', tanggalSelesai: '', isActive: false })
 
   const fetchTA = async () => {
     setLoading(true)
     try {
-      const url = searchQuery 
-        ? `/api/data-master/tahun-ajaran?search=${encodeURIComponent(searchQuery)}` 
-        : '/api/data-master/tahun-ajaran'
+      const url = searchQuery ? `/api/data-master/tahun-ajaran?search=${encodeURIComponent(searchQuery)}` : '/api/data-master/tahun-ajaran'
       const res = await fetch(url)
       const json = await res.json()
-      if (json.data) {
-        setData(json.data)
-      }
-    } catch (e) {
-      console.error(e)
-    } finally {
-      setLoading(false)
-    }
+      if (json.data) setData(json.data)
+    } catch { toast.error('Gagal memuat data') } finally { setLoading(false) }
   }
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      fetchTA()
-    }, 300)
-    return () => clearTimeout(timer)
+    const t = setTimeout(fetchTA, 300)
+    return () => clearTimeout(t)
   }, [searchQuery])
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target
-    if (type === 'checkbox') {
-        const checked = (e.target as HTMLInputElement).checked
-        setFormData(prev => ({ ...prev, [name]: checked }))
-    } else {
-        setFormData(prev => ({ ...prev, [name]: value }))
-    }
+    setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value }))
   }
 
   const openAddModal = () => {
-    setEditId(null)
-    setFormData({ 
-        nama: '', 
-        tanggalMulai: '', 
-        tanggalSelesai: '', 
-        isActive: false 
-    })
-    setErrorMsg('')
-    setIsModalOpen(true)
+    setEditId(null); setFormData({ nama: '', tanggalMulai: '', tanggalSelesai: '', isActive: false }); setErrorMsg(''); setIsModalOpen(true)
   }
 
   const openEditModal = (row: any) => {
     setEditId(row.id)
-    setFormData({
-        nama: row.nama,
-        tanggalMulai: row.tanggalMulai.split('T')[0],
-        tanggalSelesai: row.tanggalSelesai.split('T')[0],
-        isActive: row.isActive,
-    })
-    setErrorMsg('')
-    setIsModalOpen(true)
+    setFormData({ nama: row.nama, tanggalMulai: row.tanggalMulai.split('T')[0], tanggalSelesai: row.tanggalSelesai.split('T')[0], isActive: row.isActive })
+    setErrorMsg(''); setIsModalOpen(true)
   }
 
-  const handleDelete = async (id: string, name: string) => {
-    if (!window.confirm(`Apakah Anda yakin ingin menghapus tahun ajaran "${name}"?`)) return
-
+  const handleDelete = async () => {
+    if (!deleteTarget) return
     try {
-        const res = await fetch(`/api/data-master/tahun-ajaran/${id}`, { method: 'DELETE' })
-        const json = await res.json()
-
-        if (!res.ok) {
-            alert(json.error || 'Gagal menghapus data')
-        } else {
-            alert('Tahun Ajaran berhasil dihapus')
-            fetchTA()
-        }
-    } catch (error) {
-        alert('Terjadi kesalahan server.')
-    }
+      const res = await fetch(`/api/data-master/tahun-ajaran/${deleteTarget.id}`, { method: 'DELETE' })
+      const json = await res.json()
+      if (!res.ok) toast.error(json.error || 'Gagal menghapus')
+      else { toast.success('Tahun ajaran berhasil dihapus'); fetchTA() }
+    } catch { toast.error('Terjadi kesalahan server') }
+    finally { setDeleteTarget(null) }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    setErrorMsg('')
-
+    e.preventDefault(); setIsSubmitting(true); setErrorMsg('')
     try {
       const isEditing = !!editId
-      const url = isEditing ? `/api/data-master/tahun-ajaran/${editId}` : '/api/data-master/tahun-ajaran'
-      const method = isEditing ? 'PUT' : 'POST'
-
-      const res = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      })
-
+      const res = await fetch(
+        isEditing ? `/api/data-master/tahun-ajaran/${editId}` : '/api/data-master/tahun-ajaran',
+        { method: isEditing ? 'PUT' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) }
+      )
       const json = await res.json()
-
-      if (!res.ok) {
-        setErrorMsg(json.error || 'Terjadi kesalahan')
-      } else {
-        setIsModalOpen(false)
-        fetchTA()
-        alert(json.message)
-      }
-    } catch (e) {
-      setErrorMsg('Gagal terhubung ke server')
-    } finally {
-      setIsSubmitting(false)
-    }
+      if (!res.ok) setErrorMsg(json.error || 'Terjadi kesalahan')
+      else { setIsModalOpen(false); fetchTA(); toast.success(json.message) }
+    } catch { setErrorMsg('Gagal terhubung ke server') }
+    finally { setIsSubmitting(false) }
   }
 
   const columns: Column<any>[] = [
     {
       header: 'Tahun Ajaran',
       accessor: (row) => (
-        <div className={styles.userCell}>
-          <div className={styles.avatar}>
-            <Calendar size={16} />
-          </div>
+        <div className={shared.userCell}>
+          <div className={shared.avatar}><Calendar size={16} /></div>
           <div>
-            <div className={styles.name}>{row.nama}</div>
-            <div className={styles.username}>Rentang Operasional</div>
+            <div className={shared.cellName}>{row.nama}</div>
+            <div className={shared.cellSub}>{formatDate(row.tanggalMulai)} — {formatDate(row.tanggalSelesai)}</div>
           </div>
         </div>
       ),
     },
     {
-      header: 'Tanggal Mulai',
-      accessor: (row) => formatDate(row.tanggalMulai),
-    },
-    {
-      header: 'Tanggal Selesai',
-      accessor: (row) => formatDate(row.tanggalSelesai),
-    },
-    {
       header: 'Status',
       accessor: (row) => (
-        <span className={styles.statusBadge} data-active={row.isActive}>
+        <span className={`${shared.statusBadge} ${row.isActive ? shared.statusActive : shared.statusNeutral}`}>
           {row.isActive ? 'Sedang Aktif' : 'Non-Aktif'}
         </span>
       ),
     },
     {
-      header: 'Aksi',
-      align: 'center',
-      width: '180px',
+      header: 'Aksi', align: 'center', width: '120px',
       accessor: (row) => (
         <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
-          <button 
-            className={styles.actionBtn} 
-            title="Edit"
-            onClick={() => openEditModal(row)}
-            style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', backgroundColor: 'var(--bg-hover)', padding: '0.25rem 0.625rem', borderRadius: 'var(--radius-md)' }}
-          >
-            <Pencil size={14} />
-            <span style={{ fontSize: '0.75rem', fontWeight: 500 }}>Edit</span>
-          </button>
-          <button 
-            className={styles.actionBtn} 
-            style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: 'var(--danger-500)', backgroundColor: 'var(--danger-50)', padding: '0.25rem 0.625rem', borderRadius: 'var(--radius-md)' }}
-            title="Hapus"
-            onClick={() => handleDelete(row.id, row.nama)}
-          >
-            <Trash2 size={14} />
-            <span style={{ fontSize: '0.75rem', fontWeight: 500 }}>Hapus</span>
-          </button>
+          <button className={shared.actionBtn} onClick={() => openEditModal(row)} title="Edit"><Pencil size={14} /></button>
+          <button className={`${shared.actionBtn} ${shared.actionBtnDanger}`} onClick={() => setDeleteTarget({ id: row.id, nama: row.nama })} title="Hapus"><Trash2 size={14} /></button>
         </div>
       ),
     },
   ]
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
+    <div className={shared.container}>
+      <div className={shared.header}>
         <div>
-          <h1 className={styles.title}>Data Tahun Ajaran</h1>
-          <p className={styles.subtitle}>Atur periode tahun ajaran aktif sistem</p>
+          <h1 className={shared.title}>Data Tahun Ajaran</h1>
+          <p className={shared.subtitle}>Atur periode tahun ajaran aktif sistem</p>
         </div>
-        <button 
-          className={styles.addBtn} 
-          onClick={openAddModal}
-        >
-          <Plus size={18} />
-          <span>Tambah Tahun</span>
-        </button>
+        <Button leftIcon={<Plus size={16} />} onClick={openAddModal}>Tambah Tahun</Button>
       </div>
-
-      <div className={styles.toolbar}>
-        <div className={styles.search}>
-          <Search size={18} className={styles.searchIcon} />
-          <input
-            type="text"
-            placeholder="Cari tahun..."
-            className={styles.searchInput}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
+      <div className={shared.toolbar}>
+        <SearchInput placeholder="Cari tahun ajaran..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
       </div>
+      <DataTable columns={columns} data={data} isLoading={loading} emptyMessage="Belum ada data tahun ajaran" />
 
-      <DataTable
-        columns={columns}
-        data={data}
-        isLoading={loading}
-        emptyMessage="Belum ada data tahun ajaran"
-      />
-
-      <Modal 
-        isOpen={isModalOpen} 
-        onClose={() => !isSubmitting && setIsModalOpen(false)}
-        title={editId ? "Edit Tahun Ajaran" : "Tambah Tahun Ajaran Baru"}
-      >
-        <form className={styles.form} onSubmit={handleSubmit}>
-          {errorMsg && (
-            <div className={styles.errorText} style={{ padding: '0.5rem', background: 'rgba(239,68,68,0.1)', borderRadius: '4px' }}>
-              {errorMsg}
-            </div>
-          )}
-          
-          <div className={styles.formGroup}>
-            <label className={styles.label}>Nama Tahun Ajaran</label>
-            <input 
-              required
-              name="nama"
-              value={formData.nama}
-              onChange={handleInputChange}
-              type="text" 
-              className={styles.input} 
-              placeholder="Contoh: 2023/2024" 
-              disabled={isSubmitting}
-            />
+      <Modal isOpen={isModalOpen} onClose={() => !isSubmitting && setIsModalOpen(false)} title={editId ? 'Edit Tahun Ajaran' : 'Tambah Tahun Ajaran Baru'}>
+        <form className={shared.form} onSubmit={handleSubmit}>
+          {errorMsg && <div className={shared.errorAlert}>{errorMsg}</div>}
+          <div className={shared.formGroup}>
+            <label className={shared.formLabel}>Nama Tahun Ajaran <span className="required">*</span></label>
+            <input required name="nama" value={formData.nama} onChange={handleInputChange} className={shared.formInput} placeholder="Contoh: 2024/2025" disabled={isSubmitting} />
           </div>
-
-          <div className={styles.formRow}>
-            <div className={styles.formGroup}>
-              <label className={styles.label}>Tanggal Mulai</label>
-              <input 
-                required
-                name="tanggalMulai"
-                value={formData.tanggalMulai}
-                onChange={handleInputChange}
-                type="date" 
-                className={styles.input} 
-                disabled={isSubmitting}
-              />
+          <div className={shared.formRow}>
+            <div className={shared.formGroup}>
+              <label className={shared.formLabel}>Tanggal Mulai <span className="required">*</span></label>
+              <input required name="tanggalMulai" value={formData.tanggalMulai} onChange={handleInputChange} type="date" className={shared.formInput} disabled={isSubmitting} />
             </div>
-            <div className={styles.formGroup}>
-              <label className={styles.label}>Tanggal Selesai</label>
-              <input 
-                required
-                name="tanggalSelesai"
-                value={formData.tanggalSelesai}
-                onChange={handleInputChange}
-                type="date" 
-                className={styles.input} 
-                disabled={isSubmitting}
-              />
+            <div className={shared.formGroup}>
+              <label className={shared.formLabel}>Tanggal Selesai <span className="required">*</span></label>
+              <input required name="tanggalSelesai" value={formData.tanggalSelesai} onChange={handleInputChange} type="date" className={shared.formInput} disabled={isSubmitting} />
             </div>
           </div>
-
-          <div className={styles.formRow}>
-              <div className="form-group" style={{ flexDirection: 'row', alignItems: 'center', gap: '0.75rem', marginTop: '1rem' }}>
-                  <label className="toggle-switch">
-                    <input 
-                        type="checkbox" 
-                        name="isActive" 
-                        checked={formData.isActive}
-                        onChange={handleInputChange}
-                        className="toggle-input"
-                    />
-                    <div className="toggle-slider"></div>
-                    <span className="toggle-label">Jadikan Tahun Aktif</span>
-                  </label>
-              </div>
-          </div>
-
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '1rem' }}>
-            <button 
-              type="button" 
-              className={styles.actionBtn} 
-              onClick={() => setIsModalOpen(false)}
-              disabled={isSubmitting}
-              style={{ background: 'var(--bg-hover)', color: 'var(--text-color)', padding: '0.625rem 1rem', borderRadius: 'var(--radius-md)' }}
-            >
-              Batal
-            </button>
-            <button 
-              type="submit" 
-              className={styles.submitBtn}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? <Loader2 className={styles.spinner} /> : 'Simpan Tahun'}
-            </button>
+          <label className="toggle-switch">
+            <input type="checkbox" name="isActive" checked={formData.isActive} onChange={handleInputChange} className="toggle-input" />
+            <div className="toggle-slider" />
+            <span className="toggle-label">Jadikan Tahun Aktif</span>
+          </label>
+          <div className={shared.modalFooter}>
+            <Button variant="secondary" type="button" onClick={() => setIsModalOpen(false)} disabled={isSubmitting}>Batal</Button>
+            <Button type="submit" isLoading={isSubmitting}>Simpan Tahun</Button>
           </div>
         </form>
+      </Modal>
+
+      <Modal isOpen={!!deleteTarget} onClose={() => setDeleteTarget(null)} title="Konfirmasi Hapus">
+        <p style={{ color: 'var(--text-secondary)', marginBottom: 'var(--space-6)' }}>
+          Hapus tahun ajaran <strong style={{ color: 'var(--text-primary)' }}>{deleteTarget?.nama}</strong>? Semua kelas dan tagihan terkait akan terpengaruh.
+        </p>
+        <div className={shared.modalFooter}>
+          <Button variant="secondary" onClick={() => setDeleteTarget(null)}>Batal</Button>
+          <Button variant="danger" onClick={handleDelete}>Ya, Hapus</Button>
+        </div>
       </Modal>
     </div>
   )

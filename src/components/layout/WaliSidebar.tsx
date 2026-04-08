@@ -3,17 +3,20 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { 
-  Building2, 
-  LayoutDashboard, 
-  FileText, 
+import {
+  Building2,
+  LayoutDashboard,
+  FileText,
   Landmark,
   User,
   ChevronRight,
-  ChevronLeft
+  ChevronLeft,
+  ShoppingBag,
+  Bell,
+  Newspaper,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import styles from './AdminSidebar.module.css' // We can reuse the same css for now
+import styles from './AdminSidebar.module.css'
 
 interface NavItem {
   label: string
@@ -25,6 +28,9 @@ const navItems: NavItem[] = [
   { label: 'Beranda', href: '/beranda', icon: <LayoutDashboard size={20} /> },
   { label: 'Tagihan Saya', href: '/tagihan-saya', icon: <FileText size={20} /> },
   { label: 'Tabungan Saya', href: '/tabungan-saya', icon: <Landmark size={20} /> },
+  { label: 'E-Kantin', href: '/e-kantin', icon: <ShoppingBag size={20} /> },
+  { label: 'Pengumuman', href: '/pengumuman', icon: <Newspaper size={20} /> },
+  { label: 'Notifikasi', href: '/notifikasi', icon: <Bell size={20} /> },
   { label: 'Profil', href: '/profil', icon: <User size={20} /> },
 ]
 

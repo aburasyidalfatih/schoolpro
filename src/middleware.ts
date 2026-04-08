@@ -26,10 +26,17 @@ export default auth((req) => {
     return NextResponse.redirect(new URL('/login', req.nextUrl))
   }
 
+  // Redirect non-admin users away from admin dashboard
+  if (pathname.startsWith('/dashboard') && isLoggedIn) {
+    const role = (req.auth?.user as any)?.role as string
+    if (role === 'WALI' || role === 'SISWA' || role === 'USER') {
+      return NextResponse.redirect(new URL('/beranda', req.nextUrl))
+    }
+  }
+
   if (isAuthRoute && isLoggedIn) {
     const role = (req.auth?.user as any)?.role as string
-    // Redirect based on role
-    if (role === 'WALI' || role === 'SISWA') {
+    if (role === 'WALI' || role === 'SISWA' || role === 'USER') {
       return NextResponse.redirect(new URL('/beranda', req.nextUrl))
     }
     return NextResponse.redirect(new URL('/dashboard', req.nextUrl))

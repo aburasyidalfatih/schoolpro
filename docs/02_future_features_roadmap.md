@@ -487,3 +487,183 @@ Panel untuk mengelola semua tenant (sekolah) dari satu dashboard.
 ├── AI Predictive Analytics
 └── White-Label
 ```
+
+
+---
+
+## 🔬 Riset Fitur Tambahan — Update April 2026
+
+> Berdasarkan riset kompetitor global (Gradelink, OpenEduCat, InstiKit, Frontline, DreamClass) dan kebutuhan spesifik sekolah Indonesia.
+
+---
+
+## 🎯 Fitur yang Wajib Ada (Gap Analysis)
+
+Fitur-fitur berikut ditemukan di hampir semua platform school management terkemuka, namun **belum ada di SISPRO**:
+
+### 📚 Modul Akademik (Belum Ada)
+
+| Fitur | Prioritas | Deskripsi |
+|:---|:---:|:---|
+| **Absensi Digital** | 🔴 Tinggi | QR Code / RFID / manual. Notifikasi otomatis ke wali jika anak tidak hadir |
+| **Raport Digital** | 🔴 Tinggi | Input nilai guru, generate raport PDF, akses wali via portal |
+| **Jadwal Pelajaran** | 🟡 Medium | Auto-generate jadwal tanpa konflik guru & ruangan |
+| **Manajemen Mata Pelajaran** | 🟡 Medium | CRUD mata pelajaran, assign ke kelas & guru |
+| **Kalender Akademik** | 🟡 Medium | Event, libur, ujian, PPDB dalam satu kalender |
+| **Jadwal Ujian** | 🟡 Medium | Generate jadwal ujian dengan pengawas & ruangan |
+| **Rekap Kehadiran** | 🟡 Medium | Statistik per siswa, kelas, bulan — export Excel/PDF |
+
+### 👨‍🏫 Modul Kepegawaian / HR (Belum Ada)
+
+| Fitur | Prioritas | Deskripsi |
+|:---|:---:|:---|
+| **Data Guru & Staf** | 🔴 Tinggi | Profil lengkap, jabatan, mata pelajaran, kontak |
+| **Absensi Staf** | 🟡 Medium | Check-in/out digital, rekap hadir bulanan |
+| **Cuti & Izin** | 🟡 Medium | Pengajuan online, approval workflow |
+| **Penggajian (Payroll)** | 🟡 Medium | Hitung gaji, tunjangan, potongan, slip gaji digital |
+| **Evaluasi Kinerja** | 🟢 Rendah | Form evaluasi periodik, KPI tracking |
+
+### 🏥 Modul Kesehatan & Kesejahteraan Siswa (Belum Ada)
+
+| Fitur | Prioritas | Deskripsi |
+|:---|:---:|:---|
+| **Rekam Medis Siswa** | 🟡 Medium | Riwayat kesehatan, alergi, golongan darah |
+| **Kunjungan UKS** | 🟢 Rendah | Catat kunjungan, keluhan, tindakan |
+| **Vaksinasi & Imunisasi** | 🟢 Rendah | Tracking status vaksinasi siswa |
+
+### 📦 Modul Inventaris & Aset (Belum Ada)
+
+| Fitur | Prioritas | Deskripsi |
+|:---|:---:|:---|
+| **Database Aset** | 🟡 Medium | Komputer, meja, AC, proyektor, dll |
+| **QR/Barcode Label** | 🟡 Medium | Cetak label untuk setiap aset |
+| **Peminjaman Aset** | 🟡 Medium | Guru/staf pinjam aset → tracking |
+| **Pemeliharaan** | 🟢 Rendah | Jadwal maintenance, tiket perbaikan |
+| **Depresiasi Aset** | 🟢 Rendah | Hitung penyusutan nilai otomatis |
+
+### 🎓 Modul Alumni (Belum Ada)
+
+| Fitur | Prioritas | Deskripsi |
+|:---|:---:|:---|
+| **Database Alumni** | 🟡 Medium | Otomatis dari data siswa yang lulus |
+| **Direktori Alumni** | 🟡 Medium | Cari alumni per angkatan, jurusan |
+| **Portal Alumni** | 🟢 Rendah | Update karir, networking, donasi |
+| **Testimoni PPDB** | 🟢 Rendah | Alumni post testimoni untuk calon siswa baru |
+
+### 📱 Modul Mobile & Aksesibilitas (Belum Ada)
+
+| Fitur | Prioritas | Deskripsi |
+|:---|:---:|:---|
+| **PWA (Progressive Web App)** | 🔴 Tinggi | Install ke homescreen, offline mode, push notification |
+| **Mobile-First Responsive** | 🔴 Tinggi | Semua halaman optimal di HP |
+| **Notifikasi Push** | 🟡 Medium | Browser push untuk tagihan, pengumuman, absensi |
+| **Dark Mode** | ✅ Sudah Ada | — |
+
+### 🔐 Modul Keamanan & Compliance (Sebagian Ada)
+
+| Fitur | Prioritas | Deskripsi |
+|:---|:---:|:---|
+| **Two-Factor Auth (2FA)** | 🟡 Medium | OTP via WhatsApp/SMS untuk login admin |
+| **Enkripsi Data Sensitif** | 🟡 Medium | Enkripsi field NIS, alamat, kontak |
+| **Audit Trail Lengkap** | ✅ Sebagian | Log aktivitas sudah ada, perlu diperluas |
+| **Backup Otomatis** | 🟡 Medium | Backup harian dengan point-in-time recovery |
+| **GDPR/UU PDP Compliance** | 🟢 Rendah | Consent management, data deletion request |
+
+### 💳 Modul Keuangan Lanjutan (Belum Ada)
+
+| Fitur | Prioritas | Deskripsi |
+|:---|:---:|:---|
+| **Cicilan Tagihan** | 🔴 Tinggi | Siswa bisa bayar tagihan besar secara cicilan |
+| **Beasiswa & Potongan** | 🔴 Tinggi | Kelola beasiswa, diskon per siswa/kategori |
+| **Dana BOS** | 🟡 Medium | Tracking penggunaan dana BOS, laporan ke dinas |
+| **Anggaran Sekolah** | 🟡 Medium | RKAS (Rencana Kegiatan Anggaran Sekolah) |
+| **Laporan Pajak** | 🟢 Rendah | PPh 21 guru, laporan keuangan untuk audit |
+
+### 🌐 Modul Portal Publik (Belum Ada)
+
+| Fitur | Prioritas | Deskripsi |
+|:---|:---:|:---|
+| **Website Sekolah** | 🟡 Medium | Landing page sekolah dengan CMS sederhana |
+| **Galeri Foto/Video** | 🟡 Medium | Dokumentasi kegiatan sekolah |
+| **Profil Guru** | 🟢 Rendah | Halaman profil guru publik |
+| **Prestasi Sekolah** | 🟢 Rendah | Showcase prestasi siswa & sekolah |
+
+---
+
+## 🏆 Competitive Advantage Matrix (Updated)
+
+| Fitur | SISPRO | AdminSekolah | SchoolPay | Jibas | InstiKit |
+|:---|:---:|:---:|:---:|:---:|:---:|
+| Multi-Tenant SaaS | ✅ | ✅ | ❌ | ❌ | ❌ |
+| PPDB Online Lengkap | ✅ | ✅ | ❌ | ✅ | ✅ |
+| E-Kantin QR | 🔜 | ❌ | ❌ | ❌ | ❌ |
+| AI Chatbot WA | 🔜 | ❌ | ❌ | ❌ | ❌ |
+| Tabungan Siswa | 🔜 | ❌ | ✅ | ❌ | ❌ |
+| Absensi Digital | 🔜 | ❌ | ❌ | ✅ | ✅ |
+| Raport Digital | 🔜 | ❌ | ❌ | ✅ | ✅ |
+| HR & Payroll | 🔜 | ❌ | ❌ | ❌ | ✅ |
+| Inventaris Aset | 🔜 | ❌ | ❌ | ❌ | ✅ |
+| Dana BOS | 🔜 | ❌ | ❌ | ✅ | ❌ |
+| PWA Mobile | 🔜 | ❌ | ❌ | ❌ | ✅ |
+| AI Predictive | 🔜 | ❌ | ❌ | ❌ | ❌ |
+| Plugin Marketplace | 🔜 | ❌ | ❌ | ❌ | ❌ |
+| White-Label | 🔜 | ❌ | ❌ | ❌ | ❌ |
+
+> ✅ = Ada | 🔜 = Direncanakan | ❌ = Tidak Ada
+
+---
+
+## 📊 Roadmap Prioritas Lengkap (Revised)
+
+```
+FASE SEKARANG (MVP Core):
+├── ✅ Data Master
+├── ✅ PPDB Online
+├── 🔄 Tagihan & Pembayaran
+├── 🔄 Tabungan Siswa
+└── 🔄 Laporan Keuangan
+
+FASE 2 — Akademik Dasar:
+├── Absensi Digital (QR + Manual)
+├── Raport Digital (Kurikulum Merdeka)
+├── Jadwal Pelajaran
+└── Kalender Akademik
+
+FASE 3 — Operasional:
+├── E-Kantin (QR + Saldo Tabungan)
+├── Inventaris & Aset
+├── HR & Kepegawaian
+└── Dana BOS & Anggaran
+
+FASE 4 — Komunikasi & Engagement:
+├── PWA Mobile App
+├── Notifikasi WhatsApp
+├── Portal Alumni
+└── Gamifikasi Siswa
+
+FASE 5 — SaaS Platform:
+├── Super Admin Panel
+├── Billing & Subscription
+├── Marketplace Plugin
+└── White-Label
+
+FASE 6 — AI & Advanced:
+├── AI Chatbot WhatsApp
+├── Prediksi Tunggakan
+├── AI Report Generator
+└── Fraud Detection
+```
+
+---
+
+## 💡 Fitur Unik yang Belum Ada di Kompetitor Manapun
+
+Ini adalah fitur diferensiasi yang bisa menjadikan SISPRO benar-benar unggul:
+
+1. **Smart Invoice** — Invoice yang otomatis mendeteksi metode pembayaran terbaik berdasarkan histori wali
+2. **Parent Engagement Score** — Skor keterlibatan orang tua (seberapa aktif cek tagihan, hadir rapat, dll)
+3. **Student Financial Health Dashboard** — Visualisasi kesehatan keuangan per siswa (tunggakan, tabungan, tren)
+4. **Bulk WhatsApp Scheduler** — Jadwalkan pengiriman WA massal ke semua wali di waktu optimal
+5. **Digital Wallet Siswa** — Saldo multi-purpose: bayar tagihan, kantin, kegiatan, dari satu dompet
+6. **Open API** — Sekolah bisa integrasikan dengan sistem lain (absensi biometrik, CCTV, dll)
+7. **Offline-First** — Aplikasi tetap bisa dipakai saat internet mati, sync otomatis saat online

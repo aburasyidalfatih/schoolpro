@@ -897,3 +897,97 @@ src/features/<module>/
 - Verifikasi visual setiap halaman via browser subagent
 - Screenshot comparison untuk design consistency
 - Accessibility check (keyboard navigation, contrast ratio)
+
+---
+
+## 📊 Status Modul — Update Terakhir (April 2026)
+
+> Audit menyeluruh berdasarkan brainstorming fitur yang dibutuhkan vs kondisi aktual kodebase.
+
+### Legenda
+- ✅ **Selesai** — Halaman, API, dan logika bisnis sudah berfungsi
+- ⚠️ **Sebagian** — Ada tapi belum lengkap
+- ❌ **Belum Ada** — Belum diimplementasikan
+
+---
+
+### 🟢 Modul yang Sudah Selesai
+
+| Modul | Halaman Admin | Halaman Wali/Siswa | API | Catatan |
+|:---|:---:|:---:|:---:|:---|
+| **Modul Data Sekolah** | ✅ | — | ✅ | Petugas, Unit, Tahun Ajaran, Kelas, Siswa, Kategori Tagihan, Rekening |
+| **Modul Web Portal PPDB** | ✅ | ✅ | ✅ | Landing, form singkat, invoice, form lengkap, meja admin, verifikasi, sinkronisasi, pengaturan biaya |
+| **Dasbor Petugas** | ✅ | — | ✅ | Layout, sidebar, header, stat cards, quick actions |
+| **Dasbor Wali/Siswa** | — | ✅ | ✅ | Beranda dengan progress PPDB 7 tahap, tagihan-saya |
+
+---
+
+### 🟡 Modul yang Sebagian Ada
+
+| Modul | Status | Yang Sudah Ada | Yang Masih Kurang |
+|:---|:---:|:---|:---|
+| **Modul Tagihan Siswa** | ⚠️ | Halaman skeleton `/tagihan`, model DB, kategori tagihan | Generate tagihan otomatis per kelas/bulan, bulk create, filter, potongan |
+| **Modul Pembayaran Siswa** | ⚠️ | Model DB `Pembayaran`, API parsial | Halaman `/pembayaran` admin, input tunai/transfer, cetak nota, verifikasi non-tunai |
+| **Modul Rekap Pembayaran** | ⚠️ | Model DB `TransaksiKas` | Halaman `/transaksi` belum dibangun |
+| **Modul Laporan Keuangan** | ⚠️ | — | Halaman `/laporan`, export PDF & Excel |
+| **Modul Berita/Pengumuman** | ⚠️ | Model DB `Berita`, `Pengumuman` | Halaman admin CRUD, portal publik, rich editor TipTap |
+| **Modul Pengaturan Sekolah** | ⚠️ | Sidebar menu ada | Halaman `/pengaturan/umum`, tampilan, portal, sistem, notifikasi |
+
+---
+
+### 🔴 Modul yang Belum Ada
+
+| Modul | Prioritas | Catatan |
+|:---|:---:|:---|
+| **Modul Tabungan Siswa** | 🔴 Tinggi | Model DB sudah ada (`Tabungan`, `TransaksiTabungan`). Perlu: setoran, penarikan, riwayat, QR code |
+| **Modul Pembayaran Digital** | 🟡 Medium | Integrasi Tripay sudah ada di rekening. Perlu: flow payment gateway, callback, VA/QRIS |
+| **Modul Notifikasi WhatsApp** | 🟡 Medium | Belum ada. Perlu: integrasi Fonnte/WA Gateway, template pesan, trigger otomatis |
+| **Modul Pengingat Tagihan** | 🟡 Medium | Sidebar ada (`/peralatan/pengingat-tagihan`). Perlu: scheduler, template, kirim WA/email |
+| **Modul E-Kantin** | 🟢 Rendah | Roadmap Wave 3. Perlu: scan QR, debit saldo tabungan, menu digital, laporan penjualan |
+
+---
+
+### 📋 Urutan Pengerjaan yang Direkomendasikan
+
+```
+🔴 FASE BERIKUTNYA — Core Keuangan (Prioritas Tinggi):
+├── 1. Tagihan Siswa — generate otomatis, bulk create, filter, potongan
+├── 2. Pembayaran Siswa — input tunai/transfer, cetak nota, verifikasi
+├── 3. Rekap Transaksi & Arus Kas
+└── 4. Tabungan Siswa — setoran, penarikan, riwayat
+
+🟡 FASE SELANJUTNYA — Pelaporan & Komunikasi:
+├── 5. Laporan Keuangan — PDF & Excel
+├── 6. Berita & Pengumuman — CMS + portal publik
+└── 7. Pengaturan Sekolah — profil, tampilan, notifikasi
+
+🟢 FASE STRATEGIS — Integrasi & Fitur Lanjutan:
+├── 8. Notifikasi WhatsApp
+├── 9. Pembayaran Digital (Tripay)
+├── 10. Pengingat Tagihan otomatis
+└── 11. E-Kantin
+```
+
+---
+
+### 🎯 Checklist Fitur Lengkap (Brainstorming April 2026)
+
+| # | Fitur | Status |
+|:--|:---|:---:|
+| 1 | Modul Data Sekolah | ✅ |
+| 2 | Modul Tagihan Siswa | ⚠️ |
+| 3 | Modul Pembayaran Siswa | ⚠️ |
+| 4 | Modul Rekap Pembayaran | ⚠️ |
+| 5 | Modul Laporan Keuangan | ⚠️ |
+| 6 | Modul Tabungan Siswa | ❌ |
+| 7 | Modul Pembayaran Digital | ❌ |
+| 8 | Modul Pengaturan Sekolah | ⚠️ |
+| 9 | Modul Web Portal PPDB | ✅ |
+| 10 | Modul Notifikasi WhatsApp | ❌ |
+| 11 | Modul Pengingat Tagihan | ❌ |
+| 12 | Modul Berita/Pengumuman | ⚠️ |
+| 13 | Modul E-Kantin | ❌ |
+| 14 | Akses Dasbor Petugas | ✅ |
+| 15 | Akses Dasbor Wali/Siswa | ✅ |
+
+**Progress: 4/15 selesai, 6/15 sebagian, 5/15 belum ada**
