@@ -2,7 +2,7 @@
 inclusion: always
 ---
 
-# SISPRO Design System — Panduan Konsistensi
+# SchoolPro Design System — Panduan Konsistensi
 
 ## CSS Variables yang Benar
 

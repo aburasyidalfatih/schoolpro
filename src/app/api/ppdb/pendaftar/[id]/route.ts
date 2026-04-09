@@ -24,7 +24,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
             persyaratanBerkas: true,
           },
         },
-        tagihanPpdbs: true,
+        tagihanPpdbs: { include: { pembayarans: { orderBy: { createdAt: 'desc' } } } },
         berkas: { include: { persyaratan: true } },
         user: { select: { nama: true, email: true, username: true } },
       },
@@ -73,8 +73,8 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
         dataOrangtua: dataOrangtua ?? pendaftar.dataOrangtua,
         jalurPendaftaran: jalurPendaftaran ?? pendaftar.jalurPendaftaran,
         jurusanPilihan: jurusanPilihan ?? pendaftar.jurusanPilihan,
-        // Jika form lengkap disubmit, ubah status ke TERVERIFIKASI (menunggu review admin)
-        ...(dataFormulir && { status: 'TERVERIFIKASI' }),
+        // Jika form lengkap disubmit, ubah status ke MENUNGGU (menunggu review admin)
+        ...(dataFormulir && pendaftar.status === 'MENUNGGU' && { status: 'MENUNGGU' }),
       },
     })
 

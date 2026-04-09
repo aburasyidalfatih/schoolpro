@@ -18,7 +18,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     const { id } = await params
     const tenantId = userSession.tenantId
     const body = await req.json()
-    const { status, pesanPengumuman, jadwalDaftarUlang } = body
+    const { status, pesan, jadwalDaftarUlang } = body
 
     const validStatuses = ['DITERIMA', 'DITOLAK']
     if (!validStatuses.includes(status)) {
@@ -38,7 +38,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
           ...existingFormulir,
           pengumuman: {
             status,
-            pesan: pesanPengumuman || (status === 'DITERIMA'
+            pesan: pesan || (status === 'DITERIMA'
               ? 'Selamat! Anda dinyatakan DITERIMA. Silakan lakukan daftar ulang sesuai jadwal.'
               : 'Mohon maaf, Anda dinyatakan tidak lolos seleksi pada gelombang ini.'),
             jadwalDaftarUlang: jadwalDaftarUlang || null,

@@ -1,4 +1,4 @@
-# SISPRO Architecture & Agent Rules
+# SchoolPro Architecture & Agent Rules
 
 ## Core Principles
 1. **Multi-Tenant First**: Every action must be scoped to a `tenantId`. Data isolation between schools is the highest priority.
@@ -33,4 +33,4 @@
 - **Data Tables**: Use `TanStack Table` for complex stateful tables (sorting, filtering, large datasets). Use a custom UI layer to maintain Vanilla CSS aesthetics.
 - **Notifications**: Use `Sonner` for all toasts and feedback. It is clean, accessible, and supports premium animations.
 - **Excel**: Use `ExcelJS` for all data imports/exports. Always provide a template for imports.
-Build SISPRO to be the gold standard of School Information Systems. If a feature looks basic, improve the design. If code is repetitive, create a reusable utility or component. Prioritize data integrity and user experience above all.
+Build SchoolPro to be the gold standard of School Information Systems. If a feature looks basic, improve the design. If code is repetitive, create a reusable utility or component. Prioritize data integrity and user experience above all.

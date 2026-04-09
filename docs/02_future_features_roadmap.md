@@ -1,6 +1,6 @@
-# 🚀 SISPRO — Roadmap Fitur Masa Depan
+# 🚀 SchoolPro — Roadmap Fitur Masa Depan
 
-> Hasil riset fitur tambahan untuk pengembangan jangka panjang SISPRO sebagai platform SaaS Edukasi terdepan di Indonesia.
+> Hasil riset fitur tambahan untuk pengembangan jangka panjang SchoolPro sebagai platform SaaS Edukasi terdepan di Indonesia.
 
 ---
 
@@ -10,7 +10,7 @@ Fitur-fitur ini dibagi menjadi **6 gelombang pengembangan** setelah MVP selesai,
 
 ```mermaid
 timeline
-    title SISPRO Evolution Roadmap
+    title SchoolPro Evolution Roadmap
     MVP (Sekarang) : Data Master, Tagihan, Pembayaran
                    : Arus Kas, Tabungan, PPDB
                    : Laporan, Pengaturan
@@ -91,7 +91,7 @@ sequenceDiagram
     actor Wali as Wali Murid
     participant WA as WhatsApp
     participant Bot as AI Chatbot
-    participant DB as SISPRO Database
+    participant DB as SchoolPro Database
     
     Wali->>WA: "Tagihan Budi bulan April?"
     WA->>Bot: Incoming message
@@ -190,7 +190,7 @@ Sistem kantin cashless terintegrasi dengan tabungan siswa.
 | **Spending Limit** | Wali set batas belanja harian anak |
 | **Riwayat Belanja** | Wali pantau pengeluaran anak di kantin |
 | **Dashboard Kantin** | Penjualan harian, menu populer, omzet |
-| **Integrasi Tabungan** | Saldo tabungan SISPRO = saldo E-Kantin |
+| **Integrasi Tabungan** | Saldo tabungan SchoolPro = saldo E-Kantin |
 
 ```mermaid
 graph LR
@@ -367,11 +367,11 @@ Panel untuk mengelola semua tenant (sekolah) dari satu dashboard.
 
 | Fitur | Detail |
 |:--|:--|
-| **Custom Domain** | sekolah.sch.id → tanpa branding SISPRO |
+| **Custom Domain** | sekolah.sch.id → tanpa branding SchoolPro |
 | **Custom Logo & Branding** | Logo, favicon, warna, font custom |
 | **Custom Email Domain** | noreply@sekolah.sch.id |
 | **Branded PDF** | Kwitansi, raport, surat dengan header sekolah |
-| **Reseller Program** | Partner bisa jual SISPRO dengan brand mereka |
+| **Reseller Program** | Partner bisa jual SchoolPro dengan brand mereka |
 
 ---
 
@@ -446,7 +446,7 @@ Panel untuk mengelola semua tenant (sekolah) dari satu dashboard.
 
 ## 🏆 Competitive Advantage Matrix
 
-| Fitur | SISPRO | AdminSekolah | SchoolPay | Jibas |
+| Fitur | SchoolPro | AdminSekolah | SchoolPay | Jibas |
 |:--|:---:|:---:|:---:|:---:|
 | Multi-Tenant SaaS | ✅ | ✅ | ❌ | ❌ |
 | PPDB Online | ✅ | ✅ | ❌ | ✅ |
@@ -462,7 +462,7 @@ Panel untuk mengelola semua tenant (sekolah) dari satu dashboard.
 | White-Label | ✅ | ❌ | ❌ | ❌ |
 | Predictive AI | ✅ | ❌ | ❌ | ❌ |
 
-> 🎯 **SISPRO berpotensi menjadi platform SaaS Edukasi paling lengkap di Indonesia** dengan roadmap ini.
+> 🎯 **SchoolPro berpotensi menjadi platform SaaS Edukasi paling lengkap di Indonesia** dengan roadmap ini.
 
 ---
 
@@ -499,7 +499,7 @@ Panel untuk mengelola semua tenant (sekolah) dari satu dashboard.
 
 ## 🎯 Fitur yang Wajib Ada (Gap Analysis)
 
-Fitur-fitur berikut ditemukan di hampir semua platform school management terkemuka, namun **belum ada di SISPRO**:
+Fitur-fitur berikut ditemukan di hampir semua platform school management terkemuka, namun **belum ada di SchoolPro**:
 
 ### 📚 Modul Akademik (Belum Ada)
 
@@ -592,7 +592,7 @@ Fitur-fitur berikut ditemukan di hampir semua platform school management terkemu
 
 ## 🏆 Competitive Advantage Matrix (Updated)
 
-| Fitur | SISPRO | AdminSekolah | SchoolPay | Jibas | InstiKit |
+| Fitur | SchoolPro | AdminSekolah | SchoolPay | Jibas | InstiKit |
 |:---|:---:|:---:|:---:|:---:|:---:|
 | Multi-Tenant SaaS | ✅ | ✅ | ❌ | ❌ | ❌ |
 | PPDB Online Lengkap | ✅ | ✅ | ❌ | ✅ | ✅ |
@@ -658,7 +658,7 @@ FASE 6 — AI & Advanced:
 
 ## 💡 Fitur Unik yang Belum Ada di Kompetitor Manapun
 
-Ini adalah fitur diferensiasi yang bisa menjadikan SISPRO benar-benar unggul:
+Ini adalah fitur diferensiasi yang bisa menjadikan SchoolPro benar-benar unggul:
 
 1. **Smart Invoice** — Invoice yang otomatis mendeteksi metode pembayaran terbaik berdasarkan histori wali
 2. **Parent Engagement Score** — Skor keterlibatan orang tua (seberapa aktif cek tagihan, hadir rapat, dll)

@@ -51,7 +51,7 @@ export default function FormSingkatPage() {
     try {
       const result = await submitFormSingkat(formData)
       if (result.error) { setError(result.error); setLoading(false) }
-      else router.push('/beranda')
+      else router.push('/app/beranda')
     } catch {
       setError('Terjadi kesalahan sistem')
       setLoading(false)

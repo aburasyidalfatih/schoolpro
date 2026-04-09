@@ -9,7 +9,7 @@ export default function ThemeToggle() {
 
   useEffect(() => {
     // Check saved preference or system preference
-    const saved = localStorage.getItem('sispro-theme') as 'light' | 'dark' | null
+    const saved = localStorage.getItem('schoolpro-theme') as 'light' | 'dark' | null
     const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
     const initial = saved || (systemDark ? 'dark' : 'light')
     setTheme(initial)
@@ -20,7 +20,7 @@ export default function ThemeToggle() {
     const next = theme === 'light' ? 'dark' : 'light'
     setTheme(next)
     document.documentElement.setAttribute('data-theme', next)
-    localStorage.setItem('sispro-theme', next)
+    localStorage.setItem('schoolpro-theme', next)
   }
 
   return (

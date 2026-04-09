@@ -51,7 +51,7 @@ export default async function PpdbLayout({
         <div className={styles.footerContainer}>
           <p className={styles.copy}>
             &copy; {new Date().getFullYear()} {tenant.nama}. Powered by{' '}
-            <span className={styles.sisproBrand}>SISPRO</span>
+            <span className={styles.schoolproBrand}>SchoolPro</span>
           </p>
         </div>
       </footer>

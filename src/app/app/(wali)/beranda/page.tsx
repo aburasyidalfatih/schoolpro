@@ -51,10 +51,10 @@ function calcProgress(p: any) {
 function getNextAction(p: any, prog: ReturnType<typeof calcProgress>) {
   if (prog.isSiswa)      return null
   if (prog.isDitolak)    return null
-  if (!prog.steps[1].done) return { href: `/ppdb/invoice/${p.id}`,       label: 'Bayar Formulir',    variant: 'warning' }
-  if (!prog.steps[2].done) return { href: `/ppdb/form-lengkap/${p.id}`,  label: 'Lengkapi Formulir', variant: 'primary' }
-  if (prog.steps[2].done && !prog.steps[3].done) return { href: `/ppdb/form-lengkap/${p.id}`, label: 'Edit Data', variant: 'secondary' }
-  if (prog.isDiterima && !prog.steps[5].done) return { href: `/ppdb/invoice/${p.id}`, label: 'Bayar Daftar Ulang', variant: 'primary' }
+  if (!prog.steps[1].done) return { href: `/app/ppdb/invoice/${p.id}`,       label: 'Bayar Formulir',    variant: 'warning' }
+  if (!prog.steps[2].done) return { href: `/app/ppdb/form-lengkap/${p.id}`,  label: 'Lengkapi Formulir', variant: 'primary' }
+  if (prog.steps[2].done && !prog.steps[3].done) return { href: `/app/ppdb/form-lengkap/${p.id}`, label: 'Edit Data', variant: 'secondary' }
+  if (prog.isDiterima && !prog.steps[5].done) return { href: `/app/ppdb/invoice/${p.id}`, label: 'Bayar Daftar Ulang', variant: 'primary' }
   return null
 }
 
@@ -100,7 +100,7 @@ export default async function BerandaPage() {
                 <h2 className={styles.emptyTitle}>Belum Ada Pendaftaran</h2>
                 <p className={styles.emptyDesc}>Mulai proses pendaftaran dengan mengisi form singkat.</p>
               </div>
-              <Link href="/ppdb/form-singkat" className={`${styles.btnAction} ${styles.btnPrimary}`} style={{ width: 'auto', paddingLeft: '2rem', paddingRight: '2rem' }}>
+              <Link href="/app/ppdb/form-singkat" className={`${styles.btnAction} ${styles.btnPrimary}`} style={{ width: 'auto', paddingLeft: '2rem', paddingRight: '2rem' }}>
                 Mulai Pendaftaran <ArrowRight size={18} />
               </Link>
             </div>
@@ -111,7 +111,7 @@ export default async function BerandaPage() {
                   <FileText size={18} style={{ color: 'var(--primary-600)' }} />
                   Pendaftaran Saya
                 </h3>
-                <Link href="/ppdb/form-singkat" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 'var(--text-sm)', fontWeight: 700, color: 'var(--primary-600)', textDecoration: 'none' }}>
+                <Link href="/app/ppdb/form-singkat" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 'var(--text-sm)', fontWeight: 700, color: 'var(--primary-600)', textDecoration: 'none' }}>
                   <Plus size={14} /> Daftarkan Lagi
                 </Link>
               </div>
@@ -227,7 +227,7 @@ export default async function BerandaPage() {
                           {/* Tombol Edit Data — selalu ada selama belum jadi siswa & belum ditolak */}
                           {!prog.isSiswa && !prog.isDitolak && prog.steps[1].done && (
                             <Link
-                              href={`/ppdb/form-lengkap/${p.id}`}
+                              href={`/app/ppdb/form-lengkap/${p.id}`}
                               className={`${styles.btnAction} ${styles.btnSecondary}`}
                               style={{ padding: '0.4rem 0.875rem', fontSize: 'var(--text-xs)', gap: 4 }}
                             >

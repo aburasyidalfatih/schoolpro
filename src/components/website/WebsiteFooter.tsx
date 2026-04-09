@@ -83,7 +83,7 @@ export default function WebsiteFooter({ tenant }: Props) {
       <hr className={styles.footerDivider} />
       <div className={styles.footerBottom}>
         <span>© {new Date().getFullYear()} {tenant.nama}. Hak cipta dilindungi.</span>
-        <span>Powered by <span className={styles.footerBottomBrand}>SISPRO</span></span>
+        <span>Powered by <span className={styles.footerBottomBrand}>SchoolPro</span></span>
       </div>
     </footer>
   )

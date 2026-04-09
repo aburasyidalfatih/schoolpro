@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import {
   ArrowLeft, User, Users, FileText, CheckCircle2, XCircle,
   AlertCircle, RefreshCw, Loader2, ExternalLink, Megaphone,
-  Receipt, Calendar, Send
+  Receipt, Calendar, Send, CreditCard
 } from 'lucide-react'
 import Link from 'next/link'
 import { toast } from 'sonner'
@@ -57,6 +57,21 @@ export default function DetailPendaftarPage({ params }: { params: Promise<{ id: 
   useEffect(() => {
     fetch('/api/data-master/kelas').then(r => r.json()).then(j => setKelases(j.data || []))
   }, [])
+
+  const handleVerifikasiBayar = async (pembayaranId: string, approve: boolean) => {
+    setSubmitting(true)
+    try {
+      const res = await fetch(`/api/ppdb/pembayaran/${pembayaranId}/verifikasi`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ approve }),
+      })
+      const json = await res.json()
+      if (!res.ok) toast.error(json.error)
+      else { toast.success(json.message); fetchData() }
+    } catch { toast.error('Terjadi kesalahan') }
+    finally { setSubmitting(false) }
+  }
 
   const handleVerifikasi = async () => {
     setSubmitting(true)
@@ -145,7 +160,7 @@ export default function DetailPendaftarPage({ params }: { params: Promise<{ id: 
       {/* Header */}
       <div className={shared.header}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
-          <Link href="/ppdb/pendaftar" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, color: 'var(--text-tertiary)', textDecoration: 'none', fontSize: 'var(--text-sm)', fontWeight: 600 }}>
+          <Link href="/app/ppdb/pendaftar" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, color: 'var(--text-tertiary)', textDecoration: 'none', fontSize: 'var(--text-sm)', fontWeight: 600 }}>
             <ArrowLeft size={16} /> Kembali
           </Link>
           <div>
@@ -319,6 +334,46 @@ export default function DetailPendaftarPage({ params }: { params: Promise<{ id: 
               </Button>
             </div>
           </div>
+
+          {/* Verifikasi Bukti Pembayaran */}
+          {(() => {
+            const allPembayaran = data.tagihanPpdbs?.flatMap((t: any) => 
+              (t.pembayarans || []).map((p: any) => ({ ...p, tagihanJenis: t.jenis }))
+            ) || []
+            const pending = allPembayaran.filter((p: any) => p.status === 'PENDING')
+            if (pending.length === 0) return null
+            return (
+              <div className="card" style={{ borderColor: 'var(--warning-200)' }}>
+                <div className="card-header">
+                  <h3 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <CreditCard size={15} style={{ color: 'var(--warning-600)' }} /> Verifikasi Pembayaran
+                  </h3>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
+                  {pending.map((p: any) => (
+                    <div key={p.id} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
+                      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
+                        {p.tagihanJenis === 'PENDAFTARAN' ? 'Biaya Formulir' : 'Daftar Ulang'} — <strong>Rp {Number(p.nominal).toLocaleString('id-ID')}</strong>
+                      </div>
+                      {p.buktiUrl && (
+                        <a href={p.buktiUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 'var(--text-xs)', color: 'var(--primary-600)', fontWeight: 600 }}>
+                          <ExternalLink size={11} /> Lihat Bukti Transfer
+                        </a>
+                      )}
+                      <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
+                        <Button variant="success" onClick={() => handleVerifikasiBayar(p.id, true)} isLoading={submitting} style={{ flex: 1, fontSize: 'var(--text-xs)' }}>
+                          <CheckCircle2 size={13} /> Setujui
+                        </Button>
+                        <Button variant="danger" onClick={() => handleVerifikasiBayar(p.id, false)} isLoading={submitting} style={{ flex: 1, fontSize: 'var(--text-xs)' }}>
+                          <XCircle size={13} /> Tolak
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )
+          })()}
 
           {/* Info tagihan */}
           <div className="card">

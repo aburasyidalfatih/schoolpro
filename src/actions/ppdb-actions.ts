@@ -32,6 +32,17 @@ export async function submitFormSingkat(formData: FormData) {
 
     if (!periode) return { error: 'Gelombang tidak valid' }
 
+    // Validasi kuota
+    const kuota = (periode.pengaturan as any)?.kuota
+    if (kuota && Number(kuota) > 0) {
+      const jumlahPendaftar = await prisma.pendaftarPpdb.count({
+        where: { periodeId, tenantId }
+      })
+      if (jumlahPendaftar >= Number(kuota)) {
+        return { error: `Kuota pendaftaran gelombang ini sudah penuh (${kuota} pendaftar)` }
+      }
+    }
+
     // 3. Create Pendaftar Record
     const pendaftar = await prisma.pendaftarPpdb.create({
       data: {
@@ -61,7 +72,7 @@ export async function submitFormSingkat(formData: FormData) {
       }
     })
 
-    revalidatePath('/dashboard')
+    revalidatePath('/app/dashboard')
     return { success: true, pendaftarId: pendaftar.id }
   } catch (err) {
     console.error('PPDB Form Singkat error:', err)
@@ -106,7 +117,7 @@ export async function confirmPaymentManual(pendaftarId: string) {
       }
     })
 
-    revalidatePath('/beranda')
+    revalidatePath('/app/beranda')
     return { success: true }
   } catch (err) {
     console.error('Confirm Payment error:', err)

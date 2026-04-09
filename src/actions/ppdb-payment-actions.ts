@@ -60,8 +60,8 @@ export async function simulatePayment(tagihanId: string) {
       })
     })
 
-    revalidatePath('/beranda')
-    revalidatePath(`/ppdb/invoice/${tagihanId}`)
+    revalidatePath('/app/beranda')
+    revalidatePath(`/app/ppdb/invoice/${tagihanId}`)
 
     return { 
       success: true, 

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
     const session = await auth()
     if (!session || !session.user) {
@@ -11,9 +11,17 @@ export async function GET() {
 
     const userSession = session.user as any
     const tenantId = userSession.tenantId
+    const { searchParams } = new URL(req.url)
+    const activeOnly = searchParams.get('active') === 'true'
+
+    const where: any = { tenantId }
+    if (activeOnly) {
+      where.isActive = true
+      where.tanggalTutup = { gte: new Date() }
+    }
 
     const periodes = await prisma.periodePpdb.findMany({
-      where: { tenantId },
+      where,
       include: {
         tahunAjaran: true,
         unit: true,

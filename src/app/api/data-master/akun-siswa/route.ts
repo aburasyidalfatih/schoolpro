@@ -98,7 +98,7 @@ export async function POST(req: Request) {
                     data: {
                         tenantId: userSession.tenantId,
                         nama: student.namaLengkap,
-                        email: `${student.nis}@sispro.id`, // Dummy email
+                        email: `${student.nis}@schoolpro.id`, // Dummy email
                         username: student.nis,
                         passwordHash: defaultPasswordHash,
                         role: 'SISWA',
@@ -155,7 +155,7 @@ export async function POST(req: Request) {
         data: {
             tenantId: userSession.tenantId,
             nama: student.namaLengkap,
-            email: `${student.nis}@sispro.id`,
+            email: `${student.nis}@schoolpro.id`,
             username: student.nis,
             passwordHash,
             role: 'SISWA',

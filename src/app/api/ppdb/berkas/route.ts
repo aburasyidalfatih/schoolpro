@@ -26,23 +26,18 @@ export async function POST(req: Request) {
     }
 
     // Upsert berkas (update jika sudah ada, create jika belum)
-    const berkas = await prisma.berkasPpdb.upsert({
-      where: {
-        // Prisma tidak punya compound unique di sini, pakai findFirst + create/update
-        id: (await prisma.berkasPpdb.findFirst({
-          where: { pendaftarId, persyaratanId, tenantId },
-          select: { id: true },
-        }))?.id || 'new',
-      },
-      update: { fileUrl, status: 'MENUNGGU', catatan: null },
-      create: {
-        tenantId,
-        pendaftarId,
-        persyaratanId,
-        fileUrl,
-        status: 'MENUNGGU',
-      },
+    const existing = await prisma.berkasPpdb.findFirst({
+      where: { pendaftarId, persyaratanId, tenantId },
     })
+
+    const berkas = existing
+      ? await prisma.berkasPpdb.update({
+          where: { id: existing.id },
+          data: { fileUrl, status: 'MENUNGGU', catatan: null },
+        })
+      : await prisma.berkasPpdb.create({
+          data: { tenantId, pendaftarId, persyaratanId, fileUrl, status: 'MENUNGGU' },
+        })
 
     return NextResponse.json({ data: berkas, message: 'Berkas berhasil disimpan' })
   } catch (error) {

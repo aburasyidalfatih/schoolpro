@@ -1,4 +1,4 @@
-# SISPRO — Sistem Informasi Pesantren Pro
+# SchoolPro — Sistem Informasi Pesantren Pro
 
 Platform SaaS manajemen pesantren/sekolah modern berbasis Next.js, Prisma, dan PostgreSQL.
 
@@ -13,11 +13,11 @@ Platform SaaS manajemen pesantren/sekolah modern berbasis Next.js, Prisma, dan P
 ## Struktur Aplikasi
 
 ```
-sispro.kelasmaster.id/          → Website publik sekolah
-sispro.kelasmaster.id/app       → Dashboard (redirect ke login)
-sispro.kelasmaster.id/app/login → Login
-sispro.kelasmaster.id/app/dashboard → Admin dashboard
-sispro.kelasmaster.id/ppdb      → Pendaftaran online (publik)
+schoolpro.kelasmaster.id/          → Website publik sekolah
+schoolpro.kelasmaster.id/app       → Dashboard (redirect ke login)
+schoolpro.kelasmaster.id/app/login → Login
+schoolpro.kelasmaster.id/app/dashboard → Admin dashboard
+schoolpro.kelasmaster.id/ppdb      → Pendaftaran online (publik)
 ```
 
 ## Fitur
@@ -66,11 +66,11 @@ npm run dev
 # Build
 npm run build
 
-# Service: /etc/systemd/system/sispro.service
+# Service: /etc/systemd/system/schoolpro.service
 # Port: 3011
-# Domain: sispro.kelasmaster.id
+# Domain: schoolpro.kelasmaster.id
 
-sudo systemctl restart sispro
+sudo systemctl restart schoolpro
 ```
 
 ## Database Schema
@@ -88,14 +88,14 @@ Model utama:
 ## Environment Variables
 
 ```env
-DATABASE_URL="postgresql://user:pass@localhost:5433/sispro_db"
+DATABASE_URL="postgresql://user:pass@localhost:5433/schoolpro_db"
 AUTH_SECRET="..."
 AUTH_TRUST_HOST="true"
-AUTH_URL="https://sispro.kelasmaster.id"
-NEXTAUTH_URL="https://sispro.kelasmaster.id"
+AUTH_URL="https://schoolpro.kelasmaster.id"
+NEXTAUTH_URL="https://schoolpro.kelasmaster.id"
 ```
 
 ---
 
-**Live**: https://sispro.kelasmaster.id  
+**Live**: https://schoolpro.kelasmaster.id  
 **Stack**: Next.js 15 + PostgreSQL + Prisma + NextAuth

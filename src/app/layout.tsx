@@ -3,7 +3,7 @@ import './globals.css'
 import { Toaster } from 'sonner'
 
 export const metadata: Metadata = {
-  title: 'SISPRO — Sistem Informasi Sekolah Profesional',
+  title: 'SchoolPro — Sistem Informasi Sekolah Profesional',
   description: 'Platform manajemen sekolah all-in-one: tagihan, pembayaran, tabungan, PPDB, dan lainnya.',
   keywords: ['sistem informasi sekolah', 'manajemen sekolah', 'pembayaran sekolah', 'PPDB online'],
 }
@@ -24,7 +24,7 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
-                  var theme = localStorage.getItem('sispro-theme');
+                  var theme = localStorage.getItem('schoolpro-theme');
                   if (!theme) {
                     theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
                   }

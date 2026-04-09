@@ -47,7 +47,7 @@ export default function WaliSidebar() {
         <div className={styles.logoIcon}><Building2 size={24} /></div>
         {!collapsed && (
           <div className={styles.logoText}>
-            <span className={styles.logoTitle}>SISPRO</span>
+            <span className={styles.logoTitle}>SchoolPro</span>
             <span className={styles.logoSub}>Portal Wali Murid</span>
           </div>
         )}

@@ -72,7 +72,7 @@ export default function LoginPage() {
           <div className={styles.logo}>
             <Building2 size={32} strokeWidth={1.5} />
           </div>
-          <h1 className={styles.title}>SISPRO</h1>
+          <h1 className={styles.title}>SchoolPro</h1>
           <p className={styles.subtitle}>Sistem Informasi Sekolah Profesional</p>
         </div>
 
@@ -153,7 +153,7 @@ export default function LoginPage() {
         </form>
 
         <div className={styles.footer}>
-          <p>&copy; 2026 SISPRO. All rights reserved.</p>
+          <p>&copy; 2026 SchoolPro. All rights reserved.</p>
         </div>
       </div>
     </div>

@@ -26,6 +26,7 @@ export default function FormLengkapPage({ params }: { params: Promise<{ id: stri
   const [activeTab, setActiveTab] = useState<Tab>('siswa')
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
+  const [uploading, setUploading] = useState<string | null>(null)
   const [error, setError] = useState('')
   const [pendaftar, setPendaftar] = useState<any>(null)
   const [persyaratans, setPersyaratans] = useState<any[]>([])
@@ -93,15 +94,20 @@ export default function FormLengkapPage({ params }: { params: Promise<{ id: stri
   )
 
   const handleFileUpload = async (persyaratanId: string, file: File) => {
-    // Simulasi upload — di production gunakan S3/storage
-    // Untuk sekarang simpan sebagai data URL (demo)
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      const dataUrl = e.target?.result as string
-      setUploadedFiles(prev => ({ ...prev, [persyaratanId]: dataUrl }))
-      toast.success('File berhasil dipilih')
+    const fd = new FormData()
+    fd.append('file', file)
+    setUploading(persyaratanId)
+    try {
+      const res = await fetch('/api/upload', { method: 'POST', body: fd })
+      const json = await res.json()
+      if (!res.ok) { toast.error(json.error || 'Gagal upload'); return }
+      setUploadedFiles(prev => ({ ...prev, [persyaratanId]: json.url }))
+      toast.success('File berhasil diupload')
+    } catch {
+      toast.error('Gagal mengupload file')
+    } finally {
+      setUploading(null)
     }
-    reader.readAsDataURL(file)
   }
 
   const handleSubmit = async () => {
@@ -132,7 +138,7 @@ export default function FormLengkapPage({ params }: { params: Promise<{ id: stri
       }
 
       toast.success('Formulir berhasil dikirim! Menunggu verifikasi admin.')
-      router.push('/beranda')
+      router.push('/app/beranda')
     } catch {
       setError('Gagal terhubung ke server')
     } finally {
@@ -158,7 +164,7 @@ export default function FormLengkapPage({ params }: { params: Promise<{ id: stri
         <p style={{ color: 'var(--text-secondary)', marginBottom: 'var(--space-6)' }}>
           Anda perlu melunasi biaya pendaftaran terlebih dahulu sebelum mengisi formulir lengkap.
         </p>
-        <Button onClick={() => router.push(`/ppdb/invoice/${id}`)}>
+        <Button onClick={() => router.push(`/app/ppdb/invoice/${id}`)}>
           Bayar Sekarang
         </Button>
       </div>
@@ -337,13 +343,14 @@ export default function FormLengkapPage({ params }: { params: Promise<{ id: stri
                               <CheckCircle2 size={14} /> Terupload
                             </span>
                           ) : null}
-                          <label className={styles.uploadBtn}>
-                            <Upload size={13} />
-                            {isUploaded ? 'Ganti' : 'Pilih File'}
+                          <label className={styles.uploadBtn} style={{ opacity: uploading === p.id ? 0.6 : 1, pointerEvents: uploading === p.id ? 'none' : 'auto' }}>
+                            {uploading === p.id ? <Loader2 size={13} style={{ animation: 'spin 0.7s linear infinite' }} /> : <Upload size={13} />}
+                            {uploading === p.id ? 'Mengupload...' : isUploaded ? 'Ganti' : 'Pilih File'}
                             <input
                               type="file"
                               accept={p.tipeFile || 'image/*,application/pdf'}
                               style={{ display: 'none' }}
+                              disabled={!!uploading}
                               onChange={e => {
                                 const file = e.target.files?.[0]
                                 if (file) handleFileUpload(p.id, file)
@@ -362,7 +369,7 @@ export default function FormLengkapPage({ params }: { params: Promise<{ id: stri
 
         {/* Footer */}
         <div className={styles.formFooter}>
-          <Button variant="secondary" onClick={() => router.push('/beranda')}>
+          <Button variant="secondary" onClick={() => router.push('/app/beranda')}>
             <ChevronLeft size={16} /> Simpan & Lanjutkan Nanti
           </Button>
           <div style={{ display: 'flex', gap: 'var(--space-3)' }}>

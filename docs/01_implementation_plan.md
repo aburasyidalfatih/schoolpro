@@ -1,10 +1,10 @@
-# 🏫 SISPRO — Sistem Informasi Sekolah Profesional
+# 🏫 SchoolPro — Sistem Informasi Sekolah Profesional
 
 > Rencana Implementasi Lengkap Aplikasi Manajemen Sekolah All-in-One — **SaaS-Ready Architecture**
 
 ## Ringkasan Proyek
 
-SISPRO adalah aplikasi Sistem Informasi Sekolah berbasis web yang mencakup pengelolaan data master, tagihan & pembayaran, arus kas, tabungan siswa, PPDB Online, pelaporan, hingga portal berita & pengumuman. Aplikasi ini memiliki **3 portal utama**: Dasbor Petugas (Admin), Dasbor Wali/Siswa, dan Portal PPDB Online.
+SchoolPro adalah aplikasi Sistem Informasi Sekolah berbasis web yang mencakup pengelolaan data master, tagihan & pembayaran, arus kas, tabungan siswa, PPDB Online, pelaporan, hingga portal berita & pengumuman. Aplikasi ini memiliki **3 portal utama**: Dasbor Petugas (Admin), Dasbor Wali/Siswa, dan Portal PPDB Online.
 
 > [!TIP]
 > **Arsitektur SaaS-Ready (Opsi B)** — Sistem dibangun dengan multi-tenant architecture dari awal menggunakan strategi **Shared DB + Tenant ID**. Setiap tabel memiliki `tenant_id` sehingga migrasi ke model SaaS penuh (subdomain per sekolah) bisa dilakukan tanpa refactoring besar.
@@ -66,9 +66,9 @@ SISPRO adalah aplikasi Sistem Informasi Sekolah berbasis web yang mencakup penge
 ```mermaid
 graph TB
     subgraph "Portal Access Layer"
-        R["🌐 sekolah1.sispro.id"] 
-        S["🌐 sekolah2.sispro.id"]
-        T["🌐 sispro.id (Landing)"]
+        R["🌐 sekolah1.schoolpro.id"] 
+        S["🌐 sekolah2.schoolpro.id"]
+        T["🌐 schoolpro.id (Landing)"]
     end
     
     subgraph "Tenant Resolution Middleware"
@@ -122,7 +122,7 @@ sequenceDiagram
     participant App as Next.js App
     participant DB as SQLite/PostgreSQL
     
-    User->>Browser: Akses sekolah1.sispro.id
+    User->>Browser: Akses sekolah1.schoolpro.id
     Browser->>Middleware: Request + subdomain
     Middleware->>Middleware: Parse subdomain → cari tenant
     Middleware->>DB: SELECT * FROM tenants WHERE slug = 'sekolah1'
@@ -138,7 +138,7 @@ sequenceDiagram
 ## Struktur Direktori Proyek
 
 ```
-SISPRO/
+SchoolPro/
 ├── public/
 │   ├── images/              # Logo, slider, background
 │   └── fonts/
@@ -869,7 +869,7 @@ src/features/<module>/
 > **2. Prioritas Fase** — Apakah urutan fase sudah sesuai? Apakah ada modul yang lebih urgent dan perlu didahulukan?
 
 > [!WARNING]
-> **3. Branding** — Apakah sudah ada logo, nama resmi lembaga, dan warna brand yang harus digunakan? Atau menggunakan desain default SISPRO?
+> **3. Branding** — Apakah sudah ada logo, nama resmi lembaga, dan warna brand yang harus digunakan? Atau menggunakan desain default SchoolPro?
 
 > [!NOTE]
 > **4. Hosting/Deploy** — Apakah sudah ada rencana dimana aplikasi ini akan di-deploy? (VPS, Vercel, Railway, dll)

@@ -210,7 +210,7 @@ export default function AdminSidebar() {
         <div className={styles.logoIcon}><Building2 size={20} /></div>
         {!collapsed && (
           <div className={styles.logoText}>
-            <span className={styles.logoTitle}>SISPRO</span>
+            <span className={styles.logoTitle}>SchoolPro</span>
             <span className={styles.logoSub}>Sistem Informasi Sekolah</span>
           </div>
         )}

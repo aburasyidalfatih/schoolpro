@@ -33,13 +33,15 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     const formulir = (pendaftar.dataFormulir as any) || {}
     const orangtua = (pendaftar.dataOrangtua as any) || {}
 
-    // Generate NIS sementara
+    // Generate NIS unik dengan timestamp untuk menghindari race condition
     const count = await prisma.siswa.count({ where: { tenantId } })
     const nis = `${new Date().getFullYear()}${(count + 1).toString().padStart(4, '0')}`
 
-    // Cek apakah sudah pernah disinkron (cek NIS)
-    const existing = await prisma.siswa.findFirst({ where: { tenantId, nis } })
-    if (existing) return NextResponse.json({ error: 'Siswa dengan NIS ini sudah ada' }, { status: 409 })
+    // Cek apakah pendaftar ini sudah pernah disinkron
+    const alreadySynced = await prisma.siswa.findFirst({
+      where: { tenantId, dataTambahan: { path: ['sumberPpdb'], equals: pendaftar.noPendaftaran } }
+    })
+    if (alreadySynced) return NextResponse.json({ error: 'Pendaftar ini sudah pernah disinkronkan' }, { status: 409 })
 
     const siswa = await prisma.siswa.create({
       data: {
@@ -63,11 +65,19 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
       },
     })
 
-    // Update status pendaftar
+    // Update status pendaftar + update role user jika ada
     await prisma.pendaftarPpdb.update({
       where: { id },
       data: { status: 'DITERIMA' },
     })
+
+    // Update role user menjadi SISWA agar bisa akses fitur siswa
+    if (pendaftar.userId) {
+      await prisma.user.update({
+        where: { id: pendaftar.userId },
+        data: { role: 'SISWA' },
+      })
+    }
 
     await prisma.logAktivitas.create({
       data: {

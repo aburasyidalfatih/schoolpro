@@ -1,4 +1,4 @@
-# SISPRO Developer Guide (AI Assistant)
+# SchoolPro Developer Guide (AI Assistant)
 
 ## Development Commands
 - **Dev Server**: `npm run dev`

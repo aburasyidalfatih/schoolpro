@@ -52,10 +52,10 @@ export default async function PpdbLandingPage() {
             dapat dipantau kapan saja melalui dasbor akun Anda.
           </p>
           <div className={styles.heroCta}>
-            <Link href="/register" className={styles.btnPrimary}>
+            <Link href="/app/register" className={styles.btnPrimary}>
               <UserPlus size={18} /> Buat Akun Pendaftar
             </Link>
-            <Link href="/login" className={styles.btnSecondary}>
+            <Link href="/app/login" className={styles.btnSecondary}>
               <LogIn size={18} /> Sudah Punya Akun? Masuk
             </Link>
           </div>
@@ -113,7 +113,7 @@ export default async function PpdbLandingPage() {
                   </div>
 
                   {/* CTA selalu ke register/login — bukan langsung ke form */}
-                  <Link href="/register" className={styles.periodCta}>
+                  <Link href="/app/register" className={styles.periodCta}>
                     Daftar ke Gelombang Ini <ArrowRight size={14} />
                   </Link>
                 </div>
@@ -145,7 +145,7 @@ export default async function PpdbLandingPage() {
           </div>
 
           <div className={styles.alurCta}>
-            <Link href="/register" className={styles.btnPrimary}>
+            <Link href="/app/register" className={styles.btnPrimary}>
               <UserPlus size={18} /> Mulai Pendaftaran
             </Link>
           </div>

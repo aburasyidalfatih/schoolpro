@@ -50,7 +50,7 @@ Kita akan membaginya murni ke dalam 3 Fase Eksekusi agar lebih fokus dan kode le
 - `[NEW]` `src/app/(user)/ppdb/form-lengkap`: UI Tahap 3. Form builder menggunakan struktur JSON agar fleksibel `({ nama_ayah, pekerjaan, penghasilan })`.
 
 ### FASE 3: Meja Verifikasi & Sinkronisasi
-*Fokus: Admin menilai berkas dan memasukkan data mentah ke ekosistem SISPRO.*
+*Fokus: Admin menilai berkas dan memasukkan data mentah ke ekosistem SchoolPro.*
 
 **A. API Routes:**
 - `[NEW]` `/api/ppdb/pendaftar/[id]/verifikasi`: Endpoint untuk Admin menyetujui berkas.
