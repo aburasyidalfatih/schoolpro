@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 
-const protectedRoutes = ['/app/dashboard', '/app/data-master', '/app/tagihan', '/app/pembayaran', '/app/transaksi', '/app/beranda', '/app/ppdb', '/app/profil']
+const protectedRoutes = ['/app/dashboard', '/app/data-master', '/app/tagihan', '/app/pembayaran', '/app/transaksi', '/app/arus-kas', '/app/tabungan', '/app/laporan', '/app/berita', '/app/notifikasi', '/app/pengaturan', '/app/peralatan', '/app/e-kantin', '/app/ai', '/app/beranda', '/app/ppdb', '/app/profil']
 
 export default auth((req) => {
   const { pathname } = req.nextUrl
