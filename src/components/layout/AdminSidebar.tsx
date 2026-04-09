@@ -29,38 +29,38 @@ const navSections: NavSection[] = [
   {
     title: 'UTAMA',
     items: [
-      { label: 'Dashboard', href: '/dashboard', icon: <LayoutDashboard size={20} /> },
+      { label: 'Dashboard', href: '/app/dashboard', icon: <LayoutDashboard size={20} /> },
     ],
   },
   {
     title: 'KEUANGAN',
     items: [
-      { label: 'Tagihan', href: '/tagihan', icon: <FileText size={20} /> },
-      { label: 'Pembayaran', href: '/pembayaran', icon: <CreditCard size={20} /> },
-      { label: 'Transaksi', href: '/transaksi', icon: <ArrowRightLeft size={20} /> },
-      { label: 'Arus Kas', href: '/arus-kas', icon: <Wallet size={20} /> },
-      { label: 'Tabungan', href: '/tabungan', icon: <Landmark size={20} /> },
+      { label: 'Tagihan', href: '/app/tagihan', icon: <FileText size={20} /> },
+      { label: 'Pembayaran', href: '/app/pembayaran', icon: <CreditCard size={20} /> },
+      { label: 'Transaksi', href: '/app/transaksi', icon: <ArrowRightLeft size={20} /> },
+      { label: 'Arus Kas', href: '/app/arus-kas', icon: <Wallet size={20} /> },
+      { label: 'Tabungan', href: '/app/tabungan', icon: <Landmark size={20} /> },
     ],
   },
   {
     title: 'AKADEMIK',
     items: [
       {
-        label: 'PPDB', href: '/ppdb', icon: <ClipboardList size={20} />,
+        label: 'PPDB', href: '/app/ppdb', icon: <ClipboardList size={20} />,
         children: [
-          { label: 'Pendaftar', href: '/ppdb/pendaftar' },
-          { label: 'Tagihan PPDB', href: '/ppdb/tagihan' },
-          { label: 'Persyaratan Berkas', href: '/ppdb/persyaratan' },
-          { label: 'Periode', href: '/ppdb/periode' },
-          { label: 'Pengaturan', href: '/ppdb/pengaturan' },
+          { label: 'Pendaftar', href: '/app/ppdb/pendaftar' },
+          { label: 'Tagihan PPDB', href: '/app/ppdb/tagihan' },
+          { label: 'Persyaratan Berkas', href: '/app/ppdb/persyaratan' },
+          { label: 'Periode', href: '/app/ppdb/periode' },
+          { label: 'Pengaturan', href: '/app/ppdb/pengaturan' },
         ],
       },
       {
-        label: 'E-Kantin', href: '/e-kantin', icon: <ShoppingBag size={20} />,
+        label: 'E-Kantin', href: '/app/e-kantin', icon: <ShoppingBag size={20} />,
         children: [
-          { label: 'Menu Kantin', href: '/e-kantin/menu' },
-          { label: 'Transaksi Kantin', href: '/e-kantin/transaksi' },
-          { label: 'Laporan Kantin', href: '/e-kantin/laporan' },
+          { label: 'Menu Kantin', href: '/app/e-kantin/menu' },
+          { label: 'Transaksi Kantin', href: '/app/e-kantin/transaksi' },
+          { label: 'Laporan Kantin', href: '/app/e-kantin/laporan' },
         ],
       },
     ],
@@ -69,12 +69,12 @@ const navSections: NavSection[] = [
     title: 'LAPORAN',
     items: [
       {
-        label: 'Laporan', href: '/laporan', icon: <BarChart3 size={20} />,
+        label: 'Laporan', href: '/app/laporan', icon: <BarChart3 size={20} />,
         children: [
-          { label: 'Laporan Keuangan', href: '/laporan/keuangan' },
-          { label: 'Laporan Tagihan', href: '/laporan/tagihan' },
-          { label: 'Laporan Tabungan', href: '/laporan/tabungan' },
-          { label: 'Laporan PPDB', href: '/laporan/ppdb' },
+          { label: 'Laporan Keuangan', href: '/app/laporan/keuangan' },
+          { label: 'Laporan Tagihan', href: '/app/laporan/tagihan' },
+          { label: 'Laporan Tabungan', href: '/app/laporan/tabungan' },
+          { label: 'Laporan PPDB', href: '/app/laporan/ppdb' },
         ],
       },
     ],
@@ -83,18 +83,18 @@ const navSections: NavSection[] = [
     title: 'KOMUNIKASI',
     items: [
       {
-        label: 'Berita & Pengumuman', href: '/berita', icon: <Newspaper size={20} />,
+        label: 'Berita & Pengumuman', href: '/app/berita', icon: <Newspaper size={20} />,
         children: [
-          { label: 'Portal Berita', href: '/berita/artikel' },
-          { label: 'Pengumuman', href: '/berita/pengumuman' },
+          { label: 'Portal Berita', href: '/app/berita/artikel' },
+          { label: 'Pengumuman', href: '/app/berita/pengumuman' },
         ],
       },
       {
-        label: 'Notifikasi', href: '/notifikasi', icon: <MessageCircle size={20} />,
+        label: 'Notifikasi', href: '/app/notifikasi', icon: <MessageCircle size={20} />,
         children: [
-          { label: 'WhatsApp', href: '/notifikasi/whatsapp' },
-          { label: 'Pengingat Tagihan', href: '/notifikasi/pengingat' },
-          { label: 'Riwayat Kirim', href: '/notifikasi/riwayat' },
+          { label: 'WhatsApp', href: '/app/notifikasi/whatsapp' },
+          { label: 'Pengingat Tagihan', href: '/app/notifikasi/pengingat' },
+          { label: 'Riwayat Kirim', href: '/app/notifikasi/riwayat' },
         ],
       },
     ],
@@ -103,32 +103,32 @@ const navSections: NavSection[] = [
     title: 'ADMINISTRASI',
     items: [
       {
-        label: 'Data Master', href: '/data-master', icon: <Database size={20} />,
+        label: 'Data Master', href: '/app/data-master', icon: <Database size={20} />,
         children: [
           { label: 'Petugas', href: '/data-master/petugas' },
           { label: 'Unit/Jenjang', href: '/data-master/unit' },
           { label: 'Tahun Ajaran', href: '/data-master/tahun-ajaran' },
           { label: 'Kelas', href: '/data-master/kelas' },
           { label: 'Siswa', href: '/data-master/siswa' },
-          { label: 'Akun Siswa', href: '/data-master/akun-siswa' },
-          { label: 'Kategori Tagihan', href: '/data-master/kategori-tagihan' },
-          { label: 'Rekening', href: '/data-master/rekening' },
+          { label: 'Akun Siswa', href: '/app/data-master/akun-siswa' },
+          { label: 'Kategori Tagihan', href: '/app/data-master/kategori-tagihan' },
+          { label: 'Rekening', href: '/app/data-master/rekening' },
         ],
       },
       {
-        label: 'Pengaturan', href: '/pengaturan', icon: <Settings size={20} />,
+        label: 'Pengaturan', href: '/app/pengaturan', icon: <Settings size={20} />,
         children: [
-          { label: 'Profil Sekolah', href: '/pengaturan/umum' },
-          { label: 'Tampilan', href: '/pengaturan/tampilan' },
-          { label: 'Portal Publik', href: '/pengaturan/portal' },
-          { label: 'Sistem', href: '/pengaturan/sistem' },
-          { label: 'Notifikasi', href: '/pengaturan/notifikasi' },
+          { label: 'Profil Sekolah', href: '/app/pengaturan/umum' },
+          { label: 'Tampilan', href: '/app/pengaturan/tampilan' },
+          { label: 'Portal Publik', href: '/app/pengaturan/portal' },
+          { label: 'Sistem', href: '/app/pengaturan/sistem' },
+          { label: 'Notifikasi', href: '/app/pengaturan/notifikasi' },
         ],
       },
       {
-        label: 'Peralatan', href: '/peralatan', icon: <Wrench size={20} />,
+        label: 'Peralatan', href: '/app/peralatan', icon: <Wrench size={20} />,
         children: [
-          { label: 'Log Aktivitas', href: '/peralatan/log-aktivitas' },
+          { label: 'Log Aktivitas', href: '/app/peralatan/log-aktivitas' },
         ],
       },
     ],
@@ -137,21 +137,21 @@ const navSections: NavSection[] = [
     title: 'AI & INSIGHTS',
     items: [
       {
-        label: 'AI Assistant', href: '/ai/assistant', icon: <Bot size={20} />, badge: 'soon' as const,
+        label: 'AI Assistant', href: '/app/ai/assistant', icon: <Bot size={20} />, badge: 'soon' as const,
         children: [
-          { label: 'Chatbot WhatsApp', href: '/ai/chatbot', badge: 'soon' as const },
-          { label: 'Tanya Data', href: '/ai/query', badge: 'soon' as const },
+          { label: 'Chatbot WhatsApp', href: '/app/ai/chatbot', badge: 'soon' as const },
+          { label: 'Tanya Data', href: '/app/ai/query', badge: 'soon' as const },
         ],
       },
       {
-        label: 'Prediksi & Analitik', href: '/ai/analytics', icon: <BrainCircuit size={20} />, badge: 'soon' as const,
+        label: 'Prediksi & Analitik', href: '/app/ai/analytics', icon: <BrainCircuit size={20} />, badge: 'soon' as const,
         children: [
-          { label: 'Prediksi Tunggakan', href: '/ai/prediksi-tunggakan', badge: 'soon' as const },
-          { label: 'Tren Pendaftaran', href: '/ai/tren-ppdb', badge: 'soon' as const },
-          { label: 'Laporan Otomatis', href: '/ai/laporan-otomatis', badge: 'soon' as const },
+          { label: 'Prediksi Tunggakan', href: '/app/ai/prediksi-tunggakan', badge: 'soon' as const },
+          { label: 'Tren Pendaftaran', href: '/app/ai/tren-ppdb', badge: 'soon' as const },
+          { label: 'Laporan Otomatis', href: '/app/ai/laporan-otomatis', badge: 'soon' as const },
         ],
       },
-      { label: 'Deteksi Anomali', href: '/ai/anomali', icon: <ShieldAlert size={20} />, badge: 'soon' as const },
+      { label: 'Deteksi Anomali', href: '/app/ai/anomali', icon: <ShieldAlert size={20} />, badge: 'soon' as const },
     ],
   },
 ]

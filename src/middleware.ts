@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 
-const protectedRoutes = ['/dashboard', '/data-master', '/tagihan', '/pembayaran', '/transaksi', '/beranda']
+const protectedRoutes = ['/app/dashboard', '/app/data-master', '/app/tagihan', '/app/pembayaran', '/app/transaksi', '/app/beranda']
 
 export default auth((req) => {
   const { pathname } = req.nextUrl
@@ -20,26 +20,26 @@ export default auth((req) => {
 
   // 2. Authentication Protection
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route))
-  const isAuthRoute = pathname.startsWith('/login')
+  const isAuthRoute = pathname.startsWith('/app/login')
 
   if (isProtectedRoute && !isLoggedIn) {
-    return NextResponse.redirect(new URL('/login', req.nextUrl))
+    return NextResponse.redirect(new URL('/app/login', req.nextUrl))
   }
 
   // Redirect non-admin users away from admin dashboard
-  if (pathname.startsWith('/dashboard') && isLoggedIn) {
+  if (pathname.startsWith('/app/dashboard') && isLoggedIn) {
     const role = (req.auth?.user as any)?.role as string
     if (role === 'WALI' || role === 'SISWA' || role === 'USER') {
-      return NextResponse.redirect(new URL('/beranda', req.nextUrl))
+      return NextResponse.redirect(new URL('/app/beranda', req.nextUrl))
     }
   }
 
   if (isAuthRoute && isLoggedIn) {
     const role = (req.auth?.user as any)?.role as string
     if (role === 'WALI' || role === 'SISWA' || role === 'USER') {
-      return NextResponse.redirect(new URL('/beranda', req.nextUrl))
+      return NextResponse.redirect(new URL('/app/beranda', req.nextUrl))
     }
-    return NextResponse.redirect(new URL('/dashboard', req.nextUrl))
+    return NextResponse.redirect(new URL('/app/dashboard', req.nextUrl))
   }
 
   // 3. Inject Tenant Context

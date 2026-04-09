@@ -38,7 +38,7 @@ export default async function PpdbLayout({
           <nav className={styles.nav}>
             <Link href="/ppdb" className={styles.navLink}>Beranda</Link>
             <Link href="/ppdb/status" className={styles.navLink}>Cek Status</Link>
-            <Link href="/login" className={styles.loginBtn}>Masuk</Link>
+            <Link href="/app/login" className={styles.loginBtn}>Masuk</Link>
           </nav>
         </div>
       </header>

@@ -25,13 +25,13 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { label: 'Beranda', href: '/beranda', icon: <LayoutDashboard size={20} /> },
-  { label: 'Tagihan Saya', href: '/tagihan-saya', icon: <FileText size={20} /> },
-  { label: 'Tabungan Saya', href: '/tabungan-saya', icon: <Landmark size={20} /> },
-  { label: 'E-Kantin', href: '/e-kantin', icon: <ShoppingBag size={20} /> },
-  { label: 'Pengumuman', href: '/pengumuman', icon: <Newspaper size={20} /> },
-  { label: 'Notifikasi', href: '/notifikasi', icon: <Bell size={20} /> },
-  { label: 'Profil', href: '/profil', icon: <User size={20} /> },
+  { label: 'Beranda', href: '/app/beranda', icon: <LayoutDashboard size={20} /> },
+  { label: 'Tagihan Saya', href: '/app/tagihan-saya', icon: <FileText size={20} /> },
+  { label: 'Tabungan Saya', href: '/app/tabungan-saya', icon: <Landmark size={20} /> },
+  { label: 'E-Kantin', href: '/app/e-kantin', icon: <ShoppingBag size={20} /> },
+  { label: 'Pengumuman', href: '/app/pengumuman', icon: <Newspaper size={20} /> },
+  { label: 'Notifikasi', href: '/app/notifikasi', icon: <Bell size={20} /> },
+  { label: 'Profil', href: '/app/profil', icon: <User size={20} /> },
 ]
 
 export default function WaliSidebar() {

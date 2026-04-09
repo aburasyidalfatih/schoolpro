@@ -1,0 +1,16 @@
+[Unit]
+Description=SISPRO Next.js App
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/sispro
+Environment=NODE_ENV=production
+Environment=PORT=3011
+ExecStart=/home/ubuntu/.nvm/versions/node/v25.9.0/bin/npm start -- --hostname 127.0.0.1 --port 3011
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -81,7 +81,7 @@ export default function AdminHeader() {
         <button
           className={styles.iconBtn}
           title="Keluar"
-          onClick={() => signOut({ callbackUrl: '/login' })}
+          onClick={() => signOut({ callbackUrl: '/app/login' })}
           style={{ color: 'var(--danger-500)', marginLeft: 'var(--space-2)' }}
         >
           <LogOut size={20} />
