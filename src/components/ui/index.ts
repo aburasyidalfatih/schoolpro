@@ -30,3 +30,4 @@ export type { EmptyStateProps } from './EmptyState'
 
 export { Pagination } from './Pagination'
 export type { PaginationProps } from './Pagination'
+export { ComingSoon } from './ComingSoon'

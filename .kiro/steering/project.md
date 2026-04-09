@@ -1,10 +1,12 @@
 # SchoolPro — Project Context
 
 ## Lokasi Project
-- **Path**: `/var/www/schoolpro`
-- **Live URL**: https://demo.schoolpro.id
-- **Process Manager**: PM2 (`pm2 restart schoolpro`)
-- **Port**: 3011
+- **Path dev**: `/var/www/schoolpro-dev` (branch `develop`)
+- **Path prod**: `/var/www/schoolpro` (branch `main`)
+- **Dev URL**: https://dev.schoolpro.id
+- **Prod URL**: https://demo.schoolpro.id
+- **Process Manager**: PM2 (`pm2 restart schoolpro-dev` untuk dev, `pm2 restart schoolpro` untuk prod)
+- **Port dev**: 3001 | **Port prod**: 3000
 
 ## Tech Stack
 - Next.js 15 (App Router, TypeScript)
