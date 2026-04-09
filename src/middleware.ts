@@ -10,12 +10,25 @@ export default auth((req) => {
   // 1. Tenant Resolution
   const hostname = req.headers.get('host') || ''
   let tenantSlug = 'demo'
+  let isLandingPage = false
 
   if (!hostname.includes('localhost') && !hostname.match(/^\d/)) {
     const parts = hostname.split('.')
-    if (parts.length >= 3) {
+    // If hostname is exactly schoolpro.id (no subdomain) → Landing page
+    if (parts.length === 2 && parts[0] === 'schoolpro' && parts[1] === 'id') {
+      isLandingPage = true
+      // Redirect root to /landing
+      if (pathname === '/') {
+        return NextResponse.redirect(new URL('/landing', req.nextUrl))
+      }
+    } else if (parts.length >= 3) {
       tenantSlug = parts[0]
     }
+  }
+
+  // Skip tenant resolution for landing page routes
+  if (isLandingPage && pathname.startsWith('/landing')) {
+    return NextResponse.next()
   }
 
   // 2. Authentication Protection

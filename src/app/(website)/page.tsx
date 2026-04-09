@@ -41,6 +41,45 @@ export default async function BerandaPage() {
 
   const stats = profile.stats || {}
 
+  // Fallback data supaya semua section tetap tampil
+  const beritaDisplay = beritas.length > 0 ? beritas : [
+    { id: '1', slug: '#', judul: 'Selamat Datang di Website Resmi Kami', ringkasan: 'Kami hadir untuk memberikan informasi terkini seputar kegiatan dan program sekolah.', kategori: 'BERITA', gambarUrl: null, tanggalTerbit: new Date(), createdAt: new Date() },
+    { id: '2', slug: '#', judul: 'Program Unggulan Tahun Ajaran Baru', ringkasan: 'Berbagai program baru disiapkan untuk meningkatkan kualitas pendidikan santri.', kategori: 'BERITA', gambarUrl: null, tanggalTerbit: new Date(), createdAt: new Date() },
+    { id: '3', slug: '#', judul: 'Prestasi Membanggakan di Tingkat Nasional', ringkasan: 'Santri kami kembali menorehkan prestasi gemilang di ajang kompetisi nasional.', kategori: 'BERITA', gambarUrl: null, tanggalTerbit: new Date(), createdAt: new Date() },
+  ]
+
+  const pengumumanDisplay = pengumumans.length > 0 ? pengumumans : [
+    { id: '1', judul: 'Libur Hari Raya Idul Fitri', tanggal: new Date() },
+    { id: '2', judul: 'Jadwal Ujian Semester Genap', tanggal: new Date() },
+    { id: '3', judul: 'Pendaftaran Ekskul Tahun Ajaran Baru', tanggal: new Date() },
+  ]
+
+  const agendaDisplay = agendas.length > 0 ? agendas : [
+    { id: '1', judul: 'Upacara Hari Pendidikan Nasional', tanggalMulai: new Date(), lokasi: 'Lapangan Utama' },
+    { id: '2', judul: 'Rapat Wali Murid Semester Genap', tanggalMulai: new Date(Date.now() + 3 * 86400000), lokasi: 'Aula Sekolah' },
+    { id: '3', judul: 'Lomba Kreativitas Santri', tanggalMulai: new Date(Date.now() + 7 * 86400000), lokasi: 'Gedung Serbaguna' },
+  ]
+
+  const prestasiDisplay = prestasis.length > 0 ? prestasis : [
+    { id: '1', judul: 'Juara 1 Olimpiade Matematika', tingkat: 'NASIONAL', tahun: '2024' },
+    { id: '2', judul: 'Juara 2 Lomba Pidato Bahasa Arab', tingkat: 'PROVINSI', tahun: '2024' },
+    { id: '3', judul: 'Juara 1 Musabaqah Tilawatil Quran', tingkat: 'KOTA', tahun: '2024' },
+    { id: '4', judul: 'Juara 3 Kompetisi Sains Nasional', tingkat: 'NASIONAL', tahun: '2023' },
+    { id: '5', judul: 'Juara 1 Lomba Karya Ilmiah Remaja', tingkat: 'PROVINSI', tahun: '2023' },
+    { id: '6', judul: 'Juara 2 Turnamen Futsal Pelajar', tingkat: 'KOTA', tahun: '2023' },
+  ]
+
+  const ekskulDisplay = ekskuls.length > 0 ? ekskuls : [
+    { id: '1', nama: 'Pramuka', jadwal: 'Jumat, 14.00 - 16.00' },
+    { id: '2', nama: 'Tahfidz Al-Quran', jadwal: 'Senin & Rabu, 16.00 - 17.30' },
+    { id: '3', nama: 'Futsal', jadwal: 'Sabtu, 07.00 - 09.00' },
+    { id: '4', nama: 'Seni Kaligrafi', jadwal: 'Kamis, 14.00 - 16.00' },
+    { id: '5', nama: 'Robotika', jadwal: 'Sabtu, 09.00 - 11.00' },
+    { id: '6', nama: 'Bahasa Inggris Club', jadwal: 'Selasa & Kamis, 15.00 - 16.30' },
+    { id: '7', nama: 'Marawis', jadwal: 'Jumat, 13.00 - 15.00' },
+    { id: '8', nama: 'Bulu Tangkis', jadwal: 'Sabtu, 07.00 - 09.00' },
+  ]
+
   return (
     <>
       {/* ── Hero ── */}
@@ -118,39 +157,37 @@ export default async function BerandaPage() {
       </div>
 
       {/* ── Berita ── */}
-      {beritas.length > 0 && (
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <div>
-              <div className={styles.sectionLabel}><Newspaper size={13} /> Informasi Terkini</div>
-              <h2 className={styles.sectionTitle}>Berita & Artikel</h2>
-              <p className={styles.sectionSubtitle}>Kabar terbaru dari lingkungan pesantren</p>
-            </div>
-            <Link href="/berita" className={styles.seeAll}>Lihat Semua <ArrowRight size={14} /></Link>
+      <section className={styles.section}>
+        <div className={styles.sectionHeader}>
+          <div>
+            <div className={styles.sectionLabel}><Newspaper size={13} /> Informasi Terkini</div>
+            <h2 className={styles.sectionTitle}>Berita & Artikel</h2>
+            <p className={styles.sectionSubtitle}>Kabar terbaru dari lingkungan pesantren</p>
           </div>
-          <div className={styles.beritaGrid}>
-            {beritas.map(b => (
-              <Link key={b.id} href={`/berita/${b.slug}`} className={styles.beritaCard}>
-                <div className={styles.beritaImg}>
-                  {b.gambarUrl
-                    ? <img src={b.gambarUrl} alt={b.judul} />
-                    : <div className={styles.beritaImgPlaceholder}><Newspaper size={40} /></div>
-                  }
+          <Link href="/berita" className={styles.seeAll}>Lihat Semua <ArrowRight size={14} /></Link>
+        </div>
+        <div className={styles.beritaGrid}>
+          {beritaDisplay.map(b => (
+            <Link key={b.id} href={`/berita/${b.slug}`} className={styles.beritaCard}>
+              <div className={styles.beritaImg}>
+                {b.gambarUrl
+                  ? <img src={b.gambarUrl} alt={b.judul} />
+                  : <div className={styles.beritaImgPlaceholder}><Newspaper size={40} /></div>
+                }
+              </div>
+              <div className={styles.beritaBody}>
+                <span className={styles.beritaKategori}>{kategoriLabel[b.kategori] || b.kategori}</span>
+                <div className={styles.beritaJudul}>{b.judul}</div>
+                {b.ringkasan && <div className={styles.beritaRingkasan}>{b.ringkasan}</div>}
+                <div className={styles.beritaMeta}>
+                  <Clock size={12} />
+                  {formatTanggal(b.tanggalTerbit || b.createdAt)}
                 </div>
-                <div className={styles.beritaBody}>
-                  <span className={styles.beritaKategori}>{kategoriLabel[b.kategori] || b.kategori}</span>
-                  <div className={styles.beritaJudul}>{b.judul}</div>
-                  {b.ringkasan && <div className={styles.beritaRingkasan}>{b.ringkasan}</div>}
-                  <div className={styles.beritaMeta}>
-                    <Clock size={12} />
-                    {formatTanggal(b.tanggalTerbit || b.createdAt)}
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
 
       {/* ── Pengumuman + Agenda ── */}
       <div className={styles.sectionAlt}>
@@ -173,9 +210,9 @@ export default async function BerandaPage() {
                 <Link href="/pengumuman" className={styles.infoCardLink}>Semua <ChevronRight size={13} /></Link>
               </div>
               <div className={styles.infoList}>
-                {pengumumans.length === 0
+                {pengumumanDisplay.length === 0
                   ? <div className={styles.infoEmpty}>Belum ada pengumuman</div>
-                  : pengumumans.map(p => (
+                  : pengumumanDisplay.map(p => (
                     <div key={p.id} className={styles.infoItem}>
                       <div className={styles.infoItemTitle}>{p.judul}</div>
                       <div className={styles.infoItemMeta}><Clock size={11} />{formatTanggal(p.tanggal)}</div>
@@ -195,9 +232,9 @@ export default async function BerandaPage() {
                 <Link href="/agenda" className={styles.infoCardLink}>Semua <ChevronRight size={13} /></Link>
               </div>
               <div className={styles.infoList}>
-                {agendas.length === 0
+                {agendaDisplay.length === 0
                   ? <div className={styles.infoEmpty}>Belum ada agenda</div>
-                  : agendas.map(a => (
+                  : agendaDisplay.map(a => (
                     <div key={a.id} className={styles.infoItem}>
                       <div className={styles.agendaDate}>
                         <div className={styles.agendaDateBox}>
@@ -219,58 +256,54 @@ export default async function BerandaPage() {
       </div>
 
       {/* ── Prestasi ── */}
-      {prestasis.length > 0 && (
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <div>
-              <div className={styles.sectionLabel}><Trophy size={13} /> Capaian Kami</div>
-              <h2 className={styles.sectionTitle}>Prestasi Unggulan</h2>
-              <p className={styles.sectionSubtitle}>Pencapaian membanggakan warga pesantren</p>
-            </div>
-            <Link href="/prestasi" className={styles.seeAll}>Lihat Semua <ArrowRight size={14} /></Link>
+      <section className={styles.section}>
+        <div className={styles.sectionHeader}>
+          <div>
+            <div className={styles.sectionLabel}><Trophy size={13} /> Capaian Kami</div>
+            <h2 className={styles.sectionTitle}>Prestasi Unggulan</h2>
+            <p className={styles.sectionSubtitle}>Pencapaian membanggakan warga pesantren</p>
           </div>
-          <div className={styles.prestasiGrid}>
-            {prestasis.map(p => {
-              const tc = tingkatColor[p.tingkat] || tingkatColor.SEKOLAH
-              return (
-                <div key={p.id} className={styles.prestasiCard}>
-                  <div className={styles.prestasiIconWrap}><Trophy size={22} /></div>
-                  <div className={styles.prestasiTingkat} style={{ background: tc.bg, color: tc.color }}>
-                    {p.tingkat}
-                  </div>
-                  <div className={styles.prestasiJudul}>{p.judul}</div>
-                  <div className={styles.prestasiTahun}>{p.tahun}</div>
+          <Link href="/prestasi" className={styles.seeAll}>Lihat Semua <ArrowRight size={14} /></Link>
+        </div>
+        <div className={styles.prestasiGrid}>
+          {prestasiDisplay.map(p => {
+            const tc = tingkatColor[p.tingkat] || tingkatColor.SEKOLAH
+            return (
+              <div key={p.id} className={styles.prestasiCard}>
+                <div className={styles.prestasiIconWrap}><Trophy size={22} /></div>
+                <div className={styles.prestasiTingkat} style={{ background: tc.bg, color: tc.color }}>
+                  {p.tingkat}
                 </div>
-              )
-            })}
-          </div>
-        </section>
-      )}
+                <div className={styles.prestasiJudul}>{p.judul}</div>
+                <div className={styles.prestasiTahun}>{p.tahun}</div>
+              </div>
+            )
+          })}
+        </div>
+      </section>
 
       {/* ── Ekskul ── */}
-      {ekskuls.length > 0 && (
-        <div className={styles.sectionAlt}>
-          <div className={styles.sectionAltInner}>
-            <div className={styles.sectionHeader}>
-              <div>
-                <div className={styles.sectionLabel}><Star size={13} /> Kegiatan</div>
-                <h2 className={styles.sectionTitle}>Program & Kegiatan</h2>
-                <p className={styles.sectionSubtitle}>Kembangkan potensi diri bersama kami</p>
+      <div className={styles.sectionAlt}>
+        <div className={styles.sectionAltInner}>
+          <div className={styles.sectionHeader}>
+            <div>
+              <div className={styles.sectionLabel}><Star size={13} /> Kegiatan</div>
+              <h2 className={styles.sectionTitle}>Program & Kegiatan</h2>
+              <p className={styles.sectionSubtitle}>Kembangkan potensi diri bersama kami</p>
+            </div>
+            <Link href="/ekskul" className={styles.seeAll}>Lihat Semua <ArrowRight size={14} /></Link>
+          </div>
+          <div className={styles.ekskulGrid}>
+            {ekskulDisplay.map(e => (
+              <div key={e.id} className={styles.ekskulCard}>
+                <div className={styles.ekskulIconWrap}><Star size={18} /></div>
+                <div className={styles.ekskulNama}>{e.nama}</div>
+                {e.jadwal && <div className={styles.ekskulJadwal}><Clock size={11} />{e.jadwal}</div>}
               </div>
-              <Link href="/ekskul" className={styles.seeAll}>Lihat Semua <ArrowRight size={14} /></Link>
-            </div>
-            <div className={styles.ekskulGrid}>
-              {ekskuls.map(e => (
-                <div key={e.id} className={styles.ekskulCard}>
-                  <div className={styles.ekskulIconWrap}><Star size={18} /></div>
-                  <div className={styles.ekskulNama}>{e.nama}</div>
-                  {e.jadwal && <div className={styles.ekskulJadwal}><Clock size={11} />{e.jadwal}</div>}
-                </div>
-              ))}
-            </div>
+            ))}
           </div>
         </div>
-      )}
+      </div>
 
       {/* ── PPDB Banner ── */}
       {ppdbAktif && (

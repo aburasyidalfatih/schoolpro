@@ -1,22 +1,23 @@
 'use client'
 
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useSession, signOut } from 'next-auth/react'
-import { Home, Search, Bell, LogOut, User as UserIcon } from 'lucide-react'
+import { useRef, useState, useEffect } from 'react'
+import { Home, Search, Bell, LogOut, User as UserIcon, Settings, ChevronDown } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
 import styles from './AdminHeader.module.css'
 
 export default function AdminHeader() {
   const pathname = usePathname()
+  const router = useRouter()
   const { data: session } = useSession()
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   const getBreadcrumbs = () => {
     const paths = pathname.split('/').filter(Boolean)
     return paths.map((p, i) => ({
-      label: p
-        .split('-')
-        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-        .join(' '),
+      label: p.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
       href: '/' + paths.slice(0, i + 1).join('/'),
       isLast: i === paths.length - 1,
     }))
@@ -24,6 +25,16 @@ export default function AdminHeader() {
 
   const breadcrumbs = getBreadcrumbs()
   const user = session?.user as any
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   return (
     <header className={styles.header}>
@@ -33,13 +44,7 @@ export default function AdminHeader() {
           {breadcrumbs.map((crumb) => (
             <span key={crumb.href} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
               <span className={styles.separator}>/</span>
-              <span
-                className={
-                  crumb.isLast ? styles.crumbActive : styles.crumbItem
-                }
-              >
-                {crumb.label}
-              </span>
+              <span className={crumb.isLast ? styles.crumbActive : styles.crumbItem}>{crumb.label}</span>
             </span>
           ))}
         </div>
@@ -49,11 +54,7 @@ export default function AdminHeader() {
         {/* Search */}
         <div className={styles.search}>
           <span className={styles.searchIcon}><Search size={16} /></span>
-          <input
-            type="text"
-            placeholder="Cari menu, siswa, tagihan..."
-            className={styles.searchInput}
-          />
+          <input type="text" placeholder="Cari menu, siswa, tagihan..." className={styles.searchInput} />
           <kbd className={styles.searchKbd}>⌘K</kbd>
         </div>
 
@@ -66,26 +67,49 @@ export default function AdminHeader() {
         {/* Theme Toggle */}
         <ThemeToggle />
 
-        {/* Profile */}
-        <div className={styles.profile}>
-          <div className={styles.avatar}>
-            {user?.name ? user.name.charAt(0).toUpperCase() : <UserIcon size={18} />}
+        {/* Profile Dropdown */}
+        <div className={styles.profileWrapper} ref={dropdownRef}>
+          <div className={styles.profile} onClick={() => setDropdownOpen((v) => !v)}>
+            <div className={styles.avatar}>
+              {user?.name ? user.name.charAt(0).toUpperCase() : <UserIcon size={18} />}
+            </div>
+            <div className={styles.profileInfo}>
+              <span className={styles.profileName}>{user?.name || 'User'}</span>
+              <span className={styles.profileRole}>{user?.role || 'Guest'}</span>
+            </div>
+            <ChevronDown size={14} className={`${styles.chevron} ${dropdownOpen ? styles.chevronOpen : ''}`} />
           </div>
-          <div className={styles.profileInfo}>
-            <span className={styles.profileName}>{user?.name || 'User'}</span>
-            <span className={styles.profileRole}>{user?.role || 'Guest'}</span>
-          </div>
-        </div>
 
-        {/* Sign Out */}
-        <button
-          className={styles.iconBtn}
-          title="Keluar"
-          onClick={() => signOut({ callbackUrl: '/app/login' })}
-          style={{ color: 'var(--danger-500)', marginLeft: 'var(--space-2)' }}
-        >
-          <LogOut size={20} />
-        </button>
+          {dropdownOpen && (
+            <div className={styles.dropdown}>
+              <div className={styles.dropdownHeader}>
+                <div className={styles.dropdownAvatar}>
+                  {user?.name ? user.name.charAt(0).toUpperCase() : <UserIcon size={18} />}
+                </div>
+                <div>
+                  <div className={styles.dropdownName}>{user?.name || 'User'}</div>
+                  <div className={styles.dropdownEmail}>{user?.email || user?.role || 'Guest'}</div>
+                </div>
+              </div>
+              <div className={styles.dropdownDivider} />
+              <button
+                className={styles.dropdownItem}
+                onClick={() => { setDropdownOpen(false); router.push('/app/pengaturan/umum') }}
+              >
+                <Settings size={15} />
+                Pengaturan
+              </button>
+              <div className={styles.dropdownDivider} />
+              <button
+                className={`${styles.dropdownItem} ${styles.dropdownItemDanger}`}
+                onClick={() => signOut({ callbackUrl: '/app/login' })}
+              >
+                <LogOut size={15} />
+                Keluar
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   )
