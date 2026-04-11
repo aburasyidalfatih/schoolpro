@@ -40,6 +40,7 @@
 - PPDB Online: Periode, Pendaftar, Berkas, Tagihan PPDB
 - Website publik: Berita, Pengumuman, Agenda, Prestasi, Ekskul, Fasilitas, Alumni, Guru, Blog, Editorial
 - Auth multi-role + multi-tenant
+- Landing SaaS: funnel `website sekolah gratis` sebagai entry point, lalu upgrade ke modul admin premium saat kebutuhan sekolah berkembang
 
 ## Fitur Belum Ada (Roadmap Prioritas)
 1. Absensi Digital (QR Code)

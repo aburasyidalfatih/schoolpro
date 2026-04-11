@@ -91,6 +91,7 @@ Pakai `recharts` — BarChart, LineChart, PieChart, dll.
 - Gunakan CSS Variables dari `globals.css`, jangan hardcode warna
 - Semua komponen harus support Dark Mode
 - Icon dari `lucide-react`
+- Landing SaaS `schoolpro.id` harus menonjolkan funnel `website sekolah gratis` sebagai CTA utama, dengan jalur sekunder ke demo admin dan penjelasan upgrade ke modul premium
 - Untuk komponen website publik di mobile, pastikan floating controls tidak saling menutupi CTA/konten bawah
 - Untuk slider/carousel mobile, sinkronkan kontrol yang tampil dengan interaksi yang benar-benar didukung
 - Jika slider utama konten publik dipakai di mobile, sediakan gesture swipe/touch selain autoplay agar navigasi tetap natural
