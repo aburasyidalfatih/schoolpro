@@ -115,7 +115,7 @@ export default function PeriodePpdbPage() {
     {
       header: 'Masa Pendaftaran',
       accessor: (row) => (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 'var(--text-sm)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 'var(--sp-text-sm)' }}>
           <Calendar size={13} style={{ opacity: 0.5 }} />
           {formatDate(row.tanggalBuka)} — {formatDate(row.tanggalTutup)}
         </div>
@@ -124,7 +124,7 @@ export default function PeriodePpdbPage() {
     {
       header: 'Biaya Formulir',
       accessor: (row) => (
-        <span style={{ fontWeight: 700, fontSize: 'var(--text-sm)' }}>
+        <span style={{ fontWeight: 700, fontSize: 'var(--sp-text-sm)' }}>
           {formatRp(row.pengaturan?.biayaPendaftaran || 0)}
         </span>
       ),
@@ -214,7 +214,7 @@ export default function PeriodePpdbPage() {
           <div className={shared.formGroup}>
             <label className={shared.formLabel}>Biaya Pendaftaran (Formulir) <span className="required">*</span></label>
             <div style={{ position: 'relative' }}>
-              <span style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', fontSize: 'var(--text-sm)', fontWeight: 700, color: 'var(--text-secondary)' }}>Rp</span>
+              <span style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', fontSize: 'var(--sp-text-sm)', fontWeight: 700, color: 'var(--text-secondary)' }}>Rp</span>
               <input
                 required name="biayaPendaftaran" value={formData.biayaPendaftaran}
                 onChange={handleInputChange} type="number" min="0"

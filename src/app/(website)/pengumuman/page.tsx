@@ -1,56 +1,62 @@
-import { headers } from 'next/headers'
-import { getTenantBySlug } from '@/lib/tenant'
-import { redirect } from 'next/navigation'
-import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
-import { Bell, Clock } from 'lucide-react'
-import styles from '@/components/website/page.module.css'
+import { AlertTriangle, Bell, Info } from 'lucide-react'
+import PageHeader from '@/components/website/shared/PageHeader'
+import { prisma } from '@/lib/prisma'
+import { headers } from 'next/headers'
 
-function formatTanggal(date: Date) {
-  return new Intl.DateTimeFormat('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(date))
+const priorityConfig: Record<string, { icon: React.ReactNode; bg: string; border: string; text: string; label: string }> = {
+  urgent: { icon: <AlertTriangle className="h-4 w-4" />, bg: '#fef2f2', border: '#fecaca', text: '#dc2626', label: 'Penting' },
+  normal: { icon: <Bell className="h-4 w-4" />, bg: '#eff6ff', border: '#bfdbfe', text: '#2563eb', label: 'Normal' },
+  info: { icon: <Info className="h-4 w-4" />, bg: '#f0fdf4', border: '#bbf7d0', text: '#16a34a', label: 'Info' },
+}
+
+async function getTenant() {
+  const h = await headers()
+  const slug = h.get('x-tenant-slug') || 'demo'
+  return prisma.tenant.findFirst({ where: { slug, isActive: true } })
 }
 
 export default async function PengumumanPage() {
-  const headerList = await headers()
-  const tenantSlug = headerList.get('x-tenant-slug') || 'demo'
-  const tenant = await getTenantBySlug(tenantSlug)
-  if (!tenant) redirect('/app/login')
+  const tenant = await getTenant()
+  if (!tenant) return null
 
-  const pengumumans = await prisma.pengumuman.findMany({
+  const data = await prisma.pengumuman.findMany({
     where: { tenantId: tenant.id },
     orderBy: { tanggal: 'desc' },
   })
 
   return (
     <>
-      <div className={styles.pageHero}>
-        <div className={styles.pageHeroInner}>
-          <div className={styles.breadcrumb}><Link href="/">Beranda</Link> <span>/</span> <span>Pengumuman</span></div>
-          <div className={styles.pageLabel}><Bell size={13} /> Informasi Resmi</div>
-          <h1 className={styles.pageTitle}>Pengumuman</h1>
-          <p className={styles.pageSubtitle}>Informasi dan pemberitahuan resmi dari pesantren</p>
+      <PageHeader title="Pengumuman" description="Informasi dan pemberitahuan resmi sekolah"
+        breadcrumbs={[{ label: 'Pengumuman' }]} />
+      <section className="py-12 lg:py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto grid gap-5">
+          {data.map((item) => {
+            const config = priorityConfig[(item as any).prioritas] || priorityConfig.normal
+            const href = (item as any).slug ? `/pengumuman/${(item as any).slug}` : '#'
+            return (
+              <Link key={item.id} href={href} className="block group">
+                <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all p-6 border" style={{ borderColor: 'var(--skin-border)' }}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full"
+                      style={{ background: config.bg, color: config.text, border: `1px solid ${config.border}` }}>
+                      {config.icon} {config.label}
+                    </span>
+                    <span className="text-xs" style={{ color: 'var(--skin-text-muted)' }}>
+                      {new Date(item.tanggal).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
+                    </span>
+                  </div>
+                  <h2 className="text-lg font-bold mb-2 group-hover:underline decoration-2 underline-offset-4" style={{ color: 'var(--skin-text-heading)' }}>
+                    {item.judul}
+                  </h2>
+                  {(item as any).ringkasan && <p className="text-sm leading-relaxed" style={{ color: 'var(--skin-text-muted)' }}>{(item as any).ringkasan}</p>}
+                </div>
+              </Link>
+            )
+          })}
+          {data.length === 0 && <p className="text-center py-12" style={{ color: 'var(--skin-text-muted)' }}>Belum ada pengumuman.</p>}
         </div>
-      </div>
-      <div className={styles.container}>
-        {pengumumans.length === 0 ? (
-          <div className={styles.empty}>
-            <div className={styles.emptyIcon}><Bell size={28} /></div>
-            <div className={styles.emptyText}>Belum ada pengumuman</div>
-          </div>
-        ) : pengumumans.map(p => (
-          <div key={p.id} className={styles.listItem}>
-            <div className={styles.listItemTitle}>{p.judul}</div>
-            <div className={styles.listItemMeta}>
-              <Clock size={12} /> {formatTanggal(p.tanggal)}
-            </div>
-            {p.konten && (
-              <div style={{ marginTop: '0.875rem', fontSize: '0.9rem', color: '#475569', lineHeight: 1.7, paddingTop: '0.875rem', borderTop: '1px solid #f1f5f9' }}>
-                {p.konten}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
+      </section>
     </>
   )
 }

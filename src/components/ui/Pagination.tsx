@@ -34,12 +34,12 @@ export function Pagination({
       }}
     >
       {totalItems !== undefined && pageSize !== undefined ? (
-        <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-tertiary)' }}>
+        <span style={{ fontSize: 'var(--sp-text-sm)', color: 'var(--text-tertiary)' }}>
           Menampilkan {Math.min((page - 1) * pageSize + 1, totalItems)}–
           {Math.min(page * pageSize, totalItems)} dari {totalItems} data
         </span>
       ) : (
-        <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-tertiary)' }}>
+        <span style={{ fontSize: 'var(--sp-text-sm)', color: 'var(--text-tertiary)' }}>
           Halaman {page} dari {totalPages}
         </span>
       )}
@@ -59,7 +59,7 @@ export function Pagination({
                 justifyContent: 'center',
                 minWidth: '32px',
                 height: '32px',
-                fontSize: 'var(--text-sm)',
+                fontSize: 'var(--sp-text-sm)',
                 color: 'var(--text-tertiary)',
               }}
             >
@@ -109,14 +109,14 @@ function PageBtn({
         minWidth: '32px',
         height: '32px',
         padding: '0 0.375rem',
-        fontSize: 'var(--text-sm)',
+        fontSize: 'var(--sp-text-sm)',
         fontWeight: active ? 700 : 500,
         color: active ? 'white' : 'var(--text-secondary)',
         background: active
           ? 'linear-gradient(135deg, var(--primary-600), var(--primary-700))'
           : 'var(--bg-secondary)',
         border: `1px solid ${active ? 'transparent' : 'var(--border-color)'}`,
-        borderRadius: 'var(--radius-md)',
+        borderRadius: 'var(--sp-radius-md)',
         cursor: disabled ? 'not-allowed' : 'pointer',
         opacity: disabled ? 0.4 : 1,
         transition: 'all var(--transition-fast)',

@@ -7,7 +7,7 @@ import {
   Building2, LayoutDashboard, Database, FileText, CreditCard,
   ArrowRightLeft, Wallet, Landmark, ClipboardList, Settings,
   Wrench, ChevronRight, ChevronLeft, ShoppingBag, Newspaper,
-  MessageCircle, BarChart3, BrainCircuit, Bot, ShieldAlert,
+  MessageCircle, BarChart3, BrainCircuit, Bot, ShieldAlert, Globe,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import styles from './AdminSidebar.module.css'
@@ -82,11 +82,19 @@ const navSections: NavSection[] = [
   {
     title: 'KOMUNIKASI',
     items: [
+
       {
-        label: 'Berita & Pengumuman', href: '/app/berita', icon: <Newspaper size={20} />,
+        label: 'Kelola Website', href: '/app/website', icon: <Globe size={20} />,
         children: [
-          { label: 'Portal Berita', href: '/app/berita/artikel' },
-          { label: 'Pengumuman', href: '/app/berita/pengumuman' },
+          { label: 'Slider / Banner', href: '/app/website/slider' },
+          { label: 'Pengumuman', href: '/app/website/pengumuman' },
+          { label: 'Agenda', href: '/app/website/agenda' },
+          { label: 'Prestasi', href: '/app/website/prestasi' },
+          { label: 'Ekskul', href: '/app/website/ekskul' },
+          { label: 'Fasilitas', href: '/app/website/fasilitas' },
+          { label: 'Guru & Staff', href: '/app/website/guru' },
+          { label: 'Blog Guru', href: '/app/website/blog' },
+          { label: 'Editorial', href: '/app/website/editorial' },
         ],
       },
       {

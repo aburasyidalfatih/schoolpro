@@ -1,167 +1,124 @@
+import { GraduationCap, Eye, Target, Award, BookOpen, Users, Globe } from 'lucide-react'
+import PageHeader from '@/components/website/shared/PageHeader'
+import { prisma } from '@/lib/prisma'
 import { headers } from 'next/headers'
-import { getTenantBySlug } from '@/lib/tenant'
-import { redirect } from 'next/navigation'
-import Link from 'next/link'
-import { BookOpen, MapPin, Phone, Mail, Globe, Award, Calendar, Target, Rocket, UserCircle, AtSign, Share2, Play, MessageCircle } from 'lucide-react'
-import styles from './page.module.css'
+
+async function getTenant() {
+  const h = await headers()
+  const slug = h.get('x-tenant-slug') || 'demo'
+  return prisma.tenant.findFirst({ where: { slug, isActive: true } })
+}
 
 export default async function ProfilPage() {
-  const headerList = await headers()
-  const tenantSlug = headerList.get('x-tenant-slug') || 'demo'
-  const tenant = await getTenantBySlug(tenantSlug)
-  if (!tenant) redirect('/app/login')
+  const tenant = await getTenant()
+  if (!tenant) return null
 
-  const profile = (tenant.profileWebsite as any) || {}
-  const sosmed = (tenant.mediaSosial as any) || {}
+  const pengaturan = (tenant.pengaturan as any) || {}
+  // const mediaSosial = (tenant.mediaSosial as any) || {}
+
+  let misiArr: string[] = []
+  try {
+    misiArr = JSON.parse(pengaturan.misi || '[]')
+  } catch {
+    if (pengaturan.misi) misiArr = String(pengaturan.misi).split(',').map((s: string) => s.trim())
+  }
+
+  const stats = [
+    { icon: <Users className="h-5 w-5 sm:h-6 sm:w-6" />, value: pengaturan.statsStudents || 0, label: 'Siswa' },
+    { icon: <GraduationCap className="h-5 w-5 sm:h-6 sm:w-6" />, value: pengaturan.statsTeachers || 0, label: 'Pendidik' },
+    { icon: <Award className="h-5 w-5 sm:h-6 sm:w-6" />, value: pengaturan.statsAchieve || 0, label: 'Prestasi' },
+    { icon: <Globe className="h-5 w-5 sm:h-6 sm:w-6" />, value: pengaturan.statsEkskul || 0, label: 'Ekskul' },
+  ]
 
   return (
     <>
-      <div className={styles.pageHero}>
-        <div className={styles.pageHeroInner}>
-          <div className={styles.breadcrumb}><Link href="/">Beranda</Link> <span>/</span> <span>Profil</span></div>
-          <div className={styles.pageLabel}><BookOpen size={13} /> Tentang Kami</div>
-          <h1 className={styles.pageTitle}>Profil Pesantren</h1>
-          <p className={styles.pageSubtitle}>Mengenal lebih dekat {tenant.nama}</p>
-        </div>
-      </div>
+      <PageHeader title="Profil Sekolah" description={`Mengenal lebih dekat ${tenant.nama}`}
+        breadcrumbs={[{ label: 'Profil' }]} />
+      <div className="py-12 lg:py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto space-y-12">
 
-      <div className={styles.container}>
-        <div className={styles.profilGrid}>
-          <div className={styles.profilMain}>
-            {/* Identity card */}
-            <div className={styles.profilCard}>
-              <div className={styles.profilLogoBox}>
-                {tenant.logoUrl
-                  ? <img src={tenant.logoUrl} alt={tenant.nama} style={{ width: 80, height: 80, objectFit: 'contain' }} />
-                  : <BookOpen size={40} />
-                }
+          {/* Identitas */}
+          <section className="glass-card rounded-2xl p-8">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-white shadow-lg"
+                style={{ background: 'linear-gradient(135deg, var(--skin-primary), var(--skin-primary-light))' }}>
+                <GraduationCap className="h-8 w-8" />
               </div>
-              <h2 className={styles.profilNama}>{tenant.nama}</h2>
-              {profile.tipeLembaga && <div className={styles.profilTipe}>{profile.tipeLembaga}</div>}
-              <div className={styles.profilBadges}>
-                {profile.npsn && <span className={styles.profilBadge}>NPSN: {profile.npsn}</span>}
-                {profile.akreditasi && <span className={styles.profilBadgeGreen}>Akreditasi {profile.akreditasi}</span>}
-                {profile.tahunBerdiri && <span className={styles.profilBadge}>Est. {profile.tahunBerdiri}</span>}
+              <div>
+                <h2 className="text-2xl font-bold" style={{ color: 'var(--skin-text-heading)' }}>{tenant.nama}</h2>
+                <p className="text-sm" style={{ color: 'var(--skin-text-muted)' }}>
+                  {pengaturan.akreditasi && <>Akreditasi: <strong>{pengaturan.akreditasi}</strong> &bull; </>}
+                  {pengaturan.npsn && <>NPSN: {pengaturan.npsn}</>}
+                </p>
               </div>
             </div>
+            {pengaturan.tagline && <p className="text-base leading-relaxed" style={{ color: 'var(--skin-text-body)' }}>{pengaturan.tagline}</p>}
+          </section>
 
-            {/* Tentang */}
-            {profile.tentang && (
-              <div className={styles.profilSection}>
-                <h3 className={styles.profilSectionTitle}><BookOpen size={16} /> Tentang Pesantren</h3>
-                <div className={styles.profilText}>{profile.tentang}</div>
+          {/* Sejarah */}
+          {pengaturan.sejarah && (
+            <section>
+              <div className="flex items-center gap-3 mb-4">
+                <BookOpen className="h-6 w-6" style={{ color: 'var(--skin-primary)' }} />
+                <h2 className="text-xl font-bold" style={{ color: 'var(--skin-text-heading)' }}>Sejarah</h2>
               </div>
-            )}
+              <div className="section-divider mb-6" />
+              <p className="text-base leading-relaxed" style={{ color: 'var(--skin-text-body)' }}>{pengaturan.sejarah}</p>
+            </section>
+          )}
 
-            {/* Visi Misi */}
-            {(profile.visi || profile.misi) && (
-              <div className={styles.profilVisiMisi}>
-                {profile.visi && (
-                  <div className={styles.profilVisiCard}>
-                    <div className={styles.profilVisiIcon}><Target size={20} /></div>
-                    <h3>Visi</h3>
-                    <p>{profile.visi}</p>
-                  </div>
-                )}
-                {profile.misi && (
-                  <div className={styles.profilMisiCard}>
-                    <div className={styles.profilMisiIcon}><Rocket size={20} /></div>
-                    <h3>Misi</h3>
-                    <div className={styles.profilText} style={{ whiteSpace: 'pre-line' }}>{profile.misi}</div>
-                  </div>
-                )}
+          {/* Visi */}
+          {pengaturan.visi && (
+            <section className="p-8 rounded-2xl" style={{ background: 'linear-gradient(135deg, var(--skin-primary-dark), var(--skin-primary))' }}>
+              <div className="flex items-center gap-3 mb-4">
+                <Eye className="h-6 w-6 text-white" />
+                <h2 className="text-xl font-bold text-white">Visi</h2>
               </div>
-            )}
+              <p className="text-base leading-relaxed text-white/85">{pengaturan.visi}</p>
+            </section>
+          )}
 
-            {/* Kepala Sekolah */}
-            {profile.kepalaSekolah && (
-              <div className={styles.profilSection}>
-                <h3 className={styles.profilSectionTitle}><UserCircle size={16} /> Pimpinan</h3>
-                <div className={styles.kepalaCard}>
-                  <div className={styles.kepalaFoto}>
-                    {profile.fotoKepala
-                      ? <img src={profile.fotoKepala} alt={profile.kepalaSekolah} />
-                      : <UserCircle size={32} />
-                    }
+          {/* Misi */}
+          {misiArr.length > 0 && (
+            <section>
+              <div className="flex items-center gap-3 mb-4">
+                <Target className="h-6 w-6" style={{ color: 'var(--skin-primary)' }} />
+                <h2 className="text-xl font-bold" style={{ color: 'var(--skin-text-heading)' }}>Misi</h2>
+              </div>
+              <div className="section-divider mb-6" />
+              <div className="space-y-3">
+                {misiArr.map((m, i) => (
+                  <div key={i} className="flex items-start gap-3 p-4 rounded-xl" style={{ background: 'var(--skin-surface)' }}>
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white flex-shrink-0 text-sm font-bold"
+                      style={{ background: 'var(--skin-primary)' }}>{i + 1}</div>
+                    <p className="text-sm leading-relaxed pt-1" style={{ color: 'var(--skin-text-body)' }}>{m}</p>
                   </div>
-                  <div>
-                    <div className={styles.kepalaNama}>{profile.kepalaSekolah}</div>
-                    <div className={styles.kepalaJabatan}>Pengasuh / Kepala Sekolah</div>
-                    {profile.nipKepala && <div className={styles.kepalaNip}>NIP: {profile.nipKepala}</div>}
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Statistik */}
+          <section>
+            <div className="flex items-center gap-3 mb-4">
+              <Award className="h-6 w-6" style={{ color: 'var(--skin-primary)' }} />
+              <h2 className="text-xl font-bold" style={{ color: 'var(--skin-text-heading)' }}>Sekolah dalam Angka</h2>
+            </div>
+            <div className="section-divider mb-6" />
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              {stats.map((stat, i) => (
+                <div key={i} className="text-center p-4 sm:p-6 rounded-2xl" style={{ background: 'var(--skin-surface)' }}>
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl mx-auto mb-2 sm:mb-3 flex items-center justify-center text-white"
+                    style={{ background: 'linear-gradient(135deg, var(--skin-primary), var(--skin-primary-light))' }}>
+                    {stat.icon}
                   </div>
+                  <p className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--skin-text-heading)' }}>{Number(stat.value).toLocaleString('id-ID')}+</p>
+                  <p className="text-[10px] sm:text-xs font-medium" style={{ color: 'var(--skin-text-muted)' }}>{stat.label}</p>
                 </div>
-              </div>
-            )}
-          </div>
-
-          {/* Sidebar */}
-          <div className={styles.profilSidebar}>
-            <div className={styles.infoBox}>
-              <h3 className={styles.infoBoxTitle}>Informasi Kontak</h3>
-              <div className={styles.infoList}>
-                {tenant.alamat && (
-                  <div className={styles.infoRow}>
-                    <div className={styles.infoRowIcon}><MapPin size={14} /></div>
-                    <span>{tenant.alamat}</span>
-                  </div>
-                )}
-                {tenant.telepon && (
-                  <div className={styles.infoRow}>
-                    <div className={styles.infoRowIcon}><Phone size={14} /></div>
-                    <a href={`tel:${tenant.telepon}`}>{tenant.telepon}</a>
-                  </div>
-                )}
-                {tenant.email && (
-                  <div className={styles.infoRow}>
-                    <div className={styles.infoRowIcon}><Mail size={14} /></div>
-                    <a href={`mailto:${tenant.email}`}>{tenant.email}</a>
-                  </div>
-                )}
-                {tenant.website && (
-                  <div className={styles.infoRow}>
-                    <div className={styles.infoRowIcon}><Globe size={14} /></div>
-                    <a href={tenant.website} target="_blank" rel="noopener">{tenant.website}</a>
-                  </div>
-                )}
-              </div>
+              ))}
             </div>
+          </section>
 
-            <div className={styles.infoBox}>
-              <h3 className={styles.infoBoxTitle}>Data Lembaga</h3>
-              <div className={styles.infoList}>
-                {profile.npsn && (
-                  <div className={styles.infoRow}>
-                    <div className={styles.infoRowIcon}><BookOpen size={14} /></div>
-                    <span>NPSN: <strong>{profile.npsn}</strong></span>
-                  </div>
-                )}
-                {profile.akreditasi && (
-                  <div className={styles.infoRow}>
-                    <div className={styles.infoRowIcon}><Award size={14} /></div>
-                    <span>Akreditasi: <strong>{profile.akreditasi}</strong></span>
-                  </div>
-                )}
-                {profile.tahunBerdiri && (
-                  <div className={styles.infoRow}>
-                    <div className={styles.infoRowIcon}><Calendar size={14} /></div>
-                    <span>Berdiri: <strong>{profile.tahunBerdiri}</strong></span>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {(sosmed.instagram || sosmed.facebook || sosmed.youtube || sosmed.twitter) && (
-              <div className={styles.infoBox}>
-                <h3 className={styles.infoBoxTitle}>Media Sosial</h3>
-                <div className={styles.sosmedList}>
-                  {sosmed.instagram && <a href={sosmed.instagram} target="_blank" rel="noopener" className={styles.sosmedItem}><AtSign size={15} /> Instagram</a>}
-                  {sosmed.facebook && <a href={sosmed.facebook} target="_blank" rel="noopener" className={styles.sosmedItem}><Share2 size={15} /> Facebook</a>}
-                  {sosmed.youtube && <a href={sosmed.youtube} target="_blank" rel="noopener" className={styles.sosmedItem}><Play size={15} /> YouTube</a>}
-                  {sosmed.twitter && <a href={sosmed.twitter} target="_blank" rel="noopener" className={styles.sosmedItem}><MessageCircle size={15} /> Twitter/X</a>}
-                </div>
-              </div>
-            )}
-          </div>
         </div>
       </div>
     </>

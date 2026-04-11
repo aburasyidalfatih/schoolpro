@@ -47,7 +47,7 @@ export default function LoginPage() {
       } else {
         router.push('/app/dashboard')
       }
-    } catch (err) {
+    } catch {
       setError('Terjadi kesalahan sistem')
       setLoading(false)
     }

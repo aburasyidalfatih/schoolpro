@@ -18,7 +18,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     const { id } = await params
     const tenantId = userSession.tenantId
     const body = await req.json()
-    const { status, berkasUpdates, catatan } = body
+    const { status, berkasUpdates } = body
     // berkasUpdates: [{ berkasId, status: 'DITERIMA'|'DITOLAK', catatan }]
 
     const pendaftar = await prisma.pendaftarPpdb.findUnique({ where: { id, tenantId } })

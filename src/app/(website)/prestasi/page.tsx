@@ -1,75 +1,79 @@
-import { headers } from 'next/headers'
-import { getTenantBySlug } from '@/lib/tenant'
-import { redirect } from 'next/navigation'
-import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Trophy, Medal } from 'lucide-react'
-import styles from '@/components/website/page.module.css'
+import PageHeader from '@/components/website/shared/PageHeader'
+import { prisma } from '@/lib/prisma'
+import { headers } from 'next/headers'
 
-const tingkatConfig: Record<string, { label: string; bg: string; color: string }> = {
-  SEKOLAH:       { label: 'Sekolah',       bg: '#f1f5f9', color: '#475569' },
-  KOTA:          { label: 'Kota/Kab',      bg: '#eff6ff', color: '#2563eb' },
-  PROVINSI:      { label: 'Provinsi',      bg: '#f5f3ff', color: '#7c3aed' },
-  NASIONAL:      { label: 'Nasional',      bg: '#fef3c7', color: '#d97706' },
-  INTERNASIONAL: { label: 'Internasional', bg: '#fef2f2', color: '#dc2626' },
+const levelColors: Record<string, string> = {
+  KOTA: '#64748b', PROVINSI: '#2563eb', NASIONAL: '#d97706', INTERNASIONAL: '#dc2626', SEKOLAH: '#16a34a',
+}
+
+async function getTenant() {
+  const h = await headers()
+  const slug = h.get('x-tenant-slug') || 'demo'
+  return prisma.tenant.findFirst({ where: { slug, isActive: true } })
 }
 
 export default async function PrestasiPage() {
-  const headerList = await headers()
-  const tenantSlug = headerList.get('x-tenant-slug') || 'demo'
-  const tenant = await getTenantBySlug(tenantSlug)
-  if (!tenant) redirect('/app/login')
+  const tenant = await getTenant()
+  if (!tenant) return null
 
-  const prestasis = await prisma.prestasi.findMany({
+  const data = await prisma.prestasi.findMany({
     where: { tenantId: tenant.id, isPublished: true },
-    orderBy: [{ tahun: 'desc' }, { tingkat: 'asc' }],
+    orderBy: { createdAt: 'desc' },
   })
 
   return (
     <>
-      <div className={styles.pageHero}>
-        <div className={styles.pageHeroInner}>
-          <div className={styles.breadcrumb}><Link href="/">Beranda</Link> <span>/</span> <span>Prestasi</span></div>
-          <div className={styles.pageLabel}><Trophy size={13} /> Capaian Kami</div>
-          <h1 className={styles.pageTitle}>Prestasi Unggulan</h1>
-          <p className={styles.pageSubtitle}>Pencapaian membanggakan warga pesantren</p>
-        </div>
-      </div>
-      <div className={styles.container}>
-        {prestasis.length === 0 ? (
-          <div className={styles.empty}>
-            <div className={styles.emptyIcon}><Trophy size={28} /></div>
-            <div className={styles.emptyText}>Belum ada prestasi yang ditampilkan</div>
-          </div>
-        ) : (
-          <div className={styles.grid3}>
-            {prestasis.map(p => {
-              const tc = tingkatConfig[p.tingkat] || tingkatConfig.SEKOLAH
-              return (
-                <div key={p.id} className={styles.card} style={{ borderTop: `3px solid ${tc.color}` }}>
-                  <div className={styles.cardBody}>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                      <div style={{ width: 44, height: 44, background: '#fef3c7', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#d97706' }}>
-                        <Trophy size={20} />
+      <PageHeader title="Galeri Prestasi" description="Catatan kebanggaan siswa di berbagai kompetisi"
+        breadcrumbs={[{ label: 'Prestasi' }]} />
+      <section className="py-12 lg:py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {data.map((item) => {
+            const color = levelColors[item.tingkat?.toUpperCase()] || '#64748b'
+            const href = (item as any).slug ? `/prestasi/${(item as any).slug}` : '#'
+            return (
+              <Link key={item.id} href={href} className="block group">
+                <div className="h-full bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all overflow-hidden border" style={{ borderColor: 'var(--skin-border)' }}>
+                  {item.gambarUrl ? (
+                    <div className="relative h-48 overflow-hidden">
+                      <Image src={item.gambarUrl} alt={item.judul} fill className="object-cover group-hover:scale-110 transition-transform duration-500" />
+                      <div className="absolute top-3 left-3">
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full text-white shadow-lg"
+                          style={{ background: color }}>
+                          <Trophy className="h-3 w-3" />{item.tingkat}
+                        </span>
                       </div>
-                      <span style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', padding: '0.25rem 0.625rem', borderRadius: 100, background: tc.bg, color: tc.color }}>
-                        {tc.label}
-                      </span>
+                      {(item as any).pencapaian && (
+                        <div className="absolute bottom-3 right-3">
+                          <span className="inline-flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-full bg-white/90 backdrop-blur shadow-md"
+                            style={{ color }}>
+                            <Medal className="h-3.5 w-3.5" />{(item as any).pencapaian}
+                          </span>
+                        </div>
+                      )}
                     </div>
-                    <div className={styles.cardTitle}>{p.judul}</div>
-                    {p.deskripsi && <div className={styles.cardDesc}>{p.deskripsi}</div>}
-                    <div className={styles.cardMeta}>
-                      <Medal size={12} /> {p.tahun}
-                      <span style={{ color: '#cbd5e1' }}>·</span>
-                      {p.kategori}
+                  ) : (
+                    <div className="h-24 flex items-center justify-center" style={{ background: `${color}15` }}>
+                      <Trophy className="h-10 w-10" style={{ color }} />
                     </div>
+                  )}
+                  <div className="p-5">
+                    <p className="text-xs mb-2" style={{ color: 'var(--skin-text-muted)' }}>{item.tahun}</p>
+                    <h2 className="text-base font-bold mb-2 line-clamp-2 group-hover:underline decoration-2 underline-offset-4" style={{ color: 'var(--skin-text-heading)' }}>
+                      {item.judul}
+                    </h2>
+                    {(item as any).siswa && <p className="text-sm font-medium mb-2" style={{ color: 'var(--skin-primary)' }}>{(item as any).siswa}</p>}
+                    <span className="text-[10px] px-2.5 py-1 rounded-full font-medium" style={{ background: 'var(--skin-surface)', color: 'var(--skin-text-muted)' }}>{item.kategori}</span>
                   </div>
                 </div>
-              )
-            })}
-          </div>
-        )}
-      </div>
+              </Link>
+            )
+          })}
+          {data.length === 0 && <p className="col-span-3 text-center py-12" style={{ color: 'var(--skin-text-muted)' }}>Belum ada prestasi.</p>}
+        </div>
+      </section>
     </>
   )
 }

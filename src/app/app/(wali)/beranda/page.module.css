@@ -12,7 +12,7 @@
 }
 
 .welcomeTitle {
-  font-size: var(--text-3xl);
+  font-size: var(--sp-text-3xl);
   font-weight: 800;
   letter-spacing: -0.02em;
 }
@@ -25,10 +25,10 @@
 /* ── Empty State ── */
 .emptyState {
   background: var(--bg-secondary);
-  border-radius: var(--radius-2xl);
+  border-radius: var(--sp-radius-2xl);
   padding: 4rem 2rem;
   border: 1px solid var(--border-color);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--sp-shadow-md);
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -73,10 +73,10 @@
 /* ── Card ── */
 .pendaftaranCard {
   background: var(--bg-secondary);
-  border-radius: var(--radius-xl);
+  border-radius: var(--sp-radius-xl);
   padding: var(--space-6);
   border: 1px solid var(--border-color);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--sp-shadow-sm);
   transition: all var(--transition-base);
   display: flex;
   flex-direction: column;
@@ -85,7 +85,7 @@
 
 .pendaftaranCard:hover {
   border-color: var(--primary-200);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--sp-shadow-md);
 }
 
 .cardSiswa {
@@ -117,7 +117,7 @@
   height: 3rem;
   background: var(--primary-50);
   color: var(--primary-600);
-  border-radius: var(--radius-lg);
+  border-radius: var(--sp-radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -131,9 +131,9 @@
   color: var(--success-600);
 }
 
-.studentName { font-size: var(--text-base); font-weight: 700; }
+.studentName { font-size: var(--sp-text-base); font-weight: 700; }
 .studentMeta {
-  font-size: var(--text-xs);
+  font-size: var(--sp-text-xs);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -155,14 +155,14 @@
 .progressBarTrack {
   height: 6px;
   background: var(--bg-tertiary);
-  border-radius: var(--radius-full);
+  border-radius: var(--sp-radius-full);
   overflow: hidden;
 }
 
 .progressBarFill {
   height: 100%;
   background: linear-gradient(90deg, var(--primary-500), var(--primary-400));
-  border-radius: var(--radius-full);
+  border-radius: var(--sp-radius-full);
   transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -251,7 +251,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  font-size: var(--text-xs);
+  font-size: var(--sp-text-xs);
   color: var(--text-secondary);
   font-weight: 500;
 }
@@ -262,9 +262,9 @@
   align-items: center;
   justify-content: center;
   gap: 0.375rem;
-  border-radius: var(--radius-lg);
+  border-radius: var(--sp-radius-lg);
   font-weight: 700;
-  font-size: var(--text-sm);
+  font-size: var(--sp-text-sm);
   padding: 0.625rem 1.25rem;
   transition: all var(--transition-base);
   text-decoration: none;

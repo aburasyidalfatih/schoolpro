@@ -1,6 +1,19 @@
 import type { Metadata } from 'next'
+import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
 import { Toaster } from 'sonner'
+
+const inter = Inter({
+  variable: '--font-sans',
+  subsets: ['latin'],
+  display: 'swap',
+})
+
+const plusJakarta = Plus_Jakarta_Sans({
+  variable: '--font-heading',
+  subsets: ['latin'],
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: 'SchoolPro — Sistem Informasi Sekolah Profesional',
@@ -18,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="id" suppressHydrationWarning>
       <head>
-        {/* Prevent flash of wrong theme */}
+        {/* Prevent flash of wrong theme/skin */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -29,13 +42,15 @@ export default function RootLayout({
                     theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
                   }
                   document.documentElement.setAttribute('data-theme', theme);
+                  var skin = localStorage.getItem('school-skin') || 'akademi';
+                  document.documentElement.setAttribute('data-skin', skin);
                 } catch(e) {}
               })();
             `,
           }}
         />
       </head>
-      <body>
+      <body className={`${inter.variable} ${plusJakarta.variable}`}>
         <AuthProvider>
           {children}
           <Toaster richColors position="top-right" />

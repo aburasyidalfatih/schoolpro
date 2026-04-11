@@ -103,7 +103,7 @@ export default function KelasPage() {
     {
       header: 'Unit / Jenjang',
       accessor: (row) => (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: 'var(--text-sm)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: 'var(--sp-text-sm)' }}>
           <Building2 size={14} style={{ opacity: 0.5 }} />{row.unit?.nama}
         </div>
       ),
@@ -111,7 +111,7 @@ export default function KelasPage() {
     {
       header: 'Tahun Ajaran',
       accessor: (row) => (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: 'var(--text-sm)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: 'var(--sp-text-sm)' }}>
           <Calendar size={14} style={{ opacity: 0.5 }} />{row.tahunAjaran?.nama}
         </div>
       ),

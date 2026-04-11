@@ -77,7 +77,7 @@ export default function PengaturanPpdbPage() {
       </div>
 
       {/* Info Banner */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-3)', padding: 'var(--space-4) var(--space-5)', background: 'var(--primary-50)', border: '1px solid var(--primary-100)', borderRadius: 'var(--radius-lg)', fontSize: 'var(--text-sm)', color: 'var(--primary-700)' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--space-3)', padding: 'var(--space-4) var(--space-5)', background: 'var(--primary-50)', border: '1px solid var(--primary-100)', borderRadius: 'var(--sp-radius-lg)', fontSize: 'var(--sp-text-sm)', color: 'var(--primary-700)' }}>
         <Info size={16} style={{ flexShrink: 0, marginTop: 2 }} />
         <p>Pengaturan biaya di sini akan otomatis digunakan saat pendaftar mengisi form singkat. Biaya formulir juga bisa diatur langsung di halaman <strong>Gelombang PPDB</strong>.</p>
       </div>
@@ -93,19 +93,19 @@ export default function PengaturanPpdbPage() {
             const s = settings[p.id] || {}
 
             return (
-              <div key={p.id} style={{ background: 'var(--bg-secondary)', border: `1px solid ${p.isActive ? 'var(--primary-200)' : 'var(--border-color)'}`, borderRadius: 'var(--radius-xl)', overflow: 'hidden', boxShadow: 'var(--shadow-xs)' }}>
+              <div key={p.id} style={{ background: 'var(--bg-secondary)', border: `1px solid ${p.isActive ? 'var(--primary-200)' : 'var(--border-color)'}`, borderRadius: 'var(--sp-radius-xl)', overflow: 'hidden', boxShadow: 'var(--sp-shadow-xs)' }}>
                 {/* Accordion Header */}
                 <button
                   onClick={() => setExpanded(isOpen ? null : p.id)}
                   style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 'var(--space-5) var(--space-6)', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', gap: 'var(--space-4)' }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-                    <div style={{ width: '2.25rem', height: '2.25rem', borderRadius: 'var(--radius-lg)', background: p.isActive ? 'var(--primary-100)' : 'var(--bg-tertiary)', color: p.isActive ? 'var(--primary-600)' : 'var(--text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ width: '2.25rem', height: '2.25rem', borderRadius: 'var(--sp-radius-lg)', background: p.isActive ? 'var(--primary-100)' : 'var(--bg-tertiary)', color: p.isActive ? 'var(--primary-600)' : 'var(--text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <Settings size={16} />
                     </div>
                     <div>
-                      <div style={{ fontWeight: 700, fontSize: 'var(--text-sm)', color: 'var(--text-primary)' }}>{p.nama}</div>
-                      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>
+                      <div style={{ fontWeight: 700, fontSize: 'var(--sp-text-sm)', color: 'var(--text-primary)' }}>{p.nama}</div>
+                      <div style={{ fontSize: 'var(--sp-text-xs)', color: 'var(--text-tertiary)' }}>
                         {p.tahunAjaran?.nama}{p.unit ? ` • ${p.unit.nama}` : ''}
                         {' — '}Biaya formulir: <strong>Rp {Number(s.biayaPendaftaran || 0).toLocaleString('id-ID')}</strong>
                       </div>
@@ -123,14 +123,14 @@ export default function PengaturanPpdbPage() {
 
                     {/* Biaya */}
                     <div>
-                      <div style={{ fontSize: 'var(--text-xs)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-tertiary)', marginBottom: 'var(--space-4)', paddingBottom: 'var(--space-3)', borderBottom: '1px solid var(--border-color)' }}>
+                      <div style={{ fontSize: 'var(--sp-text-xs)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-tertiary)', marginBottom: 'var(--space-4)', paddingBottom: 'var(--space-3)', borderBottom: '1px solid var(--border-color)' }}>
                         Biaya Pendaftaran
                       </div>
                       <div className={shared.formRow}>
                         <div className={shared.formGroup}>
                           <label className={shared.formLabel}>Biaya Formulir (Pendaftaran)</label>
                           <div style={{ position: 'relative' }}>
-                            <span style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', fontSize: 'var(--text-sm)', fontWeight: 700, color: 'var(--text-secondary)' }}>Rp</span>
+                            <span style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', fontSize: 'var(--sp-text-sm)', fontWeight: 700, color: 'var(--text-secondary)' }}>Rp</span>
                             <input
                               type="number" min="0"
                               value={s.biayaPendaftaran || ''}
@@ -145,7 +145,7 @@ export default function PengaturanPpdbPage() {
                         <div className={shared.formGroup}>
                           <label className={shared.formLabel}>Biaya Daftar Ulang</label>
                           <div style={{ position: 'relative' }}>
-                            <span style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', fontSize: 'var(--text-sm)', fontWeight: 700, color: 'var(--text-secondary)' }}>Rp</span>
+                            <span style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', fontSize: 'var(--sp-text-sm)', fontWeight: 700, color: 'var(--text-secondary)' }}>Rp</span>
                             <input
                               type="number" min="0"
                               value={s.biayaDaftarUlang || ''}
@@ -162,7 +162,7 @@ export default function PengaturanPpdbPage() {
 
                     {/* Kuota & Catatan */}
                     <div>
-                      <div style={{ fontSize: 'var(--text-xs)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-tertiary)', marginBottom: 'var(--space-4)', paddingBottom: 'var(--space-3)', borderBottom: '1px solid var(--border-color)' }}>
+                      <div style={{ fontSize: 'var(--sp-text-xs)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-tertiary)', marginBottom: 'var(--space-4)', paddingBottom: 'var(--space-3)', borderBottom: '1px solid var(--border-color)' }}>
                         Kuota & Informasi
                       </div>
                       <div className={shared.formRow}>

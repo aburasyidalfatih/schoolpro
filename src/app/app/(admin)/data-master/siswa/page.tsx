@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Plus, Pencil, Trash2, User, Users, Home, Phone, GraduationCap, Building2 } from 'lucide-react'
+import { Plus, Pencil, Trash2, User, Users, Home, GraduationCap, Building2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { DataTable, Column } from '@/components/ui/DataTable'
 import { Modal } from '@/components/ui/Modal'
@@ -120,11 +120,11 @@ export default function SiswaPage() {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', marginBottom: '2px' }}>
             <GraduationCap size={13} style={{ opacity: 0.5 }} />
-            <span style={{ fontWeight: 500, fontSize: 'var(--text-sm)' }}>{row.kelas?.nama || '-'}</span>
+            <span style={{ fontWeight: 500, fontSize: 'var(--sp-text-sm)' }}>{row.kelas?.nama || '-'}</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
             <Building2 size={12} style={{ opacity: 0.5 }} />
-            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>{row.unit?.nama || '-'}</span>
+            <span style={{ fontSize: 'var(--sp-text-xs)', color: 'var(--text-tertiary)' }}>{row.unit?.nama || '-'}</span>
           </div>
         </div>
       ),

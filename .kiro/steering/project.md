@@ -1,12 +1,17 @@
 # SchoolPro — Project Context
 
-## Lokasi Project
-- **Path dev**: `/var/www/schoolpro-dev` (branch `develop`)
-- **Path prod**: `/var/www/schoolpro` (branch `main`)
-- **Dev URL**: https://dev.schoolpro.id
-- **Prod URL**: https://demo.schoolpro.id
-- **Process Manager**: PM2 (`pm2 restart schoolpro-dev` untuk dev, `pm2 restart schoolpro` untuk prod)
-- **Port dev**: 3001 | **Port prod**: 3000
+## Lokasi Project & Domain
+
+| Environment | Path | Domain | Port | PM2 Name |
+|---|---|---|---|---|
+| Production | `/var/www/schoolpro` (branch `main`) | `schoolpro.id` (landing SaaS) | 3000 | `schoolpro` |
+| Production | `/var/www/schoolpro` (branch `main`) | `demo.schoolpro.id` (app sekolah) | 3000 | `schoolpro` |
+| Development | `/var/www/schoolpro-dev` (branch `develop`) | `dev.schoolpro.id` (app sekolah) | 3001 | `schoolpro-dev` |
+| Development | `/var/www/schoolpro-dev` (branch `develop`) | `dev.schoolpro.id/landing` (landing dev) | 3001 | `schoolpro-dev` |
+
+- **Process Manager**: PM2 dijalankan sebagai user `ubuntu` (bukan root)
+- **Ecosystem config**: `/home/ubuntu/ecosystem.config.js`
+- **Startup**: `pm2-ubuntu.service` (auto-start saat reboot via systemd)
 
 ## Tech Stack
 - Next.js 15 (App Router, TypeScript)
@@ -33,7 +38,7 @@
 - Data Master: Unit, Tahun Ajaran, Kelas, Siswa, Petugas, Rekening
 - Keuangan: Tagihan, Pembayaran, Tabungan, Arus Kas
 - PPDB Online: Periode, Pendaftar, Berkas, Tagihan PPDB
-- Website publik: Berita, Pengumuman, Agenda, Prestasi, Ekskul, Fasilitas, Alumni
+- Website publik: Berita, Pengumuman, Agenda, Prestasi, Ekskul, Fasilitas, Alumni, Guru, Blog, Editorial
 - Auth multi-role + multi-tenant
 
 ## Fitur Belum Ada (Roadmap Prioritas)
@@ -46,17 +51,21 @@
 
 ## Perintah Penting
 ```bash
-# Restart setelah build
-pm2 restart schoolpro
+# Deploy production (tanpa sudo)
+cd /var/www/schoolpro && npm run build && pm2 restart schoolpro
 
-# Build production
-cd /var/www/schoolpro && npm run build
+# Deploy development (tanpa sudo)
+cd /var/www/schoolpro-dev && npm run build && pm2 restart schoolpro-dev
 
-# Prisma migrate
-cd /var/www/schoolpro && npx prisma migrate dev
+# Prisma migrate (dev)
+cd /var/www/schoolpro-dev && npx prisma migrate dev
+
+# Prisma migrate (prod) — hati-hati!
+cd /var/www/schoolpro && npx prisma migrate deploy
 
 # Lihat log
 pm2 logs schoolpro
+pm2 logs schoolpro-dev
 ```
 
 ## Aturan Pengembangan
@@ -78,7 +87,7 @@ Setiap selesai mengerjakan fitur, AI wajib:
 
 ## Environment Produksi
 - Ini adalah aplikasi PRODUKSI yang sudah live, bukan localhost
-- URL live: https://demo.schoolpro.id
+- URL live: https://demo.schoolpro.id dan https://schoolpro.id
 - Setiap perubahan kode langsung berdampak ke pengguna nyata
 - Setelah edit kode, wajib: `npm run build` lalu `pm2 restart schoolpro`
 - Jangan gunakan `npm run dev` — selalu build untuk produksi

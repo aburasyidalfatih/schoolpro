@@ -24,14 +24,14 @@
 
 .title {
   font-family: var(--font-heading);
-  font-size: var(--text-2xl);
+  font-size: var(--sp-text-2xl);
   font-weight: 800;
   color: var(--text-primary);
   letter-spacing: -0.025em;
 }
 
 .subtitle {
-  font-size: var(--text-sm);
+  font-size: var(--sp-text-sm);
   color: var(--text-secondary);
 }
 
@@ -76,11 +76,11 @@
 .searchInput {
   width: 100%;
   padding: 0.625rem 1rem 0.625rem 2.5rem;
-  border-radius: var(--radius-lg);
+  border-radius: var(--sp-radius-lg);
   border: 1.5px solid var(--border-color);
   background: var(--bg-secondary);
   color: var(--text-primary);
-  font-size: var(--text-sm);
+  font-size: var(--sp-text-sm);
   font-family: var(--font-sans);
   transition: all var(--transition-fast);
 }
@@ -111,7 +111,7 @@
   justify-content: center;
   flex-shrink: 0;
   font-weight: 700;
-  font-size: var(--text-sm);
+  font-size: var(--sp-text-sm);
   overflow: hidden;
 }
 
@@ -128,11 +128,11 @@
 .cellName {
   font-weight: 600;
   color: var(--text-primary);
-  font-size: var(--text-sm);
+  font-size: var(--sp-text-sm);
 }
 
 .cellSub {
-  font-size: var(--text-xs);
+  font-size: var(--sp-text-xs);
   color: var(--text-tertiary);
   margin-top: 1px;
 }
@@ -144,7 +144,7 @@
   color: var(--text-tertiary);
   cursor: pointer;
   padding: 0.375rem;
-  border-radius: var(--radius-md);
+  border-radius: var(--sp-radius-md);
   transition: all var(--transition-fast);
   display: inline-flex;
   align-items: center;
@@ -174,7 +174,7 @@
   display: inline-flex;
   align-items: center;
   padding: 0.2rem 0.625rem;
-  border-radius: var(--radius-full);
+  border-radius: var(--sp-radius-full);
   font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -225,7 +225,7 @@
 }
 
 .formLabel {
-  font-size: var(--text-sm);
+  font-size: var(--sp-text-sm);
   font-weight: 600;
   color: var(--text-primary);
 }
@@ -238,11 +238,11 @@
 .formInput {
   width: 100%;
   padding: 0.625rem 0.875rem;
-  border-radius: var(--radius-lg);
+  border-radius: var(--sp-radius-lg);
   border: 1.5px solid var(--border-color);
   background: var(--bg-secondary);
   color: var(--text-primary);
-  font-size: var(--text-sm);
+  font-size: var(--sp-text-sm);
   font-family: var(--font-sans);
   transition: all var(--transition-fast);
 }
@@ -269,8 +269,8 @@
   border: 1px solid var(--danger-100);
   color: var(--danger-700);
   padding: 0.75rem 1rem;
-  border-radius: var(--radius-lg);
-  font-size: var(--text-sm);
+  border-radius: var(--sp-radius-lg);
+  font-size: var(--sp-text-sm);
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -296,7 +296,7 @@
   border: none;
   background: none;
   color: var(--text-secondary);
-  font-size: var(--text-sm);
+  font-size: var(--sp-text-sm);
   font-weight: 500;
   font-family: var(--font-sans);
   cursor: pointer;
@@ -308,7 +308,7 @@
 .tabBtn:hover {
   color: var(--primary-600);
   background: var(--primary-50);
-  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  border-radius: var(--sp-radius-md) var(--sp-radius-md) 0 0;
 }
 
 .tabActive {

@@ -160,7 +160,7 @@ export default function DetailPendaftarPage({ params }: { params: Promise<{ id: 
       {/* Header */}
       <div className={shared.header}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
-          <Link href="/app/ppdb/pendaftar" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, color: 'var(--text-tertiary)', textDecoration: 'none', fontSize: 'var(--text-sm)', fontWeight: 600 }}>
+          <Link href="/app/ppdb/pendaftar" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, color: 'var(--text-tertiary)', textDecoration: 'none', fontSize: 'var(--sp-text-sm)', fontWeight: 600 }}>
             <ArrowLeft size={16} /> Kembali
           </Link>
           <div>
@@ -227,14 +227,14 @@ export default function DetailPendaftarPage({ params }: { params: Promise<{ id: 
                 { label: 'Telepon', value: formulir.telepon || '—' },
               ].map(f => (
                 <div key={f.label}>
-                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>{f.label}</div>
-                  <div style={{ fontWeight: 600, fontSize: 'var(--text-sm)' }}>{f.value}</div>
+                  <div style={{ fontSize: 'var(--sp-text-xs)', color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>{f.label}</div>
+                  <div style={{ fontWeight: 600, fontSize: 'var(--sp-text-sm)' }}>{f.value}</div>
                 </div>
               ))}
               {formulir.alamat && (
                 <div style={{ gridColumn: '1 / -1' }}>
-                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>Alamat</div>
-                  <div style={{ fontWeight: 600, fontSize: 'var(--text-sm)' }}>{formulir.alamat}</div>
+                  <div style={{ fontSize: 'var(--sp-text-xs)', color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>Alamat</div>
+                  <div style={{ fontWeight: 600, fontSize: 'var(--sp-text-sm)' }}>{formulir.alamat}</div>
                 </div>
               )}
             </div>
@@ -256,8 +256,8 @@ export default function DetailPendaftarPage({ params }: { params: Promise<{ id: 
                   { label: 'Penghasilan', value: orangtua.penghasilan || '—' },
                 ].map(f => (
                   <div key={f.label}>
-                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>{f.label}</div>
-                    <div style={{ fontWeight: 600, fontSize: 'var(--text-sm)' }}>{f.value}</div>
+                    <div style={{ fontSize: 'var(--sp-text-xs)', color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>{f.label}</div>
+                    <div style={{ fontWeight: 600, fontSize: 'var(--sp-text-sm)' }}>{f.value}</div>
                   </div>
                 ))}
               </div>
@@ -272,11 +272,11 @@ export default function DetailPendaftarPage({ params }: { params: Promise<{ id: 
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
                 {data.berkas.map((b: any) => (
-                  <div key={b.id} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)', padding: 'var(--space-4)', background: 'var(--bg-tertiary)', borderRadius: 'var(--radius-lg)' }}>
+                  <div key={b.id} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)', padding: 'var(--space-4)', background: 'var(--bg-tertiary)', borderRadius: 'var(--sp-radius-lg)' }}>
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: 600, fontSize: 'var(--text-sm)' }}>{b.persyaratan.nama}</div>
+                      <div style={{ fontWeight: 600, fontSize: 'var(--sp-text-sm)' }}>{b.persyaratan.nama}</div>
                       {b.fileUrl && (
-                        <a href={b.fileUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: 'var(--text-xs)', color: 'var(--primary-600)', display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 2 }}>
+                        <a href={b.fileUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: 'var(--sp-text-xs)', color: 'var(--primary-600)', display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 2 }}>
                           Lihat File <ExternalLink size={11} />
                         </a>
                       )}
@@ -284,7 +284,7 @@ export default function DetailPendaftarPage({ params }: { params: Promise<{ id: 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', minWidth: 200 }}>
                       <select
                         className="form-input"
-                        style={{ fontSize: 'var(--text-xs)', padding: '0.375rem 0.75rem' }}
+                        style={{ fontSize: 'var(--sp-text-xs)', padding: '0.375rem 0.75rem' }}
                         value={berkasUpdates[b.id]?.status || b.status}
                         onChange={e => setBerkasUpdates(prev => ({ ...prev, [b.id]: { ...prev[b.id], status: e.target.value } }))}
                       >
@@ -295,7 +295,7 @@ export default function DetailPendaftarPage({ params }: { params: Promise<{ id: 
                       {berkasUpdates[b.id]?.status === 'DITOLAK' && (
                         <input
                           className="form-input"
-                          style={{ fontSize: 'var(--text-xs)', padding: '0.375rem 0.75rem' }}
+                          style={{ fontSize: 'var(--sp-text-xs)', padding: '0.375rem 0.75rem' }}
                           placeholder="Alasan penolakan..."
                           value={berkasUpdates[b.id]?.catatan || ''}
                           onChange={e => setBerkasUpdates(prev => ({ ...prev, [b.id]: { ...prev[b.id], catatan: e.target.value } }))}
@@ -324,7 +324,7 @@ export default function DetailPendaftarPage({ params }: { params: Promise<{ id: 
               </div>
 
               {/* Status indicator */}
-              <div style={{ padding: 'var(--space-3)', borderRadius: 'var(--radius-lg)', background: newStatus === 'DITERIMA' ? 'var(--success-50)' : newStatus === 'DITOLAK' ? 'var(--danger-50)' : 'var(--bg-tertiary)', display: 'flex', alignItems: 'center', gap: 'var(--space-2)', fontSize: 'var(--text-sm)', fontWeight: 600, color: newStatus === 'DITERIMA' ? 'var(--success-700)' : newStatus === 'DITOLAK' ? 'var(--danger-700)' : 'var(--text-secondary)' }}>
+              <div style={{ padding: 'var(--space-3)', borderRadius: 'var(--sp-radius-lg)', background: newStatus === 'DITERIMA' ? 'var(--success-50)' : newStatus === 'DITOLAK' ? 'var(--danger-50)' : 'var(--bg-tertiary)', display: 'flex', alignItems: 'center', gap: 'var(--space-2)', fontSize: 'var(--sp-text-sm)', fontWeight: 600, color: newStatus === 'DITERIMA' ? 'var(--success-700)' : newStatus === 'DITOLAK' ? 'var(--danger-700)' : 'var(--text-secondary)' }}>
                 {newStatus === 'DITERIMA' ? <CheckCircle2 size={16} /> : newStatus === 'DITOLAK' ? <XCircle size={16} /> : <AlertCircle size={16} />}
                 {STATUS_OPTIONS.find(o => o.value === newStatus)?.label}
               </div>
@@ -352,19 +352,19 @@ export default function DetailPendaftarPage({ params }: { params: Promise<{ id: 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
                   {pending.map((p: any) => (
                     <div key={p.id} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
-                      <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
+                      <div style={{ fontSize: 'var(--sp-text-xs)', color: 'var(--text-secondary)' }}>
                         {p.tagihanJenis === 'PENDAFTARAN' ? 'Biaya Formulir' : 'Daftar Ulang'} — <strong>Rp {Number(p.nominal).toLocaleString('id-ID')}</strong>
                       </div>
                       {p.buktiUrl && (
-                        <a href={p.buktiUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 'var(--text-xs)', color: 'var(--primary-600)', fontWeight: 600 }}>
+                        <a href={p.buktiUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 'var(--sp-text-xs)', color: 'var(--primary-600)', fontWeight: 600 }}>
                           <ExternalLink size={11} /> Lihat Bukti Transfer
                         </a>
                       )}
                       <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
-                        <Button variant="success" onClick={() => handleVerifikasiBayar(p.id, true)} isLoading={submitting} style={{ flex: 1, fontSize: 'var(--text-xs)' }}>
+                        <Button variant="success" onClick={() => handleVerifikasiBayar(p.id, true)} isLoading={submitting} style={{ flex: 1, fontSize: 'var(--sp-text-xs)' }}>
                           <CheckCircle2 size={13} /> Setujui
                         </Button>
-                        <Button variant="danger" onClick={() => handleVerifikasiBayar(p.id, false)} isLoading={submitting} style={{ flex: 1, fontSize: 'var(--text-xs)' }}>
+                        <Button variant="danger" onClick={() => handleVerifikasiBayar(p.id, false)} isLoading={submitting} style={{ flex: 1, fontSize: 'var(--sp-text-xs)' }}>
                           <XCircle size={13} /> Tolak
                         </Button>
                       </div>
@@ -382,10 +382,10 @@ export default function DetailPendaftarPage({ params }: { params: Promise<{ id: 
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
               {data.tagihanPpdbs?.length === 0 && (
-                <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-tertiary)', fontStyle: 'italic' }}>Belum ada tagihan</p>
+                <p style={{ fontSize: 'var(--sp-text-sm)', color: 'var(--text-tertiary)', fontStyle: 'italic' }}>Belum ada tagihan</p>
               )}
               {data.tagihanPpdbs?.map((t: any) => (
-                <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 'var(--text-sm)' }}>
+                <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 'var(--sp-text-sm)' }}>
                   <span style={{ color: 'var(--text-secondary)' }}>{t.jenis === 'PENDAFTARAN' ? 'Biaya Formulir' : 'Daftar Ulang'}</span>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 2 }}>
                     <span style={{ fontWeight: 700 }}>Rp {Number(t.nominal).toLocaleString('id-ID')}</span>
@@ -407,7 +407,7 @@ export default function DetailPendaftarPage({ params }: { params: Promise<{ id: 
                     <Megaphone size={15} /> Pengumuman Terkirim
                   </h3>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', fontSize: 'var(--text-sm)' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', fontSize: 'var(--sp-text-sm)' }}>
                   <span className={pengumuman.status === 'DITERIMA' ? 'badge badge-success' : 'badge badge-danger'} style={{ width: 'fit-content' }}>
                     {pengumuman.status}
                   </span>
@@ -418,7 +418,7 @@ export default function DetailPendaftarPage({ params }: { params: Promise<{ id: 
                       Daftar ulang: {new Date(pengumuman.jadwalDaftarUlang).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}
                     </div>
                   )}
-                  <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>
+                  <div style={{ fontSize: 'var(--sp-text-xs)', color: 'var(--text-tertiary)' }}>
                     Dikirim: {new Date(pengumuman.tanggalPengumuman).toLocaleDateString('id-ID')}
                   </div>
                 </div>
@@ -430,7 +430,7 @@ export default function DetailPendaftarPage({ params }: { params: Promise<{ id: 
 
       {/* Modal Sinkronisasi */}
       <Modal isOpen={showSinkronModal} onClose={() => setShowSinkronModal(false)} title="Sinkronisasi ke Data Siswa">
-        <p style={{ color: 'var(--text-secondary)', marginBottom: 'var(--space-5)', fontSize: 'var(--text-sm)' }}>
+        <p style={{ color: 'var(--text-secondary)', marginBottom: 'var(--space-5)', fontSize: 'var(--sp-text-sm)' }}>
           Data pendaftar <strong>{data.namaLengkap}</strong> akan disalin ke tabel Siswa. Pilih kelas (opsional):
         </p>
         <div className={shared.formGroup} style={{ marginBottom: 'var(--space-6)' }}>
@@ -483,7 +483,7 @@ export default function DetailPendaftarPage({ params }: { params: Promise<{ id: 
               />
             </div>
           )}
-          <div style={{ padding: 'var(--space-4)', background: pengumumanForm.status === 'DITERIMA' ? 'var(--success-50)' : 'var(--danger-50)', borderRadius: 'var(--radius-lg)', fontSize: 'var(--text-sm)', color: pengumumanForm.status === 'DITERIMA' ? 'var(--success-700)' : 'var(--danger-700)', fontWeight: 600 }}>
+          <div style={{ padding: 'var(--space-4)', background: pengumumanForm.status === 'DITERIMA' ? 'var(--success-50)' : 'var(--danger-50)', borderRadius: 'var(--sp-radius-lg)', fontSize: 'var(--sp-text-sm)', color: pengumumanForm.status === 'DITERIMA' ? 'var(--success-700)' : 'var(--danger-700)', fontWeight: 600 }}>
             {pengumumanForm.status === 'DITERIMA' ? '✓ Pendaftar akan dinyatakan DITERIMA dan dapat melanjutkan ke tahap daftar ulang.' : '✕ Pendaftar akan dinyatakan DITOLAK dan tidak dapat melanjutkan proses.'}
           </div>
         </div>
@@ -502,13 +502,13 @@ export default function DetailPendaftarPage({ params }: { params: Promise<{ id: 
 
       {/* Modal Generate Tagihan Daftar Ulang */}
       <Modal isOpen={showTagihanModal} onClose={() => !submitting && setShowTagihanModal(false)} title="Buat Tagihan Daftar Ulang">
-        <p style={{ color: 'var(--text-secondary)', marginBottom: 'var(--space-5)', fontSize: 'var(--text-sm)' }}>
+        <p style={{ color: 'var(--text-secondary)', marginBottom: 'var(--space-5)', fontSize: 'var(--sp-text-sm)' }}>
           Buat tagihan daftar ulang untuk <strong>{data.namaLengkap}</strong>. Tagihan ini akan muncul di halaman Tagihan Saya pendaftar.
         </p>
         <div className={shared.formGroup} style={{ marginBottom: 'var(--space-6)' }}>
           <label className={shared.formLabel}>Nominal Daftar Ulang <span className="required">*</span></label>
           <div style={{ position: 'relative' }}>
-            <span style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', fontSize: 'var(--text-sm)', fontWeight: 700, color: 'var(--text-secondary)' }}>Rp</span>
+            <span style={{ position: 'absolute', left: '0.875rem', top: '50%', transform: 'translateY(-50%)', fontSize: 'var(--sp-text-sm)', fontWeight: 700, color: 'var(--text-secondary)' }}>Rp</span>
             <input
               type="number" min="1"
               className={shared.formInput}

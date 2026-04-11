@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { GraduationCap, FileWarning, CreditCard, PiggyBank, TrendingUp, TrendingDown, Plus, CalendarDays, ArrowUpRight, Receipt, Users, BarChart3, Loader2 } from 'lucide-react'
+import { GraduationCap, FileWarning, CreditCard, PiggyBank, Plus, CalendarDays, ArrowUpRight, Receipt, Users, BarChart3, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 
 function getGreeting() {
@@ -112,19 +112,19 @@ export default function DashboardPage() {
                 padding: '0.875rem 1rem',
                 background: action.bg,
                 textDecoration: 'none',
-                borderRadius: 'var(--radius-lg)',
+                borderRadius: 'var(--sp-radius-lg)',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
                 fontFamily: 'var(--font-sans)',
-                fontSize: 'var(--text-sm)',
+                fontSize: 'var(--sp-text-sm)',
                 fontWeight: 600,
                 color: action.color,
               }}
             >
               <span style={{
-                width: '36px', height: '36px', borderRadius: 'var(--radius-md)',
+                width: '36px', height: '36px', borderRadius: 'var(--sp-radius-md)',
                 background: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                boxShadow: 'var(--shadow-sm)',
+                boxShadow: 'var(--sp-shadow-sm)',
               }}>{action.icon}</span>
               {action.label}
               <ArrowUpRight size={14} style={{ marginLeft: 'auto', opacity: 0.5 }} />

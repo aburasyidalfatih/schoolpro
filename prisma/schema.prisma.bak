@@ -1,0 +1,601 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id                   String                 @id @default(uuid())
+  nama                 String
+  slug                 String                 @unique
+  domainKustom         String?                @map("domain_kustom")
+  logoUrl              String?                @map("logo_url")
+  alamat               String?
+  telepon              String?
+  email                String?
+  website              String?
+  mediaSosial          Json?                  @map("media_sosial")
+  pengaturan           Json?
+  paket                String                 @default("FREE")
+  berlanggananSampai   DateTime?              @map("berlangganan_sampai")
+  isActive             Boolean                @default(true) @map("is_active")
+  profileWebsite       Json?                  @map("profile_website")
+  createdAt            DateTime               @default(now()) @map("created_at")
+  updatedAt            DateTime               @updatedAt @map("updated_at")
+  agendas              Agenda[]
+  alumnis              Alumni[]
+  akunKas              AkunKas[]
+  beritas              Berita[]
+  ekskuls              Ekskul[]
+  fasilitas            Fasilitas[]
+  prestasis            Prestasi[]
+  sliders              Slider[]
+  berkasPpdbs          BerkasPpdb[]
+  kategoriTagihans     KategoriTagihan[]
+  kelases              Kelas[]
+  logAktivitas         LogAktivitas[]
+  pembayarans          Pembayaran[]
+  pendaftarPpdbs       PendaftarPpdb[]
+  pengaturanNotifikasi PengaturanNotifikasi[]
+  pengumumans          Pengumuman[]
+  periodePpdbs         PeriodePpdb[]
+  persyaratanBerkas    PersyaratanBerkas[]
+  rekenings            Rekening[]
+  siswas               Siswa[]
+  tabungans            Tabungan[]
+  tagihanPpdbs         TagihanPpdb[]
+  tagihans             Tagihan[]
+  tahunAjarans         TahunAjaran[]
+  transaksiKas         TransaksiKas[]
+  transaksiTabungans   TransaksiTabungan[]
+  units                Unit[]
+  users                User[]
+  pembayaranPpdbs      PembayaranPpdb[]
+
+  @@map("tenants")
+}
+
+model User {
+  id                 String              @id @default(uuid())
+  tenantId           String              @map("tenant_id")
+  nama               String
+  email              String
+  username           String
+  passwordHash       String              @map("password_hash")
+  role               String              @default("STAF")
+  isActive           Boolean             @default(true) @map("is_active")
+  lastLogin          DateTime?           @map("last_login")
+  createdAt          DateTime            @default(now()) @map("created_at")
+  updatedAt          DateTime            @updatedAt @map("updated_at")
+  beritas            Berita[]
+  logAktivitas       LogAktivitas[]
+  pembayarans        Pembayaran[]        @relation("PetugasPembayaran")
+  pendaftarPpdbs     PendaftarPpdb[]
+  pengumumans        Pengumuman[]
+  siswas             Siswa[]
+  transaksiTabungans TransaksiTabungan[] @relation("PetugasTabungan")
+  tenant             Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, email])
+  @@unique([tenantId, username])
+  @@map("users")
+}
+
+model Unit {
+  id           String        @id @default(uuid())
+  tenantId     String        @map("tenant_id")
+  nama         String
+  kode         String
+  isActive     Boolean       @default(true) @map("is_active")
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  kelases      Kelas[]
+  periodePpdbs PeriodePpdb[]
+  siswas       Siswa[]
+  tenant       Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, kode])
+  @@map("units")
+}
+
+model TahunAjaran {
+  id             String        @id @default(uuid())
+  tenantId       String        @map("tenant_id")
+  nama           String
+  tanggalMulai   DateTime      @map("tanggal_mulai")
+  tanggalSelesai DateTime      @map("tanggal_selesai")
+  isActive       Boolean       @default(false) @map("is_active")
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+  kelases        Kelas[]
+  periodePpdbs   PeriodePpdb[]
+  tagihans       Tagihan[]
+  tenant         Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, nama])
+  @@map("tahun_ajarans")
+}
+
+model Kelas {
+  id            String      @id @default(uuid())
+  tenantId      String      @map("tenant_id")
+  unitId        String      @map("unit_id")
+  tahunAjaranId String      @map("tahun_ajaran_id")
+  nama          String
+  tingkat       String?
+  kapasitas     Int         @default(30)
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+  tahunAjaran   TahunAjaran @relation(fields: [tahunAjaranId], references: [id], onDelete: Cascade)
+  unit          Unit        @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  tenant        Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  siswas        Siswa[]
+
+  @@map("kelases")
+}
+
+model Siswa {
+  id           String    @id @default(uuid())
+  tenantId     String    @map("tenant_id")
+  userId       String?   @map("user_id")
+  kelasId      String?   @map("kelas_id")
+  unitId       String?   @map("unit_id")
+  nis          String
+  nisn         String?
+  namaLengkap  String    @map("nama_lengkap")
+  jenisKelamin String?   @map("jenis_kelamin")
+  tempatLahir  String?   @map("tempat_lahir")
+  tanggalLahir DateTime? @map("tanggal_lahir")
+  alamat       String?
+  telepon      String?
+  fotoUrl      String?   @map("foto_url")
+  namaWali     String?   @map("nama_wali")
+  teleponWali  String?   @map("telepon_wali")
+  emailWali    String?   @map("email_wali")
+  status       String    @default("AKTIF")
+  dataTambahan Json?     @map("data_tambahan")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  unit         Unit?     @relation(fields: [unitId], references: [id])
+  kelas        Kelas?    @relation(fields: [kelasId], references: [id])
+  user         User?     @relation(fields: [userId], references: [id])
+  tenant       Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tabungan     Tabungan?
+  tagihans     Tagihan[]
+
+  @@unique([tenantId, nis])
+  @@map("siswas")
+}
+
+model KategoriTagihan {
+  id        String    @id @default(uuid())
+  tenantId  String    @map("tenant_id")
+  nama      String
+  kode      String
+  isBulanan Boolean   @default(false) @map("is_bulanan")
+  isActive  Boolean   @default(true) @map("is_active")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  tenant    Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tagihans  Tagihan[]
+
+  @@unique([tenantId, kode])
+  @@map("kategori_tagihans")
+}
+
+model Rekening {
+  id          String       @id @default(uuid())
+  tenantId    String       @map("tenant_id")
+  namaBank    String       @map("nama_bank")
+  noRekening  String       @map("no_rekening")
+  atasNama    String       @map("atas_nama")
+  logoUrl     String?      @map("logo_url")
+  isActive    Boolean      @default(true) @map("is_active")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  pembayarans Pembayaran[]
+  tenant      Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("rekenings")
+}
+
+model Tagihan {
+  id            String          @id @default(uuid())
+  tenantId      String          @map("tenant_id")
+  siswaId       String          @map("siswa_id")
+  kategoriId    String          @map("kategori_id")
+  tahunAjaranId String          @map("tahun_ajaran_id")
+  bulan         String?
+  nominal       Decimal
+  potongan      Decimal         @default(0)
+  total         Decimal
+  status        String          @default("BELUM_LUNAS")
+  jatuhTempo    DateTime?       @map("jatuh_tempo")
+  keterangan    String?
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime        @updatedAt @map("updated_at")
+  pembayarans   Pembayaran[]
+  tahunAjaran   TahunAjaran     @relation(fields: [tahunAjaranId], references: [id], onDelete: Cascade)
+  kategori      KategoriTagihan @relation(fields: [kategoriId], references: [id], onDelete: Cascade)
+  siswa         Siswa           @relation(fields: [siswaId], references: [id], onDelete: Cascade)
+  tenant        Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("tagihans")
+}
+
+model Pembayaran {
+  id           String        @id @default(uuid())
+  tenantId     String        @map("tenant_id")
+  tagihanId    String        @map("tagihan_id")
+  petugasId    String?       @map("petugas_id")
+  rekeningId   String?       @map("rekening_id")
+  noTransaksi  String        @map("no_transaksi")
+  jumlahBayar  Decimal       @map("jumlah_bayar")
+  metode       String        @default("TUNAI")
+  status       String        @default("BERHASIL")
+  buktiUrl     String?       @map("bukti_url")
+  tanggalBayar DateTime      @default(now()) @map("tanggal_bayar")
+  keterangan   String?
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  rekening     Rekening?     @relation(fields: [rekeningId], references: [id])
+  petugas      User?         @relation("PetugasPembayaran", fields: [petugasId], references: [id])
+  tagihan      Tagihan       @relation(fields: [tagihanId], references: [id], onDelete: Cascade)
+  tenant       Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  transaksiKas TransaksiKas?
+
+  @@unique([tenantId, noTransaksi])
+  @@map("pembayarans")
+}
+
+model AkunKas {
+  id           String         @id @default(uuid())
+  tenantId     String         @map("tenant_id")
+  nama         String
+  kode         String
+  tipe         String
+  isActive     Boolean        @default(true) @map("is_active")
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+  tenant       Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  transaksiKas TransaksiKas[]
+
+  @@unique([tenantId, kode])
+  @@map("akun_kas")
+}
+
+model TransaksiKas {
+  id           String      @id @default(uuid())
+  tenantId     String      @map("tenant_id")
+  akunKasId    String      @map("akun_kas_id")
+  pembayaranId String?     @unique @map("pembayaran_id")
+  jenis        String
+  nominal      Decimal
+  keterangan   String?
+  tanggal      DateTime    @default(now())
+  isOtomatis   Boolean     @default(false) @map("is_otomatis")
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+  pembayaran   Pembayaran? @relation(fields: [pembayaranId], references: [id])
+  akunKas      AkunKas     @relation(fields: [akunKasId], references: [id], onDelete: Cascade)
+  tenant       Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("transaksi_kas")
+}
+
+model Tabungan {
+  id                 String              @id @default(uuid())
+  tenantId           String              @map("tenant_id")
+  siswaId            String              @unique @map("siswa_id")
+  saldo              Decimal             @default(0)
+  createdAt          DateTime            @default(now()) @map("created_at")
+  updatedAt          DateTime            @updatedAt @map("updated_at")
+  siswa              Siswa               @relation(fields: [siswaId], references: [id], onDelete: Cascade)
+  tenant             Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  transaksiTabungans TransaksiTabungan[]
+
+  @@map("tabungans")
+}
+
+model TransaksiTabungan {
+  id           String   @id @default(uuid())
+  tenantId     String   @map("tenant_id")
+  tabunganId   String   @map("tabungan_id")
+  petugasId    String?  @map("petugas_id")
+  jenis        String
+  nominal      Decimal
+  saldoSebelum Decimal  @map("saldo_sebelum")
+  saldoSesudah Decimal  @map("saldo_sesudah")
+  tanggal      DateTime @default(now())
+  keterangan   String?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  petugas      User?    @relation("PetugasTabungan", fields: [petugasId], references: [id])
+  tabungan     Tabungan @relation(fields: [tabunganId], references: [id], onDelete: Cascade)
+  tenant       Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("transaksi_tabungans")
+}
+
+model PeriodePpdb {
+  id                String              @id @default(uuid())
+  tenantId          String              @map("tenant_id")
+  tahunAjaranId     String              @map("tahun_ajaran_id")
+  unitId            String?             @map("unit_id")
+  nama              String
+  tanggalBuka       DateTime            @map("tanggal_buka")
+  tanggalTutup      DateTime            @map("tanggal_tutup")
+  isActive          Boolean             @default(true) @map("is_active")
+  pengaturan        Json?
+  createdAt         DateTime            @default(now()) @map("created_at")
+  updatedAt         DateTime            @updatedAt @map("updated_at")
+  pendaftars        PendaftarPpdb[]
+  unit              Unit?               @relation(fields: [unitId], references: [id])
+  tahunAjaran       TahunAjaran         @relation(fields: [tahunAjaranId], references: [id], onDelete: Cascade)
+  tenant            Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  persyaratanBerkas PersyaratanBerkas[]
+
+  @@map("periode_ppdbs")
+}
+
+model PendaftarPpdb {
+  id               String        @id @default(uuid())
+  tenantId         String        @map("tenant_id")
+  periodeId        String        @map("periode_id")
+  userId           String?       @map("user_id")
+  noPendaftaran    String        @map("no_pendaftaran")
+  namaLengkap      String        @map("nama_lengkap")
+  dataFormulir     Json?         @map("data_formulir")
+  status           String        @default("MENUNGGU")
+  jalurPendaftaran String?       @map("jalur_pendaftaran")
+  jurusanPilihan   String?       @map("jurusan_pilihan")
+  dataOrangtua     Json?         @map("data_orangtua")
+  tanggalDaftar    DateTime      @default(now()) @map("tanggal_daftar")
+  createdAt        DateTime      @default(now()) @map("created_at")
+  updatedAt        DateTime      @updatedAt @map("updated_at")
+  berkas           BerkasPpdb[]
+  user             User?         @relation(fields: [userId], references: [id])
+  periode          PeriodePpdb   @relation(fields: [periodeId], references: [id], onDelete: Cascade)
+  tenant           Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tagihanPpdbs     TagihanPpdb[]
+
+  @@unique([tenantId, noPendaftaran])
+  @@map("pendaftar_ppdbs")
+}
+
+model PersyaratanBerkas {
+  id        String       @id @default(uuid())
+  tenantId  String       @map("tenant_id")
+  periodeId String       @map("periode_id")
+  nama      String
+  isWajib   Boolean      @default(true) @map("is_wajib")
+  tipeFile  String?      @map("tipe_file")
+  createdAt DateTime     @default(now()) @map("created_at")
+  updatedAt DateTime     @updatedAt @map("updated_at")
+  berkas    BerkasPpdb[]
+  periode   PeriodePpdb  @relation(fields: [periodeId], references: [id], onDelete: Cascade)
+  tenant    Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("persyaratan_berkas")
+}
+
+model BerkasPpdb {
+  id            String            @id @default(uuid())
+  tenantId      String            @map("tenant_id")
+  pendaftarId   String            @map("pendaftar_id")
+  persyaratanId String            @map("persyaratan_id")
+  fileUrl       String?           @map("file_url")
+  status        String            @default("MENUNGGU")
+  catatan       String?
+  createdAt     DateTime          @default(now()) @map("created_at")
+  updatedAt     DateTime          @updatedAt @map("updated_at")
+  persyaratan   PersyaratanBerkas @relation(fields: [persyaratanId], references: [id], onDelete: Cascade)
+  pendaftar     PendaftarPpdb     @relation(fields: [pendaftarId], references: [id], onDelete: Cascade)
+  tenant        Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("berkas_ppdbs")
+}
+
+model TagihanPpdb {
+  id          String           @id @default(uuid())
+  tenantId    String           @map("tenant_id")
+  pendaftarId String           @map("pendaftar_id")
+  jenis       String
+  nominal     Decimal
+  status      String           @default("BELUM_LUNAS")
+  createdAt   DateTime         @default(now()) @map("created_at")
+  updatedAt   DateTime         @updatedAt @map("updated_at")
+  pendaftar   PendaftarPpdb    @relation(fields: [pendaftarId], references: [id], onDelete: Cascade)
+  tenant      Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  pembayarans PembayaranPpdb[]
+
+  @@map("tagihan_ppdbs")
+}
+
+model PembayaranPpdb {
+  id           String      @id @default(uuid())
+  tenantId     String      @map("tenant_id")
+  tagihanId    String      @map("tagihan_id")
+  noTransaksi  String?     @map("no_transaksi")
+  nominal      Decimal
+  metode       String?     @default("MANUAL")
+  tanggalBayar DateTime    @default(now()) @map("tanggal_bayar")
+  status       String      @default("PENDING")
+  buktiUrl     String?     @map("bukti_url")
+  keterangan   String?
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+  tagihan      TagihanPpdb @relation(fields: [tagihanId], references: [id], onDelete: Cascade)
+  tenant       Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("pembayaran_ppdbs")
+}
+
+model Berita {
+  id            String    @id @default(uuid())
+  tenantId      String    @map("tenant_id")
+  userId        String    @map("user_id")
+  judul         String
+  slug          String
+  konten        String
+  ringkasan     String?
+  gambarUrl     String?   @map("gambar_url")
+  kategori      String    @default("BERITA")
+  status        String    @default("DRAFT")
+  tanggalTerbit DateTime? @map("tanggal_terbit")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenant        Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, slug])
+  @@map("beritas")
+}
+
+model Agenda {
+  id              String    @id @default(uuid())
+  tenantId        String    @map("tenant_id")
+  judul           String
+  deskripsi       String?
+  tanggalMulai    DateTime  @map("tanggal_mulai")
+  tanggalAkhir    DateTime? @map("tanggal_akhir")
+  lokasi          String?
+  penanggungjawab String?   @map("penanggungjawab")
+  isPublished     Boolean   @default(true) @map("is_published")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+  tenant          Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("agendas")
+}
+
+model Prestasi {
+  id          String   @id @default(uuid())
+  tenantId    String   @map("tenant_id")
+  judul       String
+  deskripsi   String?
+  tingkat     String   @default("SEKOLAH")
+  kategori    String   @default("AKADEMIK")
+  tahun       Int
+  gambarUrl   String?  @map("gambar_url")
+  isPublished Boolean  @default(true) @map("is_published")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("prestasis")
+}
+
+model Ekskul {
+  id          String   @id @default(uuid())
+  tenantId    String   @map("tenant_id")
+  nama        String
+  deskripsi   String?
+  jadwal      String?
+  pembina     String?
+  gambarUrl   String?  @map("gambar_url")
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("ekskuls")
+}
+
+model Fasilitas {
+  id          String   @id @default(uuid())
+  tenantId    String   @map("tenant_id")
+  nama        String
+  deskripsi   String?
+  gambarUrl   String?  @map("gambar_url")
+  isPublished Boolean  @default(true) @map("is_published")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("fasilitas")
+}
+
+model Slider {
+  id        String   @id @default(uuid())
+  tenantId  String   @map("tenant_id")
+  judul     String?
+  subjudul  String?
+  gambarUrl String   @map("gambar_url")
+  linkUrl   String?  @map("link_url")
+  urutan    Int      @default(0)
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("sliders")
+}
+
+model Alumni {
+  id            String   @id @default(uuid())
+  tenantId      String   @map("tenant_id")
+  namaLengkap   String   @map("nama_lengkap")
+  tahunLulus    Int      @map("tahun_lulus")
+  melanjutkanKe String?  @map("melanjutkan_ke")
+  pekerjaan     String?
+  instansi      String?
+  foto          String?
+  testimonial   String?
+  status        String   @default("MENUNGGU")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  tenant        Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("alumnis")
+}
+
+model Pengumuman {
+  id          String   @id @default(uuid())
+  tenantId    String   @map("tenant_id")
+  userId      String   @map("user_id")
+  judul       String
+  konten      String
+  targetKelas Json?    @map("target_kelas")
+  kirimWa     Boolean  @default(false) @map("kirim_wa")
+  tanggal     DateTime @default(now())
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("pengumumans")
+}
+
+model LogAktivitas {
+  id        String   @id @default(uuid())
+  tenantId  String   @map("tenant_id")
+  userId    String?  @map("user_id")
+  aksi      String
+  modul     String
+  detail    String?
+  ipAddress String?  @map("ip_address")
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User?    @relation(fields: [userId], references: [id])
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("log_aktivitas")
+}
+
+model PengaturanNotifikasi {
+  id            String   @id @default(uuid())
+  tenantId      String   @map("tenant_id")
+  jenis         String
+  viaApp        Boolean  @default(true) @map("via_app")
+  viaWa         Boolean  @default(false) @map("via_wa")
+  viaEmail      Boolean  @default(false) @map("via_email")
+  templatePesan String?  @map("template_pesan")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  tenant        Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("pengaturan_notifikasi")
+}

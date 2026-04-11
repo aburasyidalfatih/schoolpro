@@ -12,7 +12,6 @@ import styles from './page.module.css'
 function calcProgress(p: any) {
   const isPaid       = p.tagihanPpdbs.some((t: any) => t.jenis === 'PENDAFTARAN' && t.status === 'LUNAS')
   const hasForm      = !!p.dataFormulir
-  const hasBerkas    = p.berkas?.length > 0
   const isVerified   = ['TERVERIFIKASI', 'DITERIMA', 'DITOLAK'].includes(p.status)
   const isDiterima   = p.status === 'DITERIMA'
   const isDitolak    = p.status === 'DITOLAK'
@@ -111,7 +110,7 @@ export default async function BerandaPage() {
                   <FileText size={18} style={{ color: 'var(--primary-600)' }} />
                   Pendaftaran Saya
                 </h3>
-                <Link href="/app/ppdb/form-singkat" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 'var(--text-sm)', fontWeight: 700, color: 'var(--primary-600)', textDecoration: 'none' }}>
+                <Link href="/app/ppdb/form-singkat" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 'var(--sp-text-sm)', fontWeight: 700, color: 'var(--primary-600)', textDecoration: 'none' }}>
                   <Plus size={14} /> Daftarkan Lagi
                 </Link>
               </div>
@@ -137,8 +136,8 @@ export default async function BerandaPage() {
                           </div>
                         </div>
                         <div className={styles.noDaftar}>
-                          <span style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', fontWeight: 600 }}>No. Daftar</span>
-                          <span style={{ fontWeight: 800, fontSize: 'var(--text-sm)', fontFamily: 'var(--font-heading)' }}>{p.noPendaftaran}</span>
+                          <span style={{ fontSize: 'var(--sp-text-xs)', color: 'var(--text-tertiary)', fontWeight: 600 }}>No. Daftar</span>
+                          <span style={{ fontWeight: 800, fontSize: 'var(--sp-text-sm)', fontFamily: 'var(--font-heading)' }}>{p.noPendaftaran}</span>
                         </div>
                       </div>
 
@@ -150,19 +149,19 @@ export default async function BerandaPage() {
                         return (
                           <div style={{
                             padding: 'var(--space-3) var(--space-4)',
-                            borderRadius: 'var(--radius-lg)',
+                            borderRadius: 'var(--sp-radius-lg)',
                             background: isDiterima ? 'var(--success-50)' : 'var(--danger-50)',
                             border: `1px solid ${isDiterima ? 'var(--success-200)' : 'var(--danger-200)'}`,
-                            fontSize: 'var(--text-sm)',
+                            fontSize: 'var(--sp-text-sm)',
                           }}>
                             <div style={{ fontWeight: 800, color: isDiterima ? 'var(--success-700)' : 'var(--danger-700)', marginBottom: 4 }}>
                               {isDiterima ? '🎉 Selamat! Anda Diterima' : '📋 Hasil Seleksi'}
                             </div>
-                            <p style={{ color: isDiterima ? 'var(--success-700)' : 'var(--danger-700)', lineHeight: 1.5, fontSize: 'var(--text-xs)' }}>
+                            <p style={{ color: isDiterima ? 'var(--success-700)' : 'var(--danger-700)', lineHeight: 1.5, fontSize: 'var(--sp-text-xs)' }}>
                               {pengumuman.pesan}
                             </p>
                             {pengumuman.jadwalDaftarUlang && (
-                              <div style={{ marginTop: 'var(--space-2)', display: 'flex', alignItems: 'center', gap: 6, fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--primary-600)' }}>
+                              <div style={{ marginTop: 'var(--space-2)', display: 'flex', alignItems: 'center', gap: 6, fontSize: 'var(--sp-text-xs)', fontWeight: 700, color: 'var(--primary-600)' }}>
                                 📅 Jadwal Daftar Ulang: {new Date(pengumuman.jadwalDaftarUlang).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
                               </div>
                             )}
@@ -173,10 +172,10 @@ export default async function BerandaPage() {
                       {/* ── Progress Bar + Persentase ── */}
                       <div className={styles.progressBarWrap}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-2)' }}>
-                          <span style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--text-secondary)' }}>
+                          <span style={{ fontSize: 'var(--sp-text-xs)', fontWeight: 700, color: 'var(--text-secondary)' }}>
                             Progress Pendaftaran
                           </span>
-                          <span style={{ fontSize: 'var(--text-xs)', fontWeight: 800, color: prog.pct === 100 ? 'var(--success-600)' : 'var(--primary-600)' }}>
+                          <span style={{ fontSize: 'var(--sp-text-xs)', fontWeight: 800, color: prog.pct === 100 ? 'var(--success-600)' : 'var(--primary-600)' }}>
                             {prog.pct}%
                           </span>
                         </div>
@@ -229,7 +228,7 @@ export default async function BerandaPage() {
                             <Link
                               href={`/app/ppdb/form-lengkap/${p.id}`}
                               className={`${styles.btnAction} ${styles.btnSecondary}`}
-                              style={{ padding: '0.4rem 0.875rem', fontSize: 'var(--text-xs)', gap: 4 }}
+                              style={{ padding: '0.4rem 0.875rem', fontSize: 'var(--sp-text-xs)', gap: 4 }}
                             >
                               <Pencil size={12} /> Edit Data
                             </Link>
@@ -239,7 +238,7 @@ export default async function BerandaPage() {
                             <Link
                               href={nextAction.href}
                               className={`${styles.btnAction} ${styles[`btn${nextAction.variant.charAt(0).toUpperCase() + nextAction.variant.slice(1)}` as keyof typeof styles] || styles.btnPrimary}`}
-                              style={{ padding: '0.4rem 1rem', fontSize: 'var(--text-xs)', gap: 4 }}
+                              style={{ padding: '0.4rem 1rem', fontSize: 'var(--sp-text-xs)', gap: 4 }}
                             >
                               {nextAction.label} <ArrowRight size={12} />
                             </Link>
@@ -288,7 +287,7 @@ export default async function BerandaPage() {
                 <h3 className="card-title">Tagihan Belum Lunas</h3>
                 <button className="btn btn-ghost btn-sm">Riwayat <ArrowUpRight size={14} /></button>
               </div>
-              <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)', fontSize: 'var(--text-sm)' }}>
+              <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)', fontSize: 'var(--sp-text-sm)' }}>
                 Semua tagihan sudah lunas.
               </div>
             </div>
@@ -297,7 +296,7 @@ export default async function BerandaPage() {
                 <h3 className="card-title">Pengumuman</h3>
                 <Megaphone size={18} style={{ color: 'var(--primary-500)' }} />
               </div>
-              <div style={{ padding: 'var(--space-4)', textAlign: 'center', fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', fontStyle: 'italic' }}>
+              <div style={{ padding: 'var(--space-4)', textAlign: 'center', fontSize: 'var(--sp-text-xs)', color: 'var(--text-secondary)', fontStyle: 'italic' }}>
                 Belum ada pengumuman terbaru.
               </div>
             </div>

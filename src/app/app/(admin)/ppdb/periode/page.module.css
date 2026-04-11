@@ -13,7 +13,7 @@
 
 .title {
   font-family: var(--font-heading);
-  font-size: var(--text-2xl);
+  font-size: var(--sp-text-2xl);
   font-weight: 700;
   color: var(--text-color);
   letter-spacing: -0.02em;
@@ -21,7 +21,7 @@
 
 .subtitle {
   color: var(--text-muted);
-  font-size: var(--text-sm);
+  font-size: var(--sp-text-sm);
   margin-top: 0.25rem;
 }
 
@@ -33,12 +33,12 @@
   background: var(--primary-500);
   color: white;
   border: none;
-  border-radius: var(--radius-md);
-  font-size: var(--text-sm);
+  border-radius: var(--sp-radius-md);
+  font-size: var(--sp-text-sm);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--sp-shadow-sm);
 }
 
 .addBtn:hover {
@@ -69,11 +69,11 @@
 .searchInput {
   width: 100%;
   padding: 0.625rem 1rem 0.625rem 2.5rem;
-  border-radius: var(--radius-md);
+  border-radius: var(--sp-radius-md);
   border: 1px solid var(--border-color);
   background: var(--card-bg);
   color: var(--text-color);
-  font-size: var(--text-sm);
+  font-size: var(--sp-text-sm);
   transition: all 0.2s ease;
 }
 
@@ -88,7 +88,7 @@
   padding: 0.25rem 0.625rem;
   font-size: 0.75rem;
   font-weight: 600;
-  border-radius: var(--radius-full);
+  border-radius: var(--sp-radius-full);
   background: rgba(239, 68, 68, 0.1);
   color: var(--danger-500);
 }
@@ -104,7 +104,7 @@
   color: var(--text-muted);
   cursor: pointer;
   padding: 0.25rem;
-  border-radius: var(--radius-sm);
+  border-radius: var(--sp-radius-sm);
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
@@ -129,7 +129,7 @@
 }
 
 .label {
-  font-size: var(--text-sm);
+  font-size: var(--sp-text-sm);
   font-weight: 500;
   color: var(--text-color);
 }
@@ -137,11 +137,11 @@
 .input {
   width: 100%;
   padding: 0.625rem 1rem;
-  border-radius: var(--radius-md);
+  border-radius: var(--sp-radius-md);
   border: 1px solid var(--border-color);
   background: var(--bg-color);
   color: var(--text-color);
-  font-size: var(--text-sm);
+  font-size: var(--sp-text-sm);
   transition: all 0.2s ease;
 }
 
@@ -162,7 +162,7 @@
   color: white;
   border: none;
   padding: 0.625rem 1.25rem;
-  border-radius: var(--radius-md);
+  border-radius: var(--sp-radius-md);
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;

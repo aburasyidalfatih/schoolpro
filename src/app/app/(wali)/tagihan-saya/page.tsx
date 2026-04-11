@@ -129,7 +129,7 @@ export default function TagihanSayaPage() {
           >
             {tab.label}
             {tab.count !== undefined && (
-              <span style={{ marginLeft: 6, padding: '0 6px', background: filter === tab.key ? 'var(--primary-100)' : 'var(--bg-tertiary)', borderRadius: 'var(--radius-full)', fontSize: '11px', fontWeight: 700, color: filter === tab.key ? 'var(--primary-700)' : 'var(--text-tertiary)' }}>
+              <span style={{ marginLeft: 6, padding: '0 6px', background: filter === tab.key ? 'var(--primary-100)' : 'var(--bg-tertiary)', borderRadius: 'var(--sp-radius-full)', fontSize: '11px', fontWeight: 700, color: filter === tab.key ? 'var(--primary-700)' : 'var(--text-tertiary)' }}>
                 {tab.count}
               </span>
             )}
@@ -167,12 +167,12 @@ export default function TagihanSayaPage() {
                   <div className={styles.tagihanJenis}>{t.jenis}</div>
                   <div className={styles.tagihanKet}>{t.keterangan}</div>
                   {t.noPendaftaran && (
-                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: 2 }}>
+                    <div style={{ fontSize: 'var(--sp-text-xs)', color: 'var(--text-tertiary)', marginTop: 2 }}>
                       No. Daftar: {t.noPendaftaran}
                     </div>
                   )}
                   {t.jatuhTempo && !isLunas && (
-                    <div style={{ fontSize: 'var(--text-xs)', color: 'var(--warning-600)', fontWeight: 600, marginTop: 2 }}>
+                    <div style={{ fontSize: 'var(--sp-text-xs)', color: 'var(--warning-600)', fontWeight: 600, marginTop: 2 }}>
                       <Clock size={11} style={{ display: 'inline', marginRight: 3 }} />
                       Jatuh tempo: {formatDate(t.jatuhTempo)}
                     </div>
@@ -201,7 +201,7 @@ export default function TagihanSayaPage() {
                         <Link
                           href={`/ppdb/invoice/${t.pendaftarId}`}
                           className="btn btn-secondary btn-sm"
-                          style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 'var(--text-xs)' }}
+                          style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 'var(--sp-text-xs)' }}
                         >
                           <ExternalLink size={12} /> Invoice
                         </Link>
@@ -212,7 +212,7 @@ export default function TagihanSayaPage() {
                         variant="primary"
                         leftIcon={<CreditCard size={12} />}
                         onClick={() => setKonfirmasiTarget(t)}
-                        style={{ fontSize: 'var(--text-xs)' }}
+                        style={{ fontSize: 'var(--sp-text-xs)' }}
                       >
                         Konfirmasi Bayar
                       </Button>
@@ -240,11 +240,11 @@ export default function TagihanSayaPage() {
         {konfirmasiTarget && (
           <>
             {/* Detail Tagihan */}
-            <div style={{ background: 'var(--bg-tertiary)', borderRadius: 'var(--radius-lg)', padding: 'var(--space-4)', marginBottom: 'var(--space-5)' }}>
-              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginBottom: 4 }}>Tagihan</div>
+            <div style={{ background: 'var(--bg-tertiary)', borderRadius: 'var(--sp-radius-lg)', padding: 'var(--space-4)', marginBottom: 'var(--space-5)' }}>
+              <div style={{ fontSize: 'var(--sp-text-xs)', color: 'var(--text-tertiary)', marginBottom: 4 }}>Tagihan</div>
               <div style={{ fontWeight: 700 }}>{konfirmasiTarget.jenis}</div>
-              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>{konfirmasiTarget.keterangan}</div>
-              <div style={{ fontSize: 'var(--text-xl)', fontWeight: 900, fontFamily: 'var(--font-heading)', color: 'var(--primary-600)', marginTop: 'var(--space-2)' }}>
+              <div style={{ fontSize: 'var(--sp-text-xs)', color: 'var(--text-secondary)' }}>{konfirmasiTarget.keterangan}</div>
+              <div style={{ fontSize: 'var(--sp-text-xl)', fontWeight: 900, fontFamily: 'var(--font-heading)', color: 'var(--primary-600)', marginTop: 'var(--space-2)' }}>
                 {formatRp(konfirmasiTarget.nominal)}
               </div>
             </div>
@@ -252,7 +252,7 @@ export default function TagihanSayaPage() {
             {/* Rekening Tujuan */}
             {rekenings.length > 0 && (
               <>
-                <p style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 'var(--space-3)' }}>
+                <p style={{ fontSize: 'var(--sp-text-sm)', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: 'var(--space-3)' }}>
                   Transfer ke salah satu rekening berikut:
                 </p>
                 <div className={styles.rekeningList}>
@@ -270,7 +270,7 @@ export default function TagihanSayaPage() {
               </>
             )}
 
-            <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginTop: 'var(--space-4)', marginBottom: 'var(--space-2)' }}>
+            <p style={{ fontSize: 'var(--sp-text-xs)', color: 'var(--text-tertiary)', marginTop: 'var(--space-4)', marginBottom: 'var(--space-2)' }}>
               Setelah transfer, klik tombol di bawah untuk mengkonfirmasi pembayaran Anda.
             </p>
 

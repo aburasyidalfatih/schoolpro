@@ -1,0 +1,513 @@
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ========================================
+   SKIN SYSTEM — 3-in-1 Color Palettes
+   ======================================== */
+
+/* AKADEMI SKIN — Formal & Modern Blue */
+:root,
+[data-skin="akademi"] {
+  --skin-primary: #1e40af;
+  --skin-primary-light: #3b82f6;
+  --skin-primary-dark: #1e3a8a;
+  --skin-secondary: #059669;
+  --skin-secondary-light: #34d399;
+  --skin-accent: #d97706;
+  --skin-accent-light: #fbbf24;
+  --skin-gradient-start: #1e40af;
+  --skin-gradient-end: #3b82f6;
+  --skin-hero-overlay: rgba(15, 23, 42, 0.65);
+  --skin-surface: #f8fafc;
+  --skin-surface-hover: #f1f5f9;
+  --skin-card-bg: rgba(255, 255, 255, 0.85);
+  --skin-nav-bg: rgba(255, 255, 255, 0.8);
+  --skin-text-heading: #0f172a;
+  --skin-text-body: #334155;
+  --skin-text-muted: #64748b;
+  --skin-border: #e2e8f0;
+}
+
+/* MADING SKIN — Colorful & Magazine */
+[data-skin="mading"] {
+  --skin-primary: #7c3aed;
+  --skin-primary-light: #a78bfa;
+  --skin-primary-dark: #5b21b6;
+  --skin-secondary: #f59e0b;
+  --skin-secondary-light: #fcd34d;
+  --skin-accent: #ec4899;
+  --skin-accent-light: #f9a8d4;
+  --skin-gradient-start: #7c3aed;
+  --skin-gradient-end: #ec4899;
+  --skin-hero-overlay: rgba(88, 28, 135, 0.6);
+  --skin-surface: #faf5ff;
+  --skin-surface-hover: #f3e8ff;
+  --skin-card-bg: rgba(255, 255, 255, 0.9);
+  --skin-nav-bg: rgba(255, 255, 255, 0.85);
+  --skin-text-heading: #1e1b4b;
+  --skin-text-body: #3730a3;
+  --skin-text-muted: #6366f1;
+  --skin-border: #e9d5ff;
+}
+
+/* PRESTASI SKIN — Dynamic & Bold Gold-Red */
+[data-skin="prestasi"] {
+  --skin-primary: #dc2626;
+  --skin-primary-light: #f87171;
+  --skin-primary-dark: #991b1b;
+  --skin-secondary: #eab308;
+  --skin-secondary-light: #fde047;
+  --skin-accent: #16a34a;
+  --skin-accent-light: #4ade80;
+  --skin-gradient-start: #991b1b;
+  --skin-gradient-end: #dc2626;
+  --skin-hero-overlay: rgba(30, 10, 0, 0.7);
+  --skin-surface: #fef2f2;
+  --skin-surface-hover: #fee2e2;
+  --skin-card-bg: rgba(255, 255, 255, 0.9);
+  --skin-nav-bg: rgba(255, 255, 255, 0.85);
+  --skin-text-heading: #1c1917;
+  --skin-text-body: #44403c;
+  --skin-text-muted: #78716c;
+  --skin-border: #fecaca;
+}
+
+/* EMERALD SKIN — Fresh Nature & Islamic Green */
+[data-skin="emerald"] {
+  --skin-primary: #047857;
+  --skin-primary-light: #10b981;
+  --skin-primary-dark: #064e3b;
+  --skin-secondary: #0891b2;
+  --skin-secondary-light: #67e8f9;
+  --skin-accent: #d97706;
+  --skin-accent-light: #fbbf24;
+  --skin-gradient-start: #064e3b;
+  --skin-gradient-end: #10b981;
+  --skin-hero-overlay: rgba(6, 78, 59, 0.65);
+  --skin-surface: #ecfdf5;
+  --skin-surface-hover: #d1fae5;
+  --skin-card-bg: rgba(255, 255, 255, 0.9);
+  --skin-nav-bg: rgba(255, 255, 255, 0.85);
+  --skin-text-heading: #022c22;
+  --skin-text-body: #1a4a3a;
+  --skin-text-muted: #4d7c6a;
+  --skin-border: #a7f3d0;
+}
+
+/* SUNSET SKIN — Warm Coral & Vibrant Orange */
+[data-skin="sunset"] {
+  --skin-primary: #ea580c;
+  --skin-primary-light: #fb923c;
+  --skin-primary-dark: #9a3412;
+  --skin-secondary: #e11d48;
+  --skin-secondary-light: #fb7185;
+  --skin-accent: #7c3aed;
+  --skin-accent-light: #a78bfa;
+  --skin-gradient-start: #9a3412;
+  --skin-gradient-end: #ea580c;
+  --skin-hero-overlay: rgba(80, 20, 5, 0.65);
+  --skin-surface: #fff7ed;
+  --skin-surface-hover: #ffedd5;
+  --skin-card-bg: rgba(255, 255, 255, 0.9);
+  --skin-nav-bg: rgba(255, 255, 255, 0.85);
+  --skin-text-heading: #431407;
+  --skin-text-body: #7c2d12;
+  --skin-text-muted: #c2410c;
+  --skin-border: #fed7aa;
+}
+
+/* MIDNIGHT SKIN — Dark Mode Elegant */
+[data-skin="midnight"] {
+  --skin-primary: #6366f1;
+  --skin-primary-light: #818cf8;
+  --skin-primary-dark: #4338ca;
+  --skin-secondary: #06b6d4;
+  --skin-secondary-light: #67e8f9;
+  --skin-accent: #f59e0b;
+  --skin-accent-light: #fbbf24;
+  --skin-gradient-start: #312e81;
+  --skin-gradient-end: #6366f1;
+  --skin-hero-overlay: rgba(15, 10, 40, 0.75);
+  --skin-surface: #1e1b2e;
+  --skin-surface-hover: #2a2640;
+  --skin-card-bg: rgba(30, 27, 46, 0.95);
+  --skin-nav-bg: rgba(15, 12, 30, 0.9);
+  --skin-text-heading: #f1f0ff;
+  --skin-text-body: #c4b5fd;
+  --skin-text-muted: #8b83b3;
+  --skin-border: #3b3560;
+}
+
+/* ========================================
+   SHADCN DESIGN TOKENS
+   ======================================== */
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-heading);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* Custom skin colors for Tailwind */
+  --color-skin-primary: var(--skin-primary);
+  --color-skin-primary-light: var(--skin-primary-light);
+  --color-skin-primary-dark: var(--skin-primary-dark);
+  --color-skin-secondary: var(--skin-secondary);
+  --color-skin-secondary-light: var(--skin-secondary-light);
+  --color-skin-accent: var(--skin-accent);
+  --color-skin-accent-light: var(--skin-accent-light);
+  --color-skin-surface: var(--skin-surface);
+  --color-skin-surface-hover: var(--skin-surface-hover);
+  --color-skin-card-bg: var(--skin-card-bg);
+  --color-skin-nav-bg: var(--skin-nav-bg);
+  --color-skin-text-heading: var(--skin-text-heading);
+  --color-skin-text-body: var(--skin-text-body);
+  --color-skin-text-muted: var(--skin-text-muted);
+  --color-skin-border: var(--skin-border);
+}
+
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+/* ========================================
+   BASE STYLES
+   ======================================== */
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans scroll-smooth;
+  }
+}
+
+/* ========================================
+   GLOBAL FOCUS STATES — Accessibility
+   ======================================== */
+
+*:focus-visible {
+  outline: 2px solid var(--skin-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ========================================
+   RUNNING TEXT / MARQUEE ANIMATION
+   ======================================== */
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* ========================================
+   GLASSMORPHISM UTILITIES
+   ======================================== */
+
+.glass {
+  background: var(--skin-nav-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-card {
+  background: var(--skin-card-bg);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* ========================================
+   CUSTOM SCROLLBAR
+   ======================================== */
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--skin-surface); }
+::-webkit-scrollbar-thumb {
+  background: var(--skin-primary-light);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--skin-primary);
+}
+
+/* ========================================
+   HERO SLIDER
+   ======================================== */
+
+.hero-gradient-overlay {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.85) 0%,
+    var(--skin-hero-overlay) 40%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+}
+
+/* ========================================
+   SECTION DIVIDER
+   ======================================== */
+
+.section-divider {
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(to right, var(--skin-primary), var(--skin-accent));
+  border-radius: 2px;
+}
+
+/* ========================================
+   SKIN TRANSITION
+   ======================================== */
+
+html {
+  transition: --skin-primary 0.4s ease,
+              --skin-primary-light 0.4s ease,
+              --skin-secondary 0.4s ease,
+              --skin-accent 0.4s ease;
+}
+
+/* ========================================
+   ANIMATED COUNTER
+   ======================================== */
+
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.count-up {
+  animation: countUp 0.8s ease-out forwards;
+}
+
+/* ========================================
+   SKELETON LOADING
+   ======================================== */
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--skin-surface) 25%,
+    var(--skin-surface-hover) 50%,
+    var(--skin-surface) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+/* ========================================
+   UTILITIES
+   ======================================== */
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ========================================
+   SELECTION COLOR
+   ======================================== */
+
+::selection {
+  background: var(--skin-primary-light);
+  color: white;
+}
+
+::-moz-selection {
+  background: var(--skin-primary-light);
+  color: white;
+}
+
+/* ========================================
+   SMOOTH IMAGE LOADING
+   ======================================== */
+
+img {
+  transition: opacity 0.3s ease;
+}
+
+/* ========================================
+   PROSE / ARTICLE STYLING
+   ======================================== */
+
+.prose h2 {
+  font-family: var(--font-heading);
+  color: var(--skin-text-heading);
+  font-weight: 700;
+  margin-top: 2em;
+  margin-bottom: 0.5em;
+}
+
+.prose h3 {
+  font-family: var(--font-heading);
+  color: var(--skin-text-heading);
+  font-weight: 600;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.prose strong {
+  color: var(--skin-text-heading);
+  font-weight: 600;
+}
+
+.prose a {
+  color: var(--skin-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s;
+}
+
+.prose a:hover {
+  color: var(--skin-primary-dark);
+}
+
+.prose ul, .prose ol {
+  padding-left: 1.5em;
+  margin: 1em 0;
+}
+
+.prose li {
+  margin: 0.3em 0;
+}
+
+.prose blockquote {
+  border-left: 3px solid var(--skin-primary);
+  padding-left: 1em;
+  font-style: italic;
+  color: var(--skin-text-muted);
+  margin: 1.5em 0;
+}
+
+/* ========================================
+   MIDNIGHT SKIN — Dark Mode Overrides
+   ======================================== */
+
+[data-skin="midnight"] body {
+  background: #13111f;
+  color: #c4b5fd;
+}
+
+[data-skin="midnight"] .bg-white {
+  background: #1e1b2e !important;
+}
+
+[data-skin="midnight"] .glass {
+  background: rgba(15, 12, 30, 0.9);
+  border-bottom-color: rgba(99, 102, 241, 0.15);
+}
+
+[data-skin="midnight"] .glass-card {
+  background: rgba(30, 27, 46, 0.95);
+  border-color: rgba(99, 102, 241, 0.15);
+}
+
+[data-skin="midnight"] .shadow-sm,
+[data-skin="midnight"] .shadow-lg {
+  --tw-shadow-color: rgba(0, 0, 0, 0.3);
+}
+
+[data-skin="midnight"] input,
+[data-skin="midnight"] textarea,
+[data-skin="midnight"] select {
+  background: #2a2640 !important;
+  color: #f1f0ff !important;
+  border-color: #3b3560 !important;
+}
+
+[data-skin="midnight"] input::placeholder,
+[data-skin="midnight"] textarea::placeholder {
+  color: #6b63a0 !important;
+}

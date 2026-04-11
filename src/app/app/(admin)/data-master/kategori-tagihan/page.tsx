@@ -93,7 +93,7 @@ export default function KategoriTagihanPage() {
     {
       header: 'Status',
       accessor: (row) => (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: 'var(--text-sm)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: 'var(--sp-text-sm)' }}>
           {row.isActive
             ? <><CircleCheck size={14} style={{ color: 'var(--success-500)' }} /><span>Aktif</span></>
             : <><CircleX size={14} style={{ color: 'var(--danger-500)' }} /><span>Non-Aktif</span></>}

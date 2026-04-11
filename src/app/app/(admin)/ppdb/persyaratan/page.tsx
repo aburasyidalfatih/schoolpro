@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Plus, Loader2, Trash2, FileText, CheckCircle2, XCircle, HelpCircle } from 'lucide-react'
+import { Plus, Loader2, Trash2, FileText, CheckCircle2, HelpCircle } from 'lucide-react'
 import { DataTable, Column } from '@/components/ui/DataTable'
 import { Modal } from '@/components/ui/Modal'
 import styles from './page.module.css'
@@ -98,7 +98,7 @@ export default function PersyaratanPpdbPage() {
       } else {
         fetchPersyaratan(selectedPeriode)
       }
-    } catch (error) {
+    } catch {
       alert('Terjadi kesalahan server.')
     }
   }
@@ -123,7 +123,7 @@ export default function PersyaratanPpdbPage() {
         setIsModalOpen(false)
         fetchPersyaratan(selectedPeriode)
       }
-    } catch (e) {
+    } catch {
       setErrorMsg('Gagal terhubung ke server')
     } finally {
       setIsSubmitting(false)

@@ -149,7 +149,7 @@ export default function RekeningPage() {
         <DataTable columns={columns} data={data} isLoading={loading} emptyMessage="Belum ada rekening manual" />
       ) : (
         <div style={{ maxWidth: '600px' }}>
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginBottom: 'var(--space-6)', padding: '1rem', background: 'var(--primary-50)', borderRadius: 'var(--radius-lg)', color: 'var(--primary-700)', fontSize: 'var(--text-sm)' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', marginBottom: 'var(--space-6)', padding: '1rem', background: 'var(--primary-50)', borderRadius: 'var(--sp-radius-lg)', color: 'var(--primary-700)', fontSize: 'var(--sp-text-sm)' }}>
             <Info size={18} style={{ flexShrink: 0, marginTop: 1 }} />
             <p>Hubungkan akun Tripay untuk menerima pembayaran otomatis via Virtual Account, QRIS, dan Retail Outlet.</p>
           </div>

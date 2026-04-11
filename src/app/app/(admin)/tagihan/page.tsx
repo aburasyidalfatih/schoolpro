@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Plus, Search, Loader2, Pencil, Trash2, FileText, Send, User, ChevronRight, Filter } from 'lucide-react'
+import { Search, Loader2, Trash2, Send } from 'lucide-react'
 import { DataTable, Column } from '@/components/ui/DataTable'
 import { Modal } from '@/components/ui/Modal'
 import { cn } from '@/lib/utils'
@@ -17,7 +17,7 @@ export default function TagihanPage() {
   // Filter States
   const [filterKelas, setFilterKelas] = useState('')
   const [filterKategori, setFilterKategori] = useState('')
-  const [filterTahun, setFilterTahun] = useState('')
+  const [filterTahun] = useState('')
 
   // Dependency Data
   const [kelases, setKelases] = useState<any[]>([])
@@ -142,7 +142,7 @@ export default function TagihanPage() {
         fetchData()
         alert(json.message)
       }
-    } catch (e) {
+    } catch {
       setErrorMsg('Gagal terhubung ke server')
     } finally {
       setIsSubmitting(false)
@@ -159,7 +159,7 @@ export default function TagihanPage() {
       } else {
         alert(json.error)
       }
-    } catch (e) {
+    } catch {
       alert('Gagal menghapus')
     }
   }

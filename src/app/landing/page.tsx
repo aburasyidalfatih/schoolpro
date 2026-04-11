@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Check, Zap, Shield, Users, Globe, ArrowRight, Star, Building2, GraduationCap, DollarSign, BarChart3 } from 'lucide-react'
+import { Zap, Shield, Users, Globe, ArrowRight, Building2, GraduationCap, DollarSign, BarChart3 } from 'lucide-react'
 import styles from './page.module.css'
 
 export const metadata = {

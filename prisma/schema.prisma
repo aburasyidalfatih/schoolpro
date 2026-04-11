@@ -54,6 +54,9 @@ model Tenant {
   units                Unit[]
   users                User[]
   pembayaranPpdbs      PembayaranPpdb[]
+  gurus                Guru[]
+  blogs                Blog[]
+  editorials           Editorial[]
 
   @@map("tenants")
 }
@@ -459,12 +462,17 @@ model Agenda {
   id              String    @id @default(uuid())
   tenantId        String    @map("tenant_id")
   judul           String
+  slug            String?
   deskripsi       String?
   tanggalMulai    DateTime  @map("tanggal_mulai")
   tanggalAkhir    DateTime? @map("tanggal_akhir")
+  waktu           String?
   lokasi          String?
   penanggungjawab String?   @map("penanggungjawab")
+  kontakPerson    String?   @map("kontak_person")
+  kategori        String?   @default("kegiatan")
   isPublished     Boolean   @default(true) @map("is_published")
+  gambarUrl       String?   @map("gambar_url")
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
   tenant          Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
@@ -476,10 +484,13 @@ model Prestasi {
   id          String   @id @default(uuid())
   tenantId    String   @map("tenant_id")
   judul       String
+  slug        String?
   deskripsi   String?
   tingkat     String   @default("SEKOLAH")
   kategori    String   @default("AKADEMIK")
   tahun       Int
+  siswa       String?
+  pencapaian  String?
   gambarUrl   String?  @map("gambar_url")
   isPublished Boolean  @default(true) @map("is_published")
   createdAt   DateTime @default(now()) @map("created_at")
@@ -490,17 +501,23 @@ model Prestasi {
 }
 
 model Ekskul {
-  id          String   @id @default(uuid())
-  tenantId    String   @map("tenant_id")
-  nama        String
-  deskripsi   String?
-  jadwal      String?
-  pembina     String?
-  gambarUrl   String?  @map("gambar_url")
-  isActive    Boolean  @default(true) @map("is_active")
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  id               String   @id @default(uuid())
+  tenantId         String   @map("tenant_id")
+  nama             String
+  slug             String?
+  deskripsi        String?
+  jadwal           String?
+  hari             String?
+  pembina          String?
+  jumlahAnggota    Int      @default(0) @map("jumlah_anggota")
+  maxAnggota       Int      @default(30) @map("max_anggota")
+  kategori         String?
+  pendaftaranBuka  Boolean  @default(true) @map("pendaftaran_buka")
+  gambarUrl        String?  @map("gambar_url")
+  isActive         Boolean  @default(true) @map("is_active")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+  tenant           Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   @@map("ekskuls")
 }
@@ -509,7 +526,10 @@ model Fasilitas {
   id          String   @id @default(uuid())
   tenantId    String   @map("tenant_id")
   nama        String
+  slug        String?
   deskripsi   String?
+  kategori    String?
+  kapasitas   String?
   gambarUrl   String?  @map("gambar_url")
   isPublished Boolean  @default(true) @map("is_published")
   createdAt   DateTime @default(now()) @map("created_at")
@@ -558,10 +578,14 @@ model Pengumuman {
   tenantId    String   @map("tenant_id")
   userId      String   @map("user_id")
   judul       String
+  slug        String?
   konten      String
+  ringkasan   String?
+  prioritas   String   @default("normal")
   targetKelas Json?    @map("target_kelas")
   kirimWa     Boolean  @default(false) @map("kirim_wa")
   tanggal     DateTime @default(now())
+  gambarUrl   String?  @map("gambar_url")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -598,4 +622,68 @@ model PengaturanNotifikasi {
   tenant        Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
   @@map("pengaturan_notifikasi")
+}
+
+model Guru {
+  id           String   @id @default(uuid())
+  tenantId     String   @map("tenant_id")
+  nama         String
+  slug         String?
+  jabatan      String   @default("guru")
+  jabatanLabel String   @map("jabatan_label")
+  nip          String?
+  pendidikan   String?
+  bidang       String?
+  bio          String?
+  quote        String?
+  foto         String?
+  urutan       Int      @default(0)
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  tenant       Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("gurus")
+}
+
+model Blog {
+  id          String   @id @default(uuid())
+  tenantId    String   @map("tenant_id")
+  judul       String
+  slug        String?
+  konten      String
+  ringkasan   String?
+  penulis     String?
+  fotoPenulis String?  @map("foto_penulis")
+  bioPenulis  String?  @map("bio_penulis")
+  kategori    String?
+  tags        String?
+  gambarUrl   String?  @map("gambar_url")
+  isPublished Boolean  @default(true) @map("is_published")
+  tanggal     DateTime @default(now())
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("blogs")
+}
+
+model Editorial {
+  id          String   @id @default(uuid())
+  tenantId    String   @map("tenant_id")
+  judul       String
+  slug        String?
+  konten      String
+  ringkasan   String?
+  penulis     String?
+  fotoPenulis String?  @map("foto_penulis")
+  judulPenulis String? @map("judul_penulis")
+  gambarUrl   String?  @map("gambar_url")
+  isPublished Boolean  @default(true) @map("is_published")
+  tanggal     DateTime @default(now())
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("editorials")
 }

@@ -29,7 +29,7 @@ export function EmptyState({
       <div style={{ marginBottom: '1rem', opacity: 0.4 }}>{icon}</div>
       <p
         style={{
-          fontSize: 'var(--text-base)',
+          fontSize: 'var(--sp-text-base)',
           fontWeight: 600,
           color: 'var(--text-secondary)',
           marginBottom: description ? '0.5rem' : 0,
@@ -38,7 +38,7 @@ export function EmptyState({
         {title}
       </p>
       {description && (
-        <p style={{ fontSize: 'var(--text-sm)', maxWidth: '360px' }}>{description}</p>
+        <p style={{ fontSize: 'var(--sp-text-sm)', maxWidth: '360px' }}>{description}</p>
       )}
       {action && <div style={{ marginTop: '1.5rem' }}>{action}</div>}
     </div>

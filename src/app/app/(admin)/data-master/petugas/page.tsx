@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Plus, User, Mail, Loader2, Pencil, Trash2 } from 'lucide-react'
+import { Plus, User, Mail, Pencil, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { DataTable, Column } from '@/components/ui/DataTable'
 import { Modal } from '@/components/ui/Modal'
@@ -112,7 +112,7 @@ export default function PetugasPage() {
     {
       header: 'Email',
       accessor: (row) => (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-secondary)', fontSize: 'var(--text-sm)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-secondary)', fontSize: 'var(--sp-text-sm)' }}>
           <Mail size={14} />{row.email}
         </div>
       ),

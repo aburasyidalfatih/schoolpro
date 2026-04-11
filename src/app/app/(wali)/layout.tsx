@@ -1,3 +1,4 @@
+import '@/app/admin.css'
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import WaliSidebar from '@/components/layout/WaliSidebar'

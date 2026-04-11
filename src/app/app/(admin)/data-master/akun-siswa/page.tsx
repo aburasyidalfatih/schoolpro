@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Loader2, Pencil, Trash2, Key, ShieldCheck, UserPlus, RefreshCw, GraduationCap } from 'lucide-react'
+import { Loader2, Trash2, Key, ShieldCheck, UserPlus, RefreshCw, GraduationCap } from 'lucide-react'
 import { toast } from 'sonner'
 import { DataTable, Column } from '@/components/ui/DataTable'
 import { Modal } from '@/components/ui/Modal'
@@ -113,7 +113,7 @@ export default function AkunSiswaPage() {
       header: 'Status',
       accessor: (row) => row.user
         ? <span className={`${shared.statusBadge} ${row.user.isActive ? shared.statusActive : shared.statusInactive}`}>{row.user.isActive ? 'Aktif' : 'Diblokir'}</span>
-        : <span style={{ color: 'var(--text-tertiary)', fontSize: 'var(--text-sm)' }}>—</span>,
+        : <span style={{ color: 'var(--text-tertiary)', fontSize: 'var(--sp-text-sm)' }}>—</span>,
     },
     {
       header: 'Aksi', align: 'center', width: '200px',
@@ -159,8 +159,8 @@ export default function AkunSiswaPage() {
       <Modal isOpen={isModalOpen} onClose={() => !isSubmitting && setIsModalOpen(false)} title={selectedUserId ? 'Reset Password Siswa' : 'Buat Akun Siswa'}>
         <form className={shared.form} onSubmit={handleSubmit}>
           {errorMsg && <div className={shared.errorAlert}>{errorMsg}</div>}
-          <div style={{ background: 'var(--bg-tertiary)', padding: '1rem', borderRadius: 'var(--radius-lg)', marginBottom: 'var(--space-2)' }}>
-            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)', marginBottom: '4px' }}>Nama Siswa</div>
+          <div style={{ background: 'var(--bg-tertiary)', padding: '1rem', borderRadius: 'var(--sp-radius-lg)', marginBottom: 'var(--space-2)' }}>
+            <div style={{ fontSize: 'var(--sp-text-xs)', color: 'var(--text-tertiary)', marginBottom: '4px' }}>Nama Siswa</div>
             <div style={{ fontWeight: 600 }}>{selectedSiswaName}</div>
           </div>
           <div className={shared.formGroup}>
@@ -180,7 +180,7 @@ export default function AkunSiswaPage() {
         <p style={{ color: 'var(--text-secondary)', marginBottom: 'var(--space-4)' }}>
           Buat akun secara otomatis untuk semua siswa yang belum memiliki akun?
         </p>
-        <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-tertiary)', marginBottom: 'var(--space-6)' }}>
+        <p style={{ fontSize: 'var(--sp-text-sm)', color: 'var(--text-tertiary)', marginBottom: 'var(--space-6)' }}>
           Password standar: <strong>Siswa123!</strong>
         </p>
         <div className={shared.modalFooter}>
@@ -194,7 +194,7 @@ export default function AkunSiswaPage() {
         <p style={{ color: 'var(--text-secondary)', marginBottom: 'var(--space-2)' }}>
           Hapus akun login untuk <strong style={{ color: 'var(--text-primary)' }}>{deleteTarget?.nama}</strong>?
         </p>
-        <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-tertiary)', marginBottom: 'var(--space-6)' }}>
+        <p style={{ fontSize: 'var(--sp-text-sm)', color: 'var(--text-tertiary)', marginBottom: 'var(--space-6)' }}>
           Data profil siswa tidak akan terhapus.
         </p>
         <div className={shared.modalFooter}>

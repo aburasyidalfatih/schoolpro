@@ -50,13 +50,13 @@ export default function CekStatusPage() {
           value={noPendaftaran}
           onChange={e => setNoPendaftaran(e.target.value)}
           placeholder="Contoh: PPDB-2026-0001"
-          style={{ flex: 1, padding: '0.75rem 1rem', borderRadius: 'var(--radius-lg)', border: '1.5px solid var(--border-color)', fontSize: '0.9rem', outline: 'none' }}
+          style={{ flex: 1, padding: '0.75rem 1rem', borderRadius: 'var(--sp-radius-lg)', border: '1.5px solid var(--border-color)', fontSize: '0.9rem', outline: 'none' }}
           required
         />
         <button
           type="submit"
           disabled={loading}
-          style={{ padding: '0.75rem 1.25rem', background: 'var(--primary-600)', color: 'white', border: 'none', borderRadius: 'var(--radius-lg)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, fontWeight: 700 }}
+          style={{ padding: '0.75rem 1.25rem', background: 'var(--primary-600)', color: 'white', border: 'none', borderRadius: 'var(--sp-radius-lg)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, fontWeight: 700 }}
         >
           {loading ? <Loader2 size={18} style={{ animation: 'spin 0.7s linear infinite' }} /> : <Search size={18} />}
           Cek
@@ -64,13 +64,13 @@ export default function CekStatusPage() {
       </form>
 
       {error && (
-        <div style={{ padding: '1rem', background: 'var(--danger-50)', border: '1px solid var(--danger-200)', borderRadius: 'var(--radius-lg)', color: 'var(--danger-700)', fontSize: '0.875rem', textAlign: 'center' }}>
+        <div style={{ padding: '1rem', background: 'var(--danger-50)', border: '1px solid var(--danger-200)', borderRadius: 'var(--sp-radius-lg)', color: 'var(--danger-700)', fontSize: '0.875rem', textAlign: 'center' }}>
           {error}
         </div>
       )}
 
       {result && statusCfg && (
-        <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-xl)', overflow: 'hidden' }}>
+        <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--sp-radius-xl)', overflow: 'hidden' }}>
           {/* Status Banner */}
           <div style={{ padding: '1.5rem', background: `color-mix(in srgb, ${statusCfg.color} 10%, white)`, borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <div style={{ color: statusCfg.color }}>{statusCfg.icon}</div>
@@ -98,7 +98,7 @@ export default function CekStatusPage() {
 
             {/* Pengumuman jika ada */}
             {result.pengumuman && (
-              <div style={{ marginTop: '0.5rem', padding: '0.875rem', background: result.pengumuman.status === 'DITERIMA' ? 'var(--success-50)' : 'var(--danger-50)', borderRadius: 'var(--radius-lg)', fontSize: '0.8rem', color: result.pengumuman.status === 'DITERIMA' ? 'var(--success-700)' : 'var(--danger-700)' }}>
+              <div style={{ marginTop: '0.5rem', padding: '0.875rem', background: result.pengumuman.status === 'DITERIMA' ? 'var(--success-50)' : 'var(--danger-50)', borderRadius: 'var(--sp-radius-lg)', fontSize: '0.8rem', color: result.pengumuman.status === 'DITERIMA' ? 'var(--success-700)' : 'var(--danger-700)' }}>
                 <div style={{ fontWeight: 700, marginBottom: 4 }}>Pesan dari Sekolah:</div>
                 <p>{result.pengumuman.pesan}</p>
                 {result.pengumuman.jadwalDaftarUlang && (

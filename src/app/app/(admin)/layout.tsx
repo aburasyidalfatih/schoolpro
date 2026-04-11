@@ -1,3 +1,4 @@
+import '@/app/admin.css'
 import AdminSidebar from '@/components/layout/AdminSidebar'
 import AdminHeader from '@/components/layout/AdminHeader'
 import styles from './layout.module.css'

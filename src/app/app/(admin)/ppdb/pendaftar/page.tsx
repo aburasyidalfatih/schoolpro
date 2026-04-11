@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Eye, Users, Clock, CheckCircle2, XCircle, AlertCircle, Search } from 'lucide-react'
+import { Eye, Users, Clock, CheckCircle2, XCircle, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
 import { DataTable, Column } from '@/components/ui/DataTable'
 import { SearchInput } from '@/components/ui/SearchInput'
@@ -86,8 +86,8 @@ export default function PendaftarPpdbPage() {
       header: 'Gelombang',
       accessor: (row) => (
         <div>
-          <div style={{ fontWeight: 600, fontSize: 'var(--text-sm)' }}>{row.periode?.nama}</div>
-          <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-tertiary)' }}>{row.periode?.unit?.nama}</div>
+          <div style={{ fontWeight: 600, fontSize: 'var(--sp-text-sm)' }}>{row.periode?.nama}</div>
+          <div style={{ fontSize: 'var(--sp-text-xs)', color: 'var(--text-tertiary)' }}>{row.periode?.unit?.nama}</div>
         </div>
       ),
     },
@@ -114,8 +114,8 @@ export default function PendaftarPpdbPage() {
         const total = row.berkas?.length || 0
         const diterima = row.berkas?.filter((b: any) => b.status === 'DITERIMA').length || 0
         return total > 0
-          ? <span style={{ fontSize: 'var(--text-sm)', fontWeight: 600 }}>{diterima}/{total} disetujui</span>
-          : <span style={{ color: 'var(--text-tertiary)', fontSize: 'var(--text-sm)' }}>—</span>
+          ? <span style={{ fontSize: 'var(--sp-text-sm)', fontWeight: 600 }}>{diterima}/{total} disetujui</span>
+          : <span style={{ color: 'var(--text-tertiary)', fontSize: 'var(--sp-text-sm)' }}>—</span>
       },
     },
     {
@@ -128,7 +128,7 @@ export default function PendaftarPpdbPage() {
     {
       header: 'Tanggal Daftar',
       accessor: (row) => (
-        <span style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)' }}>
+        <span style={{ fontSize: 'var(--sp-text-sm)', color: 'var(--text-secondary)' }}>
           {new Date(row.tanggalDaftar).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
         </span>
       ),

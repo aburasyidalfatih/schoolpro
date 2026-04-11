@@ -43,7 +43,7 @@ export default function RegisterPage() {
           router.push('/app/login')
         }, 3000)
       }
-    } catch (err) {
+    } catch {
       setError('Terjadi kesalahan sistem')
       setLoading(false)
     }

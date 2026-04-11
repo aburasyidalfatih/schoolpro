@@ -1,17 +1,17 @@
 .tableContainer {
   width: 100%;
   overflow-x: auto;
-  border-radius: var(--radius-lg);
+  border-radius: var(--sp-radius-lg);
   border: 1px solid var(--border-color);
   background: var(--card-bg);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--sp-shadow-sm);
 }
 
 .table {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
-  font-size: var(--text-sm);
+  font-size: var(--sp-text-sm);
 }
 
 .table th {

@@ -43,13 +43,16 @@
 | Model | Tabel | Keterangan |
 |---|---|---|
 | Berita | beritas | Artikel/berita, unique `[tenantId, slug]` |
-| Agenda | agendas | Kalender kegiatan |
-| Pengumuman | pengumumans | Pengumuman internal/publik |
-| Prestasi | prestasis | Prestasi siswa/sekolah |
-| Ekskul | ekskuls | Ekstrakurikuler |
-| Fasilitas | fasilitas | Fasilitas sekolah |
+| Agenda | agendas | Kalender kegiatan — ditambah field: `slug`, `waktu`, `kontakPerson`, `kategori`, `gambarUrl` |
+| Pengumuman | pengumumans | Pengumuman — ditambah field: `slug`, `ringkasan`, `prioritas`, `gambarUrl` |
+| Prestasi | prestasis | Prestasi siswa — ditambah field: `slug`, `siswa`, `pencapaian` |
+| Ekskul | ekskuls | Ekstrakurikuler — ditambah field: `slug`, `hari`, `jumlahAnggota`, `maxAnggota`, `kategori`, `pendaftaranBuka` |
+| Fasilitas | fasilitas | Fasilitas sekolah — ditambah field: `slug`, `kategori`, `kapasitas` |
 | Slider | sliders | Banner/slider homepage |
 | Alumni | alumnis | Data alumni |
+| Guru | gurus | Data guru & staff, field: `nama`, `slug`, `jabatan`, `jabatanLabel`, `nip`, `pendidikan`, `bidang`, `bio`, `quote`, `foto`, `urutan` |
+| Blog | blogs | Blog guru, field: `judul`, `slug`, `konten`, `ringkasan`, `penulis`, `fotoPenulis`, `bioPenulis`, `kategori`, `tags`, `gambarUrl` |
+| Editorial | editorials | Editorial kepala sekolah, field: `judul`, `slug`, `konten`, `ringkasan`, `penulis`, `fotoPenulis`, `judulPenulis`, `gambarUrl` |
 
 ### Sistem
 | Model | Tabel | Keterangan |

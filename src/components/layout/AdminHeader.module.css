@@ -24,12 +24,12 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  font-size: var(--text-sm);
+  font-size: var(--sp-text-sm);
 }
 
 .crumbItem { color: var(--text-tertiary); display: flex; align-items: center; }
 .crumbActive { color: var(--text-primary); font-weight: 600; }
-.separator { color: var(--gray-300); margin: 0 2px; font-size: var(--text-xs); }
+.separator { color: var(--gray-300); margin: 0 2px; font-size: var(--sp-text-xs); }
 
 /* Search */
 .search {
@@ -39,7 +39,7 @@
   padding: 0.45rem 0.875rem;
   background: var(--gray-50);
   border: 1px solid var(--border-color);
-  border-radius: var(--radius-xl);
+  border-radius: var(--sp-radius-xl);
   transition: all 0.2s ease;
   min-width: 280px;
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.04);
@@ -52,7 +52,7 @@
 }
 
 .searchIcon { 
-  font-size: var(--text-sm); 
+  font-size: var(--sp-text-sm); 
   opacity: 0.4; 
   display: flex; 
   align-items: center;
@@ -65,7 +65,7 @@
   border: none;
   background: none;
   outline: none;
-  font-size: var(--text-sm);
+  font-size: var(--sp-text-sm);
   font-family: var(--font-sans);
   color: var(--text-primary);
   width: 100%;
@@ -79,7 +79,7 @@
   font-family: var(--font-sans);
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
+  border-radius: var(--sp-radius-sm);
   color: var(--text-tertiary);
   white-space: nowrap;
   font-weight: 600;
@@ -92,14 +92,14 @@
   height: 38px;
   border: 1px solid var(--border-color);
   background: var(--bg-secondary);
-  border-radius: var(--radius-lg);
+  border-radius: var(--sp-radius-lg);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--text-secondary);
   transition: all 0.2s ease;
-  box-shadow: var(--shadow-xs);
+  box-shadow: var(--sp-shadow-xs);
 }
 
 .iconBtn:hover { 
@@ -107,7 +107,7 @@
   border-color: var(--gray-300);
   color: var(--text-primary);
   transform: translateY(-1px);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--sp-shadow-sm);
 }
 
 .badge {
@@ -140,7 +140,7 @@
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-1) var(--space-2) var(--space-1) var(--space-3);
-  border-radius: var(--radius-xl);
+  border-radius: var(--sp-radius-xl);
   cursor: pointer;
   transition: all 0.2s ease;
   border: 1px solid transparent;
@@ -155,13 +155,13 @@
   width: 36px;
   height: 36px;
   background: linear-gradient(135deg, var(--primary-500), var(--accent-500));
-  border-radius: var(--radius-lg);
+  border-radius: var(--sp-radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
   font-weight: 700;
-  font-size: var(--text-sm);
+  font-size: var(--sp-text-sm);
   box-shadow: 0 0 0 2px var(--bg-secondary), 0 0 0 3px var(--primary-200);
   transition: box-shadow 0.2s ease;
   flex-shrink: 0;
@@ -172,7 +172,7 @@
 }
 
 .profileInfo { display: flex; flex-direction: column; }
-.profileName { font-size: var(--text-sm); font-weight: 600; line-height: 1.2; color: var(--text-primary); }
+.profileName { font-size: var(--sp-text-sm); font-weight: 600; line-height: 1.2; color: var(--text-primary); }
 .profileRole { font-size: 0.65rem; color: var(--text-tertiary); font-weight: 500; }
 
 .chevron {
@@ -190,8 +190,8 @@
   min-width: 220px;
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-lg);
+  border-radius: var(--sp-radius-xl);
+  box-shadow: var(--sp-shadow-lg);
   z-index: 200;
   overflow: hidden;
   animation: dropdownIn 0.15s ease;
@@ -213,17 +213,17 @@
   width: 40px;
   height: 40px;
   background: linear-gradient(135deg, var(--primary-500), var(--accent-500));
-  border-radius: var(--radius-lg);
+  border-radius: var(--sp-radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
   font-weight: 700;
-  font-size: var(--text-sm);
+  font-size: var(--sp-text-sm);
   flex-shrink: 0;
 }
 
-.dropdownName { font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); }
+.dropdownName { font-size: var(--sp-text-sm); font-weight: 600; color: var(--text-primary); }
 .dropdownEmail { font-size: 0.7rem; color: var(--text-tertiary); margin-top: 1px; }
 
 .dropdownDivider { height: 1px; background: var(--border-color); }
@@ -237,7 +237,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  font-size: var(--text-sm);
+  font-size: var(--sp-text-sm);
   color: var(--text-secondary);
   transition: all 0.15s ease;
   text-align: left;

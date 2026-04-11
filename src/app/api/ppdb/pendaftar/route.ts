@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
-const ADMIN_ROLES = ['SUPER_ADMIN', 'ADMIN', 'PPDB']
 
 // GET — Admin: list semua pendaftar dengan filter
 export async function GET(req: Request) {

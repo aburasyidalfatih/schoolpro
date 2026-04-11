@@ -16,7 +16,6 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
 
   const [data, setData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
-  const [uploading, setUploading] = useState(false)
   const [buktiFile, setBuktiFile] = useState<File | null>(null)
   const [buktiPreview, setBuktiPreview] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
@@ -203,22 +202,22 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
               </div>
 
               {/* Upload Bukti */}
-              <div style={{ marginTop: 'var(--space-6)', padding: 'var(--space-5)', background: 'var(--bg-tertiary)', borderRadius: 'var(--radius-xl)', border: '1px solid var(--border-color)' }}>
-                <h4 style={{ fontWeight: 700, fontSize: 'var(--text-sm)', marginBottom: 'var(--space-3)', display: 'flex', alignItems: 'center', gap: 6 }}>
+              <div style={{ marginTop: 'var(--space-6)', padding: 'var(--space-5)', background: 'var(--bg-tertiary)', borderRadius: 'var(--sp-radius-xl)', border: '1px solid var(--border-color)' }}>
+                <h4 style={{ fontWeight: 700, fontSize: 'var(--sp-text-sm)', marginBottom: 'var(--space-3)', display: 'flex', alignItems: 'center', gap: 6 }}>
                   <Upload size={15} /> Upload Bukti Transfer
                 </h4>
-                <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', marginBottom: 'var(--space-4)' }}>
+                <p style={{ fontSize: 'var(--sp-text-xs)', color: 'var(--text-secondary)', marginBottom: 'var(--space-4)' }}>
                   Upload foto/screenshot bukti transfer. Format: JPG, PNG, PDF. Maks 5MB.
                 </p>
 
                 {buktiPreview && (
                   <div style={{ marginBottom: 'var(--space-4)' }}>
-                    <img src={buktiPreview} alt="Preview" style={{ maxWidth: '100%', maxHeight: 200, borderRadius: 'var(--radius-lg)', objectFit: 'contain', border: '1px solid var(--border-color)' }} />
+                    <img src={buktiPreview} alt="Preview" style={{ maxWidth: '100%', maxHeight: 200, borderRadius: 'var(--sp-radius-lg)', objectFit: 'contain', border: '1px solid var(--border-color)' }} />
                   </div>
                 )}
 
                 <div style={{ display: 'flex', gap: 'var(--space-3)', flexWrap: 'wrap', alignItems: 'center' }}>
-                  <label style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '0.5rem 1rem', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-lg)', cursor: 'pointer', fontSize: 'var(--text-sm)', fontWeight: 600 }}>
+                  <label style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '0.5rem 1rem', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', borderRadius: 'var(--sp-radius-lg)', cursor: 'pointer', fontSize: 'var(--sp-text-sm)', fontWeight: 600 }}>
                     <Upload size={14} /> {buktiFile ? buktiFile.name : 'Pilih File'}
                     <input type="file" accept="image/*,application/pdf" style={{ display: 'none' }} onChange={handleFileChange} />
                   </label>
@@ -244,15 +243,15 @@ export default function InvoicePage({ params }: { params: Promise<{ id: string }
 
           {/* Menunggu verifikasi admin */}
           {pembayaranPending && !isLunas && (
-            <div style={{ marginTop: 'var(--space-6)', padding: 'var(--space-5)', background: 'var(--warning-50)', border: '1px solid var(--warning-200)', borderRadius: 'var(--radius-xl)', display: 'flex', gap: 'var(--space-4)', alignItems: 'flex-start' }}>
+            <div style={{ marginTop: 'var(--space-6)', padding: 'var(--space-5)', background: 'var(--warning-50)', border: '1px solid var(--warning-200)', borderRadius: 'var(--sp-radius-xl)', display: 'flex', gap: 'var(--space-4)', alignItems: 'flex-start' }}>
               <Clock size={22} style={{ color: 'var(--warning-600)', flexShrink: 0, marginTop: 2 }} />
               <div>
                 <div style={{ fontWeight: 700, color: 'var(--warning-700)', marginBottom: 4 }}>Bukti Transfer Sedang Diverifikasi</div>
-                <p style={{ fontSize: 'var(--text-sm)', color: 'var(--warning-700)' }}>
+                <p style={{ fontSize: 'var(--sp-text-sm)', color: 'var(--warning-700)' }}>
                   Bukti transfer Anda sudah diterima dan sedang diverifikasi oleh admin. Proses verifikasi biasanya memakan waktu 1×24 jam.
                 </p>
                 {pembayaranPending.buktiUrl && (
-                  <a href={pembayaranPending.buktiUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 8, fontSize: 'var(--text-xs)', color: 'var(--primary-600)', fontWeight: 600 }}>
+                  <a href={pembayaranPending.buktiUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 8, fontSize: 'var(--sp-text-xs)', color: 'var(--primary-600)', fontWeight: 600 }}>
                     Lihat Bukti yang Dikirim →
                   </a>
                 )}

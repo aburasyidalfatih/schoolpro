@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { use } from 'react'
 import {
-  User, Users, MapPin, FileText, Upload, CheckCircle2,
+  User, Users, FileText, Upload, CheckCircle2,
   AlertCircle, ChevronRight, ChevronLeft, Loader2
 } from 'lucide-react'
 import { toast } from 'sonner'
@@ -157,7 +157,7 @@ export default function FormLengkapPage({ params }: { params: Promise<{ id: stri
   if (!isFormulirLunas) {
     return (
       <div style={{ maxWidth: 560, margin: '4rem auto', textAlign: 'center', padding: '0 var(--space-6)' }}>
-        <div style={{ width: '4rem', height: '4rem', borderRadius: 'var(--radius-xl)', background: 'var(--warning-100)', color: 'var(--warning-600)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto var(--space-4)' }}>
+        <div style={{ width: '4rem', height: '4rem', borderRadius: 'var(--sp-radius-xl)', background: 'var(--warning-100)', color: 'var(--warning-600)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto var(--space-4)' }}>
           <AlertCircle size={28} />
         </div>
         <h2 style={{ fontWeight: 800, marginBottom: 'var(--space-3)' }}>Formulir Belum Terbuka</h2>
@@ -321,7 +321,7 @@ export default function FormLengkapPage({ params }: { params: Promise<{ id: stri
             <div className={styles.section}>
               <div className={styles.sectionTitle}><FileText size={14} /> Berkas Persyaratan</div>
               {persyaratans.length === 0 ? (
-                <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-sm)', fontStyle: 'italic' }}>
+                <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--sp-text-sm)', fontStyle: 'italic' }}>
                   Tidak ada berkas yang dipersyaratkan untuk gelombang ini.
                 </p>
               ) : (
