@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles, GraduationCap, Users, Award } from 'lucide-react';
 
@@ -63,7 +64,7 @@ export default function CTASection() {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur text-white text-sm font-medium mb-6 border border-white/20"
           >
             <Sparkles className="h-4 w-4 text-amber-300" />
-            PPDB 2026/2027 Telah Dibuka
+            Portal Akses Sekolah
           </motion.div>
 
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight"
@@ -76,30 +77,38 @@ export default function CTASection() {
           </h2>
 
           <p className="text-base sm:text-lg text-white/75 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Daftarkan putri Anda untuk mendapatkan pendidikan Islam terpadu berkualitas.
-            Dibimbing oleh tenaga pendidik berpengalaman dalam lingkungan yang kondusif.
+            Masuk ke portal SchoolPro untuk mengakses dashboard sekolah atau membuat akun baru
+            dengan tampilan yang konsisten dengan tema aktif.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <motion.a
+            <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
-              href="#ppdb"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-base font-bold text-white shadow-2xl transition-all bg-white/20 backdrop-blur border border-white/30 hover:bg-white/30 focus-visible:outline-2 focus-visible:outline-white"
+              className="inline-flex"
             >
-              Daftar Sekarang
-              <ArrowRight className="h-5 w-5" />
-            </motion.a>
-            <motion.a
+              <Link
+                href="/app/login"
+                className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-base font-bold text-white shadow-2xl transition-all bg-white/20 backdrop-blur border border-white/30 hover:bg-white/30 focus-visible:outline-2 focus-visible:outline-white"
+              >
+                Login
+                <ArrowRight className="h-5 w-5" />
+              </Link>
+            </motion.div>
+            <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.98 }}
-              href="#ppdb"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-base font-bold shadow-xl transition-all bg-white hover:bg-white/95 focus-visible:outline-2 focus-visible:outline-white"
-              style={{ color: 'var(--skin-primary)' }}
+              className="inline-flex"
             >
-              Info PPDB
-              <ArrowRight className="h-5 w-5" />
-            </motion.a>
+              <Link
+                href="/app/register"
+                className="inline-flex items-center gap-2 px-8 py-4 rounded-xl text-base font-bold shadow-xl transition-all bg-white hover:bg-white/95 focus-visible:outline-2 focus-visible:outline-white"
+                style={{ color: 'var(--skin-primary)' }}
+              >
+                Register
+                <ArrowRight className="h-5 w-5" />
+              </Link>
+            </motion.div>
           </div>
 
           {/* Trust indicators */}

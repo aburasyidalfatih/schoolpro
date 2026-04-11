@@ -5,6 +5,15 @@ import Link from 'next/link';
 import { ArrowRight, AlertTriangle, Bell, Info } from 'lucide-react';
 import SectionTitle from '@/components/website/shared/SectionTitle';
 
+interface PengumumanCardItem {
+  id: number | string;
+  slug: string;
+  title: string;
+  date: string | Date;
+  summary?: string;
+  content?: string;
+  priority: string;
+}
 
 const priorityConfig: Record<string, { icon: React.ReactNode; bg: string; border: string; text: string; label: string }> = {
   urgent: { icon: <AlertTriangle className="h-4 w-4" />, bg: '#fef2f2', border: '#fecaca', text: '#dc2626', label: 'Penting' },
@@ -12,10 +21,40 @@ const priorityConfig: Record<string, { icon: React.ReactNode; bg: string; border
   info: { icon: <Info className="h-4 w-4" />, bg: '#f0fdf4', border: '#bbf7d0', text: '#16a34a', label: 'Info' },
 };
 
-export default function PengumumanSection({ latestPengumuman }: { latestPengumuman: any[] }) {
+function getAnnouncementPreview(summary = '', content = '') {
+  const baseText = [content, summary]
+    .filter(Boolean)
+    .join(' ')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  if (!baseText) return '';
+
+  const normalized = baseText
+    .replace(/([.!?])\s+/g, '$1|')
+    .split('|')
+    .map((sentence) => sentence.trim())
+    .filter(Boolean);
+
+  if (normalized.length >= 2) {
+    return normalized.slice(0, 2).join(' ');
+  }
+
+  if (baseText.length > 220) {
+    return `${baseText.slice(0, 220).trim()}...`;
+  }
+
+  return baseText;
+}
+
+export default function PengumumanSection({ latestPengumuman }: { latestPengumuman: PengumumanCardItem[] }) {
 
   return (
-    <section className="py-16 lg:py-24 px-4 sm:px-6 lg:px-8">
+    <section
+      className="py-16 lg:py-24 px-4 sm:px-6 lg:px-8"
+      style={{ background: 'var(--skin-section-alt)' }}
+    >
       <div className="max-w-7xl mx-auto">
         <SectionTitle
           title="Pengumuman Terbaru"
@@ -24,7 +63,8 @@ export default function PengumumanSection({ latestPengumuman }: { latestPengumum
 
         <div className="grid sm:grid-cols-2 gap-4 lg:gap-6">
           {latestPengumuman.map((item, i) => {
-            const config = priorityConfig[item.priority];
+            const config = priorityConfig[item.priority] || priorityConfig.normal;
+            const preview = getAnnouncementPreview(item.summary, item.content);
             return (
               <motion.div
                 key={item.id}
@@ -51,9 +91,11 @@ export default function PengumumanSection({ latestPengumuman }: { latestPengumum
                       style={{ color: 'var(--skin-text-heading)' }}>
                       {item.title}
                     </h3>
-                    <p className="text-sm leading-relaxed line-clamp-2" style={{ color: 'var(--skin-text-muted)' }}>
-                      {item.excerpt}
-                    </p>
+                    {preview && (
+                      <p className="text-sm leading-relaxed line-clamp-5" style={{ color: 'var(--skin-text-muted)' }}>
+                        {preview}
+                      </p>
+                    )}
                   </div>
                 </Link>
               </motion.div>

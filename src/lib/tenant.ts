@@ -1,3 +1,5 @@
+import { cache } from 'react'
+import { headers } from 'next/headers'
 import { prisma } from './prisma'
 
 export interface TenantContext {
@@ -52,3 +54,17 @@ export function parseSubdomain(hostname: string): string | null {
   if (parts.length >= 3) return parts[0]
   return null
 }
+
+/**
+ * Per-request cached tenant lookup untuk website pages.
+ * Menggunakan React cache() sehingga layout + page hanya query DB 1x per request.
+ */
+export const getWebsiteTenant = cache(async (): Promise<TenantContext | null> => {
+  const h = await headers()
+  const slug = h.get('x-tenant-slug') || 'demo'
+  const tenant = await prisma.tenant.findUnique({
+    where: { slug, isActive: true },
+    select: tenantSelect,
+  })
+  return tenant ? mapTenant(tenant) : null
+})

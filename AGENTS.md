@@ -1,5 +1,13 @@
 # SchoolPro Architecture & Agent Rules
 
+## Repository Workflow
+- **Default Workspace**: Selalu kerjakan perubahan di `/var/www/schoolpro-dev` sebagai environment development.
+- **Production Safety**: Jangan edit `/var/www/schoolpro` kecuali user secara eksplisit meminta deploy, hotfix production, atau perubahan langsung di production.
+- **Git Flow**: Semua implementasi, testing, dan validasi dilakukan di repo development lebih dulu. Push ke GitHub hanya dilakukan jika user meminta.
+- **Deploy Flow**: Setelah perubahan di `schoolpro-dev` dinyatakan fix oleh user, deploy ke production dilakukan hanya atas instruksi eksplisit user.
+- **Documentation Discipline**: Saat ada perubahan schema, UI, atau scope fitur, update dokumen di `.kiro/steering` yang relevan sebelum pekerjaan ditutup.
+- **Before Push**: Jika user meminta push ke GitHub, pastikan dokumen steering yang relevan sudah diperbarui agar konteks terbaru bisa dipakai pada pengembangan berikutnya.
+
 ## Core Principles
 1. **Multi-Tenant First**: Every action must be scoped to a `tenantId`. Data isolation between schools is the highest priority.
 2. **Premium Aesthetics**: UI must look state-of-the-art. No plain colors; use HSL-tailored variables, glassmorphism (`backdrop-filter`), and smooth transitions.

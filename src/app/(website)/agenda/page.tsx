@@ -1,27 +1,18 @@
 import Link from 'next/link'
 import { MapPin, Clock, User } from 'lucide-react'
 import PageHeader from '@/components/website/shared/PageHeader'
-import { prisma } from '@/lib/prisma'
-import { headers } from 'next/headers'
+import { getWebsiteTenant } from '@/lib/tenant'
+import { getWebsiteAgenda } from '@/lib/website-data'
 
 const categoryColors: Record<string, string> = {
   ujian: '#dc2626', rapat: '#2563eb', libur: '#16a34a', kegiatan: '#d97706', lainnya: '#64748b',
 }
 
-async function getTenant() {
-  const h = await headers()
-  const slug = h.get('x-tenant-slug') || 'demo'
-  return prisma.tenant.findFirst({ where: { slug, isActive: true } })
-}
-
 export default async function AgendaPage() {
-  const tenant = await getTenant()
+  const tenant = await getWebsiteTenant()
   if (!tenant) return null
 
-  const agendaData = await prisma.agenda.findMany({
-    where: { tenantId: tenant.id, isPublished: true },
-    orderBy: { tanggalMulai: 'asc' },
-  })
+  const agendaData = await getWebsiteAgenda(tenant.id)
 
   return (
     <>

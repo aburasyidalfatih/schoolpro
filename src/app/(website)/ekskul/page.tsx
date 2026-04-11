@@ -2,23 +2,14 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { CheckCircle, Clock, Users, XCircle } from 'lucide-react'
 import PageHeader from '@/components/website/shared/PageHeader'
-import { prisma } from '@/lib/prisma'
-import { headers } from 'next/headers'
-
-async function getTenant() {
-  const h = await headers()
-  const slug = h.get('x-tenant-slug') || 'demo'
-  return prisma.tenant.findFirst({ where: { slug, isActive: true } })
-}
+import { getWebsiteTenant } from '@/lib/tenant'
+import { getWebsiteEkskul } from '@/lib/website-data'
 
 export default async function EkskulPage() {
-  const tenant = await getTenant()
+  const tenant = await getWebsiteTenant()
   if (!tenant) return null
 
-  const data = await prisma.ekskul.findMany({
-    where: { tenantId: tenant.id, isActive: true },
-    orderBy: { createdAt: 'desc' },
-  })
+  const data = await getWebsiteEkskul(tenant.id)
 
   return (
     <>

@@ -17,9 +17,9 @@ export default auth((req) => {
     // If hostname is exactly schoolpro.id (no subdomain) → Landing page
     if (parts.length === 2 && parts[0] === 'schoolpro' && parts[1] === 'id') {
       isLandingPage = true
-      // Redirect root to /landing
+      // Rewrite root to /landing (keep URL as schoolpro.id/)
       if (pathname === '/') {
-        return NextResponse.redirect(new URL('/landing', req.nextUrl))
+        return NextResponse.rewrite(new URL('/landing', req.nextUrl))
       }
     } else if (parts.length >= 3) {
       tenantSlug = parts[0]

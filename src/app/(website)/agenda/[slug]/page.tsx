@@ -2,21 +2,15 @@ import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import { Calendar, MapPin, Clock, User, Phone } from 'lucide-react'
 import PageHeader from '@/components/website/shared/PageHeader'
-import { prisma } from '@/lib/prisma'
-import { headers } from 'next/headers'
-
-async function getTenant() {
-  const h = await headers()
-  const slug = h.get('x-tenant-slug') || 'demo'
-  return prisma.tenant.findFirst({ where: { slug, isActive: true } })
-}
+import { getWebsiteTenant } from '@/lib/tenant'
+import { getWebsiteAgendaBySlug } from '@/lib/website-data'
 
 export default async function AgendaDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const tenant = await getTenant()
+  const tenant = await getWebsiteTenant()
   if (!tenant) return notFound()
 
-  const item = await prisma.agenda.findFirst({ where: { tenantId: tenant.id, slug } })
+  const item = await getWebsiteAgendaBySlug(tenant.id, slug)
   if (!item) return notFound()
 
   const details = [

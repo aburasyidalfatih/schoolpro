@@ -1,16 +1,9 @@
 import { GraduationCap, Eye, Target, Award, BookOpen, Users, Globe } from 'lucide-react'
 import PageHeader from '@/components/website/shared/PageHeader'
-import { prisma } from '@/lib/prisma'
-import { headers } from 'next/headers'
-
-async function getTenant() {
-  const h = await headers()
-  const slug = h.get('x-tenant-slug') || 'demo'
-  return prisma.tenant.findFirst({ where: { slug, isActive: true } })
-}
+import { getWebsiteTenant } from '@/lib/tenant'
 
 export default async function ProfilPage() {
-  const tenant = await getTenant()
+  const tenant = await getWebsiteTenant()
   if (!tenant) return null
 
   const pengaturan = (tenant.pengaturan as any) || {}

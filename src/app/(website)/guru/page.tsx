@@ -1,8 +1,8 @@
 import Image from 'next/image'
 import { GraduationCap, BookOpen, Quote } from 'lucide-react'
 import PageHeader from '@/components/website/shared/PageHeader'
-import { prisma } from '@/lib/prisma'
-import { headers } from 'next/headers'
+import { getWebsiteTenant } from '@/lib/tenant'
+import { getWebsiteGuru } from '@/lib/website-data'
 
 const jabatanOrder = ['kepala-sekolah', 'wakil', 'guru', 'staf']
 const jabatanGroupLabels: Record<string, string> = {
@@ -18,20 +18,11 @@ const jabatanColors: Record<string, string> = {
   'staf': 'var(--skin-primary-light)',
 }
 
-async function getTenant() {
-  const h = await headers()
-  const slug = h.get('x-tenant-slug') || 'demo'
-  return prisma.tenant.findFirst({ where: { slug, isActive: true } })
-}
-
 export default async function GuruPage() {
-  const tenant = await getTenant()
+  const tenant = await getWebsiteTenant()
   if (!tenant) return null
 
-  const gurus = await prisma.guru.findMany({
-    where: { tenantId: tenant.id, isActive: true },
-    orderBy: { urutan: 'asc' },
-  })
+  const gurus = await getWebsiteGuru(tenant.id)
 
   const grouped = jabatanOrder
     .map((jab) => ({

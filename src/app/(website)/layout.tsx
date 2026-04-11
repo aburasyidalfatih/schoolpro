@@ -5,22 +5,15 @@ import Header from '@/components/website/layout/Header'
 import Footer from '@/components/website/layout/Footer'
 import SkinSwitcher from '@/components/website/layout/SkinSwitcher'
 import WhatsAppButton from '@/components/website/layout/WhatsAppButton'
-import { prisma } from '@/lib/prisma'
-import { headers } from 'next/headers'
-
-async function getTenant() {
-  const headersList = await headers()
-  const slug = headersList.get('x-tenant-slug') || 'demo'
-  return prisma.tenant.findFirst({ where: { slug, isActive: true } })
-}
+import { getWebsiteTenant } from '@/lib/tenant'
+import { getWebsiteLayoutData } from '@/lib/website-data'
 
 export default async function WebsiteLayout({ children }: { children: React.ReactNode }) {
-  const tenant = await getTenant()
+  const tenant = await getWebsiteTenant()
 
-  const [latestPengumuman, latestAgenda] = tenant ? await Promise.all([
-    prisma.pengumuman.findFirst({ where: { tenantId: tenant.id }, orderBy: { tanggal: 'desc' } }),
-    prisma.agenda.findFirst({ where: { tenantId: tenant.id, isPublished: true }, orderBy: { tanggalMulai: 'asc' } }),
-  ]) : [null, null]
+  const { latestPengumuman, latestAgenda } = tenant
+    ? await getWebsiteLayoutData(tenant.id)
+    : { latestPengumuman: null, latestAgenda: null }
 
   const pengaturan = (tenant?.pengaturan as any) || {}
   const mediaSosial = (tenant?.mediaSosial as any) || {}

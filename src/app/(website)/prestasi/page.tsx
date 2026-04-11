@@ -2,27 +2,18 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Trophy, Medal } from 'lucide-react'
 import PageHeader from '@/components/website/shared/PageHeader'
-import { prisma } from '@/lib/prisma'
-import { headers } from 'next/headers'
+import { getWebsiteTenant } from '@/lib/tenant'
+import { getWebsitePrestasi } from '@/lib/website-data'
 
 const levelColors: Record<string, string> = {
   KOTA: '#64748b', PROVINSI: '#2563eb', NASIONAL: '#d97706', INTERNASIONAL: '#dc2626', SEKOLAH: '#16a34a',
 }
 
-async function getTenant() {
-  const h = await headers()
-  const slug = h.get('x-tenant-slug') || 'demo'
-  return prisma.tenant.findFirst({ where: { slug, isActive: true } })
-}
-
 export default async function PrestasiPage() {
-  const tenant = await getTenant()
+  const tenant = await getWebsiteTenant()
   if (!tenant) return null
 
-  const data = await prisma.prestasi.findMany({
-    where: { tenantId: tenant.id, isPublished: true },
-    orderBy: { createdAt: 'desc' },
-  })
+  const data = await getWebsitePrestasi(tenant.id)
 
   return (
     <>

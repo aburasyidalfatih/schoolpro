@@ -1,5 +1,5 @@
-import { prisma } from '@/lib/prisma'
-import { headers } from 'next/headers'
+import { getWebsiteTenant } from '@/lib/tenant'
+import { getWebsiteHomeData } from '@/lib/website-data'
 import HeroSlider from '@/components/website/home/HeroSlider'
 import StatsCounter from '@/components/website/home/StatsCounter'
 import AgendaSection from '@/components/website/home/AgendaSection'
@@ -12,26 +12,12 @@ import FasilitasSection from '@/components/website/home/FasilitasSection'
 import EkskulSection from '@/components/website/home/EkskulSection'
 import CTASection from '@/components/website/home/CTASection'
 
-async function getTenant() {
-  const headersList = await headers()
-  const slug = headersList.get('x-tenant-slug') || 'demo'
-  return prisma.tenant.findFirst({ where: { slug, isActive: true } })
-}
-
 export default async function HomePage() {
-  const tenant = await getTenant()
+  const tenant = await getWebsiteTenant()
   if (!tenant) return <div style={{ padding: '4rem', textAlign: 'center' }}>Sekolah tidak ditemukan.</div>
 
-  const [slides, pengumuman, agenda, prestasi, gurus, blogs, fasilitas, ekskul] = await Promise.all([
-    prisma.slider.findMany({ where: { tenantId: tenant.id, isActive: true }, orderBy: { urutan: 'asc' } }),
-    prisma.pengumuman.findMany({ where: { tenantId: tenant.id }, orderBy: { tanggal: 'desc' }, take: 4 }),
-    prisma.agenda.findMany({ where: { tenantId: tenant.id, isPublished: true }, orderBy: { tanggalMulai: 'asc' }, take: 6 }),
-    prisma.prestasi.findMany({ where: { tenantId: tenant.id, isPublished: true }, orderBy: { createdAt: 'desc' }, take: 6 }),
-    prisma.guru.findMany({ where: { tenantId: tenant.id }, orderBy: { urutan: 'asc' }, take: 10 }),
-    prisma.blog.findMany({ where: { tenantId: tenant.id }, orderBy: { createdAt: 'desc' }, take: 3 }),
-    prisma.fasilitas.findMany({ where: { tenantId: tenant.id, isPublished: true }, orderBy: { createdAt: 'desc' }, take: 4 }),
-    prisma.ekskul.findMany({ where: { tenantId: tenant.id, isActive: true }, orderBy: { createdAt: 'desc' }, take: 6 }),
-  ])
+  const { slides, pengumuman, agenda, prestasi, gurus, blogs, fasilitas, ekskul } =
+    await getWebsiteHomeData(tenant.id)
 
   const pengaturan = (tenant.pengaturan as any) || {}
   const stats = {
@@ -56,6 +42,7 @@ export default async function HomePage() {
   const mappedPengumuman = pengumuman.map(p => ({
     id: p.id, slug: (p as any).slug || p.id, title: (p as any).judul,
     date: (p as any).tanggal, summary: (p as any).ringkasan || '',
+    content: (p as any).konten || '',
     priority: (p as any).prioritas || 'normal',
   }))
 

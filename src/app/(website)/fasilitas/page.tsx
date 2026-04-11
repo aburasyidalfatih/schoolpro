@@ -2,23 +2,14 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Eye } from 'lucide-react'
 import PageHeader from '@/components/website/shared/PageHeader'
-import { prisma } from '@/lib/prisma'
-import { headers } from 'next/headers'
-
-async function getTenant() {
-  const h = await headers()
-  const slug = h.get('x-tenant-slug') || 'demo'
-  return prisma.tenant.findFirst({ where: { slug, isActive: true } })
-}
+import { getWebsiteTenant } from '@/lib/tenant'
+import { getWebsiteFasilitas } from '@/lib/website-data'
 
 export default async function FasilitasPage() {
-  const tenant = await getTenant()
+  const tenant = await getWebsiteTenant()
   if (!tenant) return null
 
-  const data = await prisma.fasilitas.findMany({
-    where: { tenantId: tenant.id, isPublished: true },
-    orderBy: { createdAt: 'desc' },
-  })
+  const data = await getWebsiteFasilitas(tenant.id)
 
   return (
     <>

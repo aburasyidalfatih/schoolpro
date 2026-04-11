@@ -85,7 +85,10 @@ export default function TestimonialSection() {
   };
 
   return (
-    <section className="py-16 lg:py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <section
+      className="py-16 lg:py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden"
+      style={{ background: 'var(--skin-section-alt)' }}
+    >
       {/* Background ornamental pattern */}
       <div className="absolute inset-0 opacity-[0.03]" style={{
         backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
@@ -102,7 +105,7 @@ export default function TestimonialSection() {
           {/* Nav arrows — outside the card */}
           <button
             onClick={prev}
-            className="absolute -left-4 lg:-left-16 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-xl border-2 flex items-center justify-center transition-all hover:shadow-md focus-visible:outline-2"
+            className="hidden sm:flex absolute -left-4 lg:-left-16 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-xl border-2 items-center justify-center transition-all hover:shadow-md focus-visible:outline-2"
             style={{ borderColor: 'var(--skin-primary)', color: 'var(--skin-primary)', background: 'white' }}
             aria-label="Testimoni sebelumnya"
           >
@@ -110,7 +113,7 @@ export default function TestimonialSection() {
           </button>
           <button
             onClick={next}
-            className="absolute -right-4 lg:-right-16 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-xl flex items-center justify-center text-white transition-all hover:shadow-md focus-visible:outline-2"
+            className="hidden sm:flex absolute -right-4 lg:-right-16 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-xl items-center justify-center text-white transition-all hover:shadow-md focus-visible:outline-2"
             style={{ background: 'linear-gradient(135deg, var(--skin-primary), var(--skin-primary-light))' }}
             aria-label="Testimoni berikutnya"
           >
@@ -199,6 +202,28 @@ export default function TestimonialSection() {
                 aria-current={i === current ? 'true' : undefined}
               />
             ))}
+          </div>
+
+          <div className="flex items-center justify-center gap-3 mt-4 sm:hidden">
+            <button
+              onClick={prev}
+              className="w-10 h-10 rounded-xl border-2 flex items-center justify-center transition-all focus-visible:outline-2"
+              style={{ borderColor: 'var(--skin-primary)', color: 'var(--skin-primary)', background: 'white' }}
+              aria-label="Testimoni sebelumnya"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <span className="text-xs font-medium" style={{ color: 'var(--skin-text-muted)' }}>
+              {current + 1} / {testimonials.length}
+            </span>
+            <button
+              onClick={next}
+              className="w-10 h-10 rounded-xl flex items-center justify-center text-white transition-all focus-visible:outline-2"
+              style={{ background: 'linear-gradient(135deg, var(--skin-primary), var(--skin-primary-light))' }}
+              aria-label="Testimoni berikutnya"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
           </div>
         </div>
       </div>

@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import { AlertTriangle, Bell, Info } from 'lucide-react'
 import PageHeader from '@/components/website/shared/PageHeader'
-import { prisma } from '@/lib/prisma'
-import { headers } from 'next/headers'
+import { getWebsiteTenant } from '@/lib/tenant'
+import { getWebsitePengumuman } from '@/lib/website-data'
 
 const priorityConfig: Record<string, { icon: React.ReactNode; bg: string; border: string; text: string; label: string }> = {
   urgent: { icon: <AlertTriangle className="h-4 w-4" />, bg: '#fef2f2', border: '#fecaca', text: '#dc2626', label: 'Penting' },
@@ -10,20 +10,38 @@ const priorityConfig: Record<string, { icon: React.ReactNode; bg: string; border
   info: { icon: <Info className="h-4 w-4" />, bg: '#f0fdf4', border: '#bbf7d0', text: '#16a34a', label: 'Info' },
 }
 
-async function getTenant() {
-  const h = await headers()
-  const slug = h.get('x-tenant-slug') || 'demo'
-  return prisma.tenant.findFirst({ where: { slug, isActive: true } })
+function getAnnouncementPreview(summary = '', content = '') {
+  const baseText = [content, summary]
+    .filter(Boolean)
+    .join(' ')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+  if (!baseText) return ''
+
+  const normalized = baseText
+    .replace(/([.!?])\s+/g, '$1|')
+    .split('|')
+    .map((sentence) => sentence.trim())
+    .filter(Boolean)
+
+  if (normalized.length >= 2) {
+    return normalized.slice(0, 2).join(' ')
+  }
+
+  if (baseText.length > 220) {
+    return `${baseText.slice(0, 220).trim()}...`
+  }
+
+  return baseText
 }
 
 export default async function PengumumanPage() {
-  const tenant = await getTenant()
+  const tenant = await getWebsiteTenant()
   if (!tenant) return null
 
-  const data = await prisma.pengumuman.findMany({
-    where: { tenantId: tenant.id },
-    orderBy: { tanggal: 'desc' },
-  })
+  const data = await getWebsitePengumuman(tenant.id)
 
   return (
     <>
@@ -34,6 +52,7 @@ export default async function PengumumanPage() {
           {data.map((item) => {
             const config = priorityConfig[(item as any).prioritas] || priorityConfig.normal
             const href = (item as any).slug ? `/pengumuman/${(item as any).slug}` : '#'
+            const preview = getAnnouncementPreview((item as any).ringkasan || '', (item as any).konten || '')
             return (
               <Link key={item.id} href={href} className="block group">
                 <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all p-6 border" style={{ borderColor: 'var(--skin-border)' }}>
@@ -49,7 +68,7 @@ export default async function PengumumanPage() {
                   <h2 className="text-lg font-bold mb-2 group-hover:underline decoration-2 underline-offset-4" style={{ color: 'var(--skin-text-heading)' }}>
                     {item.judul}
                   </h2>
-                  {(item as any).ringkasan && <p className="text-sm leading-relaxed" style={{ color: 'var(--skin-text-muted)' }}>{(item as any).ringkasan}</p>}
+                  {preview && <p className="text-sm leading-relaxed line-clamp-5" style={{ color: 'var(--skin-text-muted)' }}>{preview}</p>}
                 </div>
               </Link>
             )

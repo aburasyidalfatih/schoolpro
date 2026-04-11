@@ -21,6 +21,7 @@
   --skin-hero-overlay: rgba(15, 23, 42, 0.65);
   --skin-surface: #f8fafc;
   --skin-surface-hover: #f1f5f9;
+  --skin-section-alt: #fcfcfa;
   --skin-card-bg: rgba(255, 255, 255, 0.85);
   --skin-nav-bg: rgba(255, 255, 255, 0.8);
   --skin-text-heading: #0f172a;
@@ -43,6 +44,7 @@
   --skin-hero-overlay: rgba(88, 28, 135, 0.6);
   --skin-surface: #faf5ff;
   --skin-surface-hover: #f3e8ff;
+  --skin-section-alt: #fdf8ff;
   --skin-card-bg: rgba(255, 255, 255, 0.9);
   --skin-nav-bg: rgba(255, 255, 255, 0.85);
   --skin-text-heading: #1e1b4b;
@@ -65,6 +67,7 @@
   --skin-hero-overlay: rgba(30, 10, 0, 0.7);
   --skin-surface: #fef2f2;
   --skin-surface-hover: #fee2e2;
+  --skin-section-alt: #fff8f7;
   --skin-card-bg: rgba(255, 255, 255, 0.9);
   --skin-nav-bg: rgba(255, 255, 255, 0.85);
   --skin-text-heading: #1c1917;
@@ -87,6 +90,7 @@
   --skin-hero-overlay: rgba(6, 78, 59, 0.65);
   --skin-surface: #ecfdf5;
   --skin-surface-hover: #d1fae5;
+  --skin-section-alt: #f6fdf9;
   --skin-card-bg: rgba(255, 255, 255, 0.9);
   --skin-nav-bg: rgba(255, 255, 255, 0.85);
   --skin-text-heading: #022c22;
@@ -109,6 +113,7 @@
   --skin-hero-overlay: rgba(80, 20, 5, 0.65);
   --skin-surface: #fff7ed;
   --skin-surface-hover: #ffedd5;
+  --skin-section-alt: #fffaf4;
   --skin-card-bg: rgba(255, 255, 255, 0.9);
   --skin-nav-bg: rgba(255, 255, 255, 0.85);
   --skin-text-heading: #431407;
@@ -131,6 +136,7 @@
   --skin-hero-overlay: rgba(15, 10, 40, 0.75);
   --skin-surface: #1e1b2e;
   --skin-surface-hover: #2a2640;
+  --skin-section-alt: #161427;
   --skin-card-bg: rgba(30, 27, 46, 0.95);
   --skin-nav-bg: rgba(15, 12, 30, 0.9);
   --skin-text-heading: #f1f0ff;
@@ -196,6 +202,7 @@
   --color-skin-accent-light: var(--skin-accent-light);
   --color-skin-surface: var(--skin-surface);
   --color-skin-surface-hover: var(--skin-surface-hover);
+  --color-skin-section-alt: var(--skin-section-alt);
   --color-skin-card-bg: var(--skin-card-bg);
   --color-skin-nav-bg: var(--skin-nav-bg);
   --color-skin-text-heading: var(--skin-text-heading);

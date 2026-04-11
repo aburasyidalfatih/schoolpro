@@ -4,6 +4,11 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 
+interface WhatsAppSchoolInfo {
+  phone?: string;
+  name?: string;
+}
+
 function WhatsAppIcon({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="currentColor">
@@ -12,11 +17,12 @@ function WhatsAppIcon({ className }: { className?: string }) {
   );
 }
 
-export default function WhatsAppButton({ schoolInfo }: { schoolInfo: any }) {
+export default function WhatsAppButton({ schoolInfo }: { schoolInfo: WhatsAppSchoolInfo }) {
   const [isOpen, setIsOpen] = useState(false);
   const rawPhone = schoolInfo?.phone || '6281234567890';
   const phone = rawPhone.replace(/\D/g, ''); // Extract only digits
   const defaultMessage = encodeURIComponent('Assalamu\'alaikum, saya ingin bertanya tentang PPDB di ' + (schoolInfo?.name || 'Pesantren Putri Syech Ahmad Khatib') + '.');
+  const panelWidth = 'min(300px, calc(100vw - 2rem))';
 
   return (
     <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">
@@ -27,8 +33,8 @@ export default function WhatsAppButton({ schoolInfo }: { schoolInfo: any }) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
             transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-            className="absolute bottom-16 right-0 w-[300px] rounded-2xl shadow-2xl overflow-hidden"
-            style={{ background: 'var(--skin-card-bg, white)' }}
+            className="absolute bottom-16 right-0 rounded-2xl shadow-2xl overflow-hidden"
+            style={{ background: 'var(--skin-card-bg, white)', width: panelWidth, maxWidth: panelWidth }}
           >
             {/* Header */}
             <div className="p-4 text-white relative overflow-hidden" style={{ background: '#25D366' }}>

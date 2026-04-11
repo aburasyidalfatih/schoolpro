@@ -57,7 +57,7 @@ export default function RegisterPage() {
             <div className={styles.successIcon}>
               <CheckCircle2 size={48} />
             </div>
-            <h2 className={styles.title} style={{ color: 'white', WebkitTextFillColor: 'unset' }}>Registrasi Berhasil!</h2>
+            <h2 className={styles.title}>Registrasi Berhasil!</h2>
             <p className={styles.subtitle} style={{ marginBottom: '2rem' }}>
               Akun Anda telah berhasil dibuat. Anda akan diarahkan ke halaman login dalam beberapa detik.
             </p>

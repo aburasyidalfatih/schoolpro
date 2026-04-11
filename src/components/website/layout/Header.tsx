@@ -167,13 +167,13 @@ export default function Header({ schoolInfo }: { schoolInfo: SchoolInfoProps }) 
 
           {/* CTA + Mobile Toggle */}
           <div className="flex items-center gap-3">
-            <a
-              href="#ppdb"
+            <Link
+              href="/app/login"
               className="hidden sm:inline-flex items-center px-5 py-2.5 rounded-xl text-sm font-bold text-white shadow-lg transition-all hover:shadow-xl hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2"
               style={{ background: 'linear-gradient(135deg, var(--skin-primary), var(--skin-primary-light))' }}
             >
-              PPDB Online
-            </a>
+              Login/Register
+            </Link>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
               className="lg:hidden p-2 rounded-lg hover:bg-black/5 focus-visible:outline-2 focus-visible:outline-offset-2"
@@ -261,13 +261,13 @@ export default function Header({ schoolInfo }: { schoolInfo: SchoolInfoProps }) 
                   </Link>
                 )
               )}
-              <a
-                href="#ppdb"
+              <Link
+                href="/app/login"
                 className="block text-center mt-3 px-5 py-3 rounded-xl text-sm font-bold text-white shadow-lg"
                 style={{ background: 'linear-gradient(135deg, var(--skin-primary), var(--skin-primary-light))' }}
               >
-                PPDB Online
-              </a>
+                Login/Register
+              </Link>
             </nav>
           </motion.div>
         )}

@@ -1,23 +1,14 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import PageHeader from '@/components/website/shared/PageHeader'
-import { prisma } from '@/lib/prisma'
-import { headers } from 'next/headers'
-
-async function getTenant() {
-  const h = await headers()
-  const slug = h.get('x-tenant-slug') || 'demo'
-  return prisma.tenant.findFirst({ where: { slug, isActive: true } })
-}
+import { getWebsiteTenant } from '@/lib/tenant'
+import { getWebsiteBlog } from '@/lib/website-data'
 
 export default async function BlogPage() {
-  const tenant = await getTenant()
+  const tenant = await getWebsiteTenant()
   if (!tenant) return null
 
-  const data = await prisma.blog.findMany({
-    where: { tenantId: tenant.id, isPublished: true },
-    orderBy: { createdAt: 'desc' },
-  })
+  const data = await getWebsiteBlog(tenant.id)
 
   return (
     <>

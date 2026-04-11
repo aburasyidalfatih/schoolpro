@@ -7,10 +7,16 @@ import { Home, Search, Bell, LogOut, User as UserIcon, Settings, ChevronDown } f
 import ThemeToggle from './ThemeToggle'
 import styles from './AdminHeader.module.css'
 
-export default function AdminHeader() {
+type HeaderUser = {
+  name?: string | null
+  role?: string | null
+  email?: string | null
+}
+
+export default function AdminHeader({ initialUser }: { initialUser?: HeaderUser }) {
   const pathname = usePathname()
   const router = useRouter()
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
@@ -24,7 +30,12 @@ export default function AdminHeader() {
   }
 
   const breadcrumbs = getBreadcrumbs()
-  const user = session?.user as any
+  const sessionUser = session?.user as any
+  const user = sessionUser || initialUser
+  const isSessionLoading = status === 'loading' && !user
+  const profileName = isSessionLoading ? 'Memuat...' : user?.name || 'User'
+  const profileRole = isSessionLoading ? 'Mohon tunggu' : user?.role || 'User'
+  const profileInitial = user?.name?.charAt(0)?.toUpperCase()
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -71,27 +82,17 @@ export default function AdminHeader() {
         <div className={styles.profileWrapper} ref={dropdownRef}>
           <div className={styles.profile} onClick={() => setDropdownOpen((v) => !v)}>
             <div className={styles.avatar}>
-              {user?.name ? user.name.charAt(0).toUpperCase() : <UserIcon size={18} />}
+              {profileInitial || <UserIcon size={18} />}
             </div>
             <div className={styles.profileInfo}>
-              <span className={styles.profileName}>{user?.name || 'User'}</span>
-              <span className={styles.profileRole}>{user?.role || 'Guest'}</span>
+              <span className={`${styles.profileName} ${isSessionLoading ? styles.profilePlaceholder : ''}`}>{profileName}</span>
+              <span className={`${styles.profileRole} ${isSessionLoading ? styles.profilePlaceholder : ''}`}>{profileRole}</span>
             </div>
             <ChevronDown size={14} className={`${styles.chevron} ${dropdownOpen ? styles.chevronOpen : ''}`} />
           </div>
 
           {dropdownOpen && (
             <div className={styles.dropdown}>
-              <div className={styles.dropdownHeader}>
-                <div className={styles.dropdownAvatar}>
-                  {user?.name ? user.name.charAt(0).toUpperCase() : <UserIcon size={18} />}
-                </div>
-                <div>
-                  <div className={styles.dropdownName}>{user?.name || 'User'}</div>
-                  <div className={styles.dropdownEmail}>{user?.email || user?.role || 'Guest'}</div>
-                </div>
-              </div>
-              <div className={styles.dropdownDivider} />
               <button
                 className={styles.dropdownItem}
                 onClick={() => { setDropdownOpen(false); router.push('/app/pengaturan/umum') }}

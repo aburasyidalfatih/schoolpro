@@ -25,7 +25,7 @@ export default async function WaliLayout({
     <div className={styles.wrapper}>
       <WaliSidebar />
       <div className={styles.main}>
-        <AdminHeader />
+        <AdminHeader initialUser={session.user as any} />
         <main className={styles.content}>{children}</main>
       </div>
     </div>

@@ -20,6 +20,10 @@ Selalu gunakan variabel dari `globals.css`. Jangan hardcode warna atau ukuran.
 - `--bg-tertiary` — background subtle
 - `--card-bg` — alias untuk card background
 
+### Website Skin Background
+- `--skin-surface` — background dasar section website yang mengikuti skin aktif
+- `--skin-section-alt` — background alternatif untuk section website yang perlu dibedakan dari `--skin-surface` tetapi tetap mengikuti skin aktif
+
 ### Alias (untuk kompatibilitas CSS modules lama)
 - `--text-color` → alias `--text-primary`
 - `--text-muted` → alias `--text-tertiary`
@@ -72,6 +76,14 @@ export default function HalamanPage() {
 - JANGAN hardcode `background: white` atau `color: black`
 - SELALU gunakan CSS variables
 - Test setiap komponen di dark mode
+
+## Aturan Responsive Mobile
+
+- Floating actions (`WhatsApp`, skin switcher, back-to-top, quick actions) tidak boleh saling overlap di viewport mobile; offset dan ukuran panel harus mempertimbangkan lebar layar kecil
+- Jangan tampilkan hint interaksi yang tidak sesuai perilaku aktual. Jika UI memakai tombol/dots, jangan menulis "Geser" tanpa swipe behavior yang nyata
+- Card carousel/horizontal scroll di mobile harus menyisakan ruang viewport yang sehat; hindari lebar fixed yang membuat kartu tampak terpotong tanpa affordance yang jelas
+- Untuk section homepage berbasis slider, utamakan container `overflow-hidden` dengan pagination/directional controls yang jelas; hindari kartu selebar viewport di dalam layout konten karena mudah memicu komposisi halaman terlihat pecah
+- Konten teks panjang seperti alamat, email, atau metadata wajib aman membungkus (`break-words`, `min-w-0`) agar tidak memicu overflow
 
 ## Notifikasi / Toast
 

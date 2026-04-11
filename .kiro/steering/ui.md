@@ -91,3 +91,8 @@ Pakai `recharts` — BarChart, LineChart, PieChart, dll.
 - Gunakan CSS Variables dari `globals.css`, jangan hardcode warna
 - Semua komponen harus support Dark Mode
 - Icon dari `lucide-react`
+- Untuk komponen website publik di mobile, pastikan floating controls tidak saling menutupi CTA/konten bawah
+- Untuk slider/carousel mobile, sinkronkan kontrol yang tampil dengan interaksi yang benar-benar didukung
+- Jika slider utama konten publik dipakai di mobile, sediakan gesture swipe/touch selain autoplay agar navigasi tetap natural
+- Card konten publik seperti pengumuman, blog, atau agenda sebaiknya menampilkan preview yang benar-benar informatif; utamakan 1-2 kalimat bermakna dibanding teaser yang terlalu pendek
+- Untuk section homepage yang memakai tombol prev/next, samakan gaya kontrol dengan pola `Guru Terbaik Kami`: panah kiri/kanan ditempatkan di sisi konten utama pada desktop, dengan ukuran dan treatment visual yang konsisten

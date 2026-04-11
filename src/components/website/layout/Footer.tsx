@@ -37,7 +37,7 @@ const akademikLinks = [
   { label: 'Blog Guru', href: '/blog' },
   { label: 'Galeri Prestasi', href: '/prestasi' },
   { label: 'Kegiatan Ekskul', href: '/ekskul' },
-  { label: 'PPDB Online', href: '#ppdb' },
+  { label: 'Login/Register', href: '/app/login' },
 ];
 
 // Proper SVG Social Media Icons
@@ -228,7 +228,7 @@ export default function Footer({ schoolInfo }: { schoolInfo: SchoolInfo }) {
             exit={{ opacity: 0, scale: 0.5, y: 20 }}
             transition={{ type: 'spring', stiffness: 400, damping: 25 }}
             onClick={scrollToTop}
-            className="fixed bottom-6 right-6 z-40 w-12 h-12 rounded-2xl text-white shadow-2xl hover:shadow-3xl hover:-translate-y-1 transition-all flex items-center justify-center group"
+            className="fixed bottom-20 right-4 sm:bottom-6 sm:right-6 z-40 w-11 h-11 sm:w-12 sm:h-12 rounded-2xl text-white shadow-2xl hover:shadow-3xl hover:-translate-y-1 transition-all flex items-center justify-center group"
             style={{ background: 'linear-gradient(135deg, var(--skin-primary), var(--skin-primary-light))' }}
             aria-label="Kembali ke atas"
           >

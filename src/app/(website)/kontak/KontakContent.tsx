@@ -3,7 +3,14 @@
 import { useState } from 'react'
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from 'lucide-react'
 
-export default function KontakContent({ schoolInfo }: { schoolInfo: any }) {
+interface ContactSchoolInfo {
+  address?: string
+  phone?: string
+  email?: string
+  mapEmbed?: string
+}
+
+export default function KontakContent({ schoolInfo }: { schoolInfo: ContactSchoolInfo }) {
   const [submitted, setSubmitted] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
@@ -30,7 +37,7 @@ export default function KontakContent({ schoolInfo }: { schoolInfo: any }) {
   return (
     <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-10">
       {/* Info */}
-      <div>
+      <div className="min-w-0">
         <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--skin-text-heading)' }}>Informasi Kontak</h2>
         <div className="space-y-4 mb-8">
           {contacts.map((c, i) => (
@@ -39,9 +46,9 @@ export default function KontakContent({ schoolInfo }: { schoolInfo: any }) {
                 style={{ background: 'linear-gradient(135deg, var(--skin-primary), var(--skin-primary-light))' }}>
                 {c.icon}
               </div>
-              <div>
+              <div className="min-w-0">
                 <p className="text-xs font-medium mb-0.5" style={{ color: 'var(--skin-text-muted)' }}>{c.label}</p>
-                <p className="text-sm font-semibold" style={{ color: 'var(--skin-text-heading)' }}>{c.value}</p>
+                <p className="text-sm font-semibold break-words" style={{ color: 'var(--skin-text-heading)' }}>{c.value}</p>
               </div>
             </div>
           ))}
@@ -58,10 +65,10 @@ export default function KontakContent({ schoolInfo }: { schoolInfo: any }) {
       </div>
 
       {/* Form */}
-      <div>
+      <div className="min-w-0">
         <h2 className="text-2xl font-bold mb-6" style={{ color: 'var(--skin-text-heading)' }}>Kirim Pesan</h2>
         {submitted ? (
-          <div className="flex flex-col items-center justify-center text-center p-12 rounded-2xl" style={{ background: 'var(--skin-surface)' }}>
+          <div className="flex flex-col items-center justify-center text-center p-8 sm:p-12 rounded-2xl" style={{ background: 'var(--skin-surface)' }}>
             <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 text-white"
               style={{ background: 'linear-gradient(135deg, #059669, #34d399)' }}>
               <CheckCircle className="h-8 w-8" />
@@ -103,7 +110,7 @@ export default function KontakContent({ schoolInfo }: { schoolInfo: any }) {
               {errors.pesan && <p className="text-xs text-red-500 mt-1">{errors.pesan}</p>}
             </div>
             <button type="submit"
-              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl text-white font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all"
+              className="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-8 py-3.5 rounded-xl text-white font-bold shadow-lg hover:shadow-xl hover:scale-105 transition-all"
               style={{ background: 'linear-gradient(135deg, var(--skin-primary), var(--skin-primary-light))' }}>
               <Send className="h-4 w-4" /> Kirim Pesan
             </button>

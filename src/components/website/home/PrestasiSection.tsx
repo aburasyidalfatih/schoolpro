@@ -4,7 +4,7 @@ import { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, ArrowLeft, Trophy, Medal } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Trophy, Medal, ChevronLeft, ChevronRight } from 'lucide-react';
 import SectionTitle from '@/components/website/shared/SectionTitle';
 import { Badge } from '@/components/website/shared/Badge';
 interface PrestasiItem {
@@ -31,8 +31,6 @@ export default function PrestasiSection({ prestasi = [] }: { prestasi: PrestasiI
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
 
-  if (prestasi.length === 0) return null;
-
   const checkScroll = () => {
     const el = scrollRef.current;
     if (!el) return;
@@ -55,51 +53,47 @@ export default function PrestasiSection({ prestasi = [] }: { prestasi: PrestasiI
   const scroll = (direction: 'left' | 'right') => {
     const el = scrollRef.current;
     if (!el) return;
-    const cardWidth = 340;
+    const firstCard = el.firstElementChild as HTMLElement | null;
+    const cardWidth = firstCard?.clientWidth || 340;
     el.scrollBy({
-      left: direction === 'left' ? -cardWidth : cardWidth,
+      left: direction === 'left' ? -(cardWidth + 20) : cardWidth + 20,
       behavior: 'smooth',
     });
   };
 
+  if (prestasi.length === 0) return null;
+
   return (
     <section className="py-16 lg:py-24 overflow-hidden" style={{ background: 'var(--skin-surface)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-end justify-between mb-10 lg:mb-14">
-          <div>
-            <SectionTitle
-              title="Prestasi Gemilang"
-              subtitle="Catatan kebanggaan santriwati kami di berbagai kompetisi dan kejuaraan"
-              center={false}
-            />
-          </div>
+        <SectionTitle
+          title="Prestasi Gemilang"
+          subtitle="Catatan kebanggaan santriwati kami di berbagai kompetisi dan kejuaraan"
+        />
 
-          {/* Navigation arrows */}
-          <div className="hidden sm:flex items-center gap-2 mb-10 lg:mb-14">
-            <button
-              onClick={() => scroll('left')}
-              disabled={!canScrollLeft}
-              className="w-11 h-11 rounded-xl border-2 flex items-center justify-center transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:shadow-md"
-              style={{ borderColor: 'var(--skin-primary)', color: 'var(--skin-primary)' }}
-              aria-label="Scroll kiri"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </button>
-            <button
-              onClick={() => scroll('right')}
-              disabled={!canScrollRight}
-              className="w-11 h-11 rounded-xl flex items-center justify-center text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed hover:shadow-md"
-              style={{ background: 'linear-gradient(135deg, var(--skin-primary), var(--skin-primary-light))' }}
-              aria-label="Scroll kanan"
-            >
-              <ArrowRight className="h-5 w-5" />
-            </button>
-          </div>
-        </div>
       </div>
 
       {/* Horizontal scroll container */}
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <button
+          onClick={() => scroll('left')}
+          disabled={!canScrollLeft}
+          className="hidden md:flex absolute -left-0 lg:-left-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-xl border-2 items-center justify-center transition-all hover:shadow-md focus-visible:outline-2 disabled:opacity-30 disabled:cursor-not-allowed"
+          style={{ borderColor: 'var(--skin-primary)', color: 'var(--skin-primary)', background: 'white' }}
+          aria-label="Prestasi sebelumnya"
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </button>
+        <button
+          onClick={() => scroll('right')}
+          disabled={!canScrollRight}
+          className="hidden md:flex absolute -right-0 lg:-right-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-xl items-center justify-center text-white transition-all hover:shadow-md focus-visible:outline-2 disabled:opacity-30 disabled:cursor-not-allowed"
+          style={{ background: 'linear-gradient(135deg, var(--skin-primary), var(--skin-primary-light))' }}
+          aria-label="Prestasi berikutnya"
+        >
+          <ChevronRight className="h-5 w-5" />
+        </button>
+
         {/* Gradient fade edges */}
         {canScrollLeft && (
           <div className="absolute left-0 top-0 bottom-0 w-16 z-10 pointer-events-none"
@@ -112,7 +106,7 @@ export default function PrestasiSection({ prestasi = [] }: { prestasi: PrestasiI
 
         <div
           ref={scrollRef}
-          className="flex gap-5 overflow-x-auto scrollbar-hide pb-4 snap-x snap-mandatory"
+          className="flex gap-4 sm:gap-5 overflow-x-auto scrollbar-hide pb-4 pl-1 pr-5 sm:pr-0 snap-x snap-mandatory"
           style={{
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
@@ -125,7 +119,7 @@ export default function PrestasiSection({ prestasi = [] }: { prestasi: PrestasiI
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: '-20px' }}
               transition={{ duration: 0.4, delay: Math.min(i * 0.08, 0.4) }}
-              className="flex-shrink-0 w-[300px] sm:w-[340px] snap-start"
+              className="flex-shrink-0 w-[85vw] max-w-[300px] sm:w-[340px] sm:max-w-none snap-start"
             >
               <Link href={`/prestasi/${item.slug}`} className="block group h-full">
                 <div className="h-full bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all overflow-hidden border"
@@ -181,7 +175,7 @@ export default function PrestasiSection({ prestasi = [] }: { prestasi: PrestasiI
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: 0.5 }}
-            className="flex-shrink-0 w-[300px] sm:w-[340px] snap-start"
+            className="flex-shrink-0 w-[85vw] max-w-[300px] sm:w-[340px] sm:max-w-none snap-start"
           >
             <Link href="/prestasi" className="block h-full">
               <div className="h-full rounded-2xl flex flex-col items-center justify-center p-8 transition-all hover:shadow-xl border-2 border-dashed"
@@ -208,11 +202,30 @@ export default function PrestasiSection({ prestasi = [] }: { prestasi: PrestasiI
         </div>
       </div>
 
-      {/* Mobile scroll indicator */}
-      <div className="flex justify-center mt-4 sm:hidden">
-        <p className="text-xs flex items-center gap-1" style={{ color: 'var(--skin-text-muted)' }}>
-          <ArrowLeft className="h-3 w-3" /> Geser untuk melihat lebih banyak <ArrowRight className="h-3 w-3" />
-        </p>
+      <div className="flex items-center justify-center gap-4 mt-6">
+        <div className="flex items-center justify-center gap-3 md:hidden">
+          <button
+            onClick={() => scroll('left')}
+            disabled={!canScrollLeft}
+            className="w-10 h-10 rounded-xl border-2 flex items-center justify-center transition-all focus-visible:outline-2 disabled:opacity-30 disabled:cursor-not-allowed"
+            style={{ borderColor: 'var(--skin-primary)', color: 'var(--skin-primary)', background: 'white' }}
+            aria-label="Prestasi sebelumnya"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+          <span className="text-xs font-medium" style={{ color: 'var(--skin-text-muted)' }}>
+            Geser kartu
+          </span>
+          <button
+            onClick={() => scroll('right')}
+            disabled={!canScrollRight}
+            className="w-10 h-10 rounded-xl flex items-center justify-center text-white transition-all focus-visible:outline-2 disabled:opacity-30 disabled:cursor-not-allowed"
+            style={{ background: 'linear-gradient(135deg, var(--skin-primary), var(--skin-primary-light))' }}
+            aria-label="Prestasi berikutnya"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+        </div>
       </div>
     </section>
   );

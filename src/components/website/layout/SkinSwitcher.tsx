@@ -54,6 +54,7 @@ const skins: { key: SkinType; label: string; icon: React.ReactNode; desc: string
 export default function SkinSwitcher() {
   const { skin, setSkin } = useSkin();
   const [open, setOpen] = useState(false);
+  const panelWidth = 'min(280px, calc(100vw - 2rem))';
 
   return (
     <div className="fixed bottom-4 left-4 sm:bottom-6 sm:left-6 z-50">
@@ -64,7 +65,8 @@ export default function SkinSwitcher() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
             transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-            className="absolute bottom-16 left-0 glass-card rounded-2xl shadow-2xl p-4 min-w-[240px]"
+            className="absolute bottom-16 left-0 glass-card rounded-2xl shadow-2xl p-4"
+            style={{ width: panelWidth, maxWidth: panelWidth }}
           >
             <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{ color: 'var(--skin-text-muted)' }}>
               Pilih Tampilan

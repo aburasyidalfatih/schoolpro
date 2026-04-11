@@ -65,7 +65,10 @@ export default function GuruSection({ gurus = [] }: { gurus: Guru[] }) {
   };
 
   return (
-    <section className="py-16 lg:py-24 px-4 sm:px-6 lg:px-8">
+    <section
+      className="py-16 lg:py-24 px-4 sm:px-6 lg:px-8"
+      style={{ background: 'var(--skin-section-alt)' }}
+    >
       <div className="max-w-7xl mx-auto">
         <SectionTitle
           title="Guru Terbaik Kami"
