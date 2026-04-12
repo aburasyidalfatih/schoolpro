@@ -1,6 +1,8 @@
+import { Prisma } from '@prisma/client'
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import { getSessionUser, hasAnyRole } from '@/lib/auth/session'
+import { prisma } from '@/lib/db/prisma'
 
 export async function GET(req: Request) {
   try {
@@ -12,8 +14,11 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url)
     const search = searchParams.get('search')
 
-    const userSession = session.user as any
-    const whereClause: any = {
+    const userSession = getSessionUser(session)
+    if (!userSession?.tenantId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+    const whereClause: Prisma.KategoriTagihanWhereInput = {
       tenantId: userSession.tenantId,
     }
 
@@ -43,8 +48,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const userSession = session.user as any
-    if (userSession.role !== 'SUPER_ADMIN' && userSession.role !== 'ADMIN') {
+    const userSession = getSessionUser(session)
+    if (!userSession?.tenantId || !hasAnyRole(userSession, ['SUPER_ADMIN', 'ADMIN'])) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
@@ -65,7 +70,7 @@ export async function POST(req: Request) {
 
     const newKategori = await prisma.kategoriTagihan.create({
       data: {
-        tenantId: userSession.tenantId as string,
+        tenantId: userSession.tenantId,
         nama,
         kode,
         isBulanan: !!isBulanan,

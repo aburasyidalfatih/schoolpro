@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@/lib/db/prisma'
+import { getSessionUser, hasAnyRole } from '@/lib/auth/session'
 
 export async function GET(
   req: Request,
@@ -13,10 +14,14 @@ export async function GET(
     }
 
     const { id } = await params
-    const userSession = session.user as any
+    const userSession = getSessionUser(session)
+    const tenantId = userSession?.tenantId
+    if (!tenantId) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
 
     const tagihan = await prisma.tagihan.findUnique({
-      where: { id, tenantId: userSession.tenantId },
+      where: { id, tenantId },
       include: {
         siswa: true,
         kategori: true,
@@ -47,8 +52,9 @@ export async function PUT(
     }
 
     const { id } = await params
-    const userSession = session.user as any
-    if (userSession.role !== 'SUPER_ADMIN' && userSession.role !== 'ADMIN' && userSession.role !== 'KEUANGAN') {
+    const userSession = getSessionUser(session)
+    const tenantId = userSession?.tenantId
+    if (!tenantId || !hasAnyRole(userSession, ['SUPER_ADMIN', 'ADMIN', 'KEUANGAN'])) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
@@ -59,7 +65,7 @@ export async function PUT(
     // (though in "pro" mode we might allow it with recalculation of 'total')
 
     const updated = await prisma.tagihan.update({
-      where: { id, tenantId: userSession.tenantId },
+      where: { id, tenantId },
       data: {
         nominal: nominal ? parseFloat(nominal) : undefined,
         total: nominal ? parseFloat(nominal) : undefined,
@@ -87,8 +93,9 @@ export async function DELETE(
     }
 
     const { id } = await params
-    const userSession = session.user as any
-    if (userSession.role !== 'SUPER_ADMIN' && userSession.role !== 'ADMIN' && userSession.role !== 'KEUANGAN') {
+    const userSession = getSessionUser(session)
+    const tenantId = userSession?.tenantId
+    if (!tenantId || !hasAnyRole(userSession, ['SUPER_ADMIN', 'ADMIN', 'KEUANGAN'])) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
@@ -104,7 +111,7 @@ export async function DELETE(
     }
 
     await prisma.tagihan.delete({
-      where: { id, tenantId: userSession.tenantId }
+      where: { id, tenantId }
     })
 
     return NextResponse.json({ message: 'Tagihan berhasil dihapus' })

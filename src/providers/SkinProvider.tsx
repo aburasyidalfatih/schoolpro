@@ -26,17 +26,24 @@ const skinLabels: Record<SkinType, string> = {
   midnight: 'Midnight',
 };
 
-export function SkinProvider({ children }: { children: React.ReactNode }) {
-  // Read from DOM attribute first (set by inline script) to avoid FOUC
-  const [skin, setSkinState] = useState<SkinType>(() => {
-    if (typeof window !== 'undefined') {
-      const domSkin = document.documentElement.getAttribute('data-skin') as SkinType;
-      if (domSkin && VALID_SKINS.includes(domSkin)) {
-        return domSkin;
-      }
+function resolveInitialSkin(): SkinType {
+  if (typeof window !== 'undefined') {
+    const domSkin = document.documentElement.getAttribute('data-skin');
+    if (domSkin && VALID_SKINS.includes(domSkin as SkinType)) {
+      return domSkin as SkinType;
     }
-    return 'akademi';
-  });
+
+    const saved = localStorage.getItem('school-skin');
+    if (saved && VALID_SKINS.includes(saved as SkinType)) {
+      return saved as SkinType;
+    }
+  }
+
+  return 'akademi';
+}
+
+export function SkinProvider({ children }: { children: React.ReactNode }) {
+  const [skin, setSkinState] = useState<SkinType>(resolveInitialSkin);
 
   const setSkin = useCallback((newSkin: SkinType) => {
     setSkinState(newSkin);
@@ -45,13 +52,8 @@ export function SkinProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    // Sync state with localStorage on mount (covers SSR mismatch)
-    const saved = localStorage.getItem('school-skin') as SkinType;
-    if (saved && VALID_SKINS.includes(saved)) {
-      setSkinState(saved);
-      document.documentElement.setAttribute('data-skin', saved);
-    }
-  }, []);
+    document.documentElement.setAttribute('data-skin', skin);
+  }, [skin]);
 
   return (
     <SkinContext.Provider value={{ skin, setSkin, skinLabel: skinLabels[skin] }}>

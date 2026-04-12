@@ -1,6 +1,8 @@
+import { Prisma } from '@prisma/client'
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import { getSessionUser, hasAnyRole } from '@/lib/auth/session'
+import { prisma } from '@/lib/db/prisma'
 import bcrypt from 'bcryptjs'
 
 export async function GET(req: Request) {
@@ -14,8 +16,11 @@ export async function GET(req: Request) {
     const role = searchParams.get('role')
     const search = searchParams.get('search')
 
-    const userSession = session.user as any
-    const whereClause: any = {
+    const userSession = getSessionUser(session)
+    if (!userSession?.tenantId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+    const whereClause: Prisma.UserWhereInput = {
       tenantId: userSession.tenantId,
       // Exclude WALI and SISWA as they are usually managed separately
       role: { notIn: ['WALI', 'SISWA'] },
@@ -62,10 +67,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const userSession = session.user as any
-
-    // Only Admin can create users
-    if (userSession.role !== 'SUPER_ADMIN' && userSession.role !== 'ADMIN') {
+    const userSession = getSessionUser(session)
+    if (!userSession?.tenantId || !hasAnyRole(userSession, ['SUPER_ADMIN', 'ADMIN'])) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
@@ -95,7 +98,7 @@ export async function POST(req: Request) {
 
     const newUser = await prisma.user.create({
       data: {
-        tenantId: userSession.tenantId as string,
+        tenantId: userSession.tenantId,
         nama,
         email,
         username,

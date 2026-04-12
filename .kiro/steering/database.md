@@ -60,6 +60,55 @@
 | LogAktivitas | log_aktivitas | Audit log per user |
 | PengaturanNotifikasi | pengaturan_notifikasi | Konfigurasi notif (app/WA/email) |
 
+### Platform / Super Admin
+| Model | Tabel | Keterangan |
+|---|---|---|
+| Plan | plans | Paket SchoolPro lintas tenant, diarahkan menjadi katalog plan berbasis `studentCapacity` dan harga tahunan |
+| PlanFeature | plan_features | Mapping fitur default per plan, dipertahankan untuk override/internal control, bukan pembeda pricing utama |
+| TenantSubscription | tenant_subscriptions | Source of truth langganan aktif tenant: plan aktif, kapasitas siswa, masa aktif, status subscription, dan relasi 1-to-1 per tenant |
+| SubscriptionOrder | subscription_orders | Order checkout tenant untuk new subscription, upgrade, renewal, bukti pembayaran, verifikasi, dan aktivasi |
+| TenantFeatureOverride | tenant_feature_overrides | Override fitur per tenant, unique `[tenantId, featureKey]` |
+| PlatformAuditLog | platform_audit_logs | Audit log aksi sensitif super admin lintas tenant |
+
+### Tambahan Field Tenant
+- `Tenant.planId` — relasi ke `Plan`
+- `Tenant.tenantStatus` — status platform tenant (`TRIAL`, `ACTIVE`, `SUSPENDED`, `ARCHIVED`)
+- `Tenant.trialEndsAt` — akhir masa trial tenant
+- `Tenant.paket` tetap dipertahankan sebagai fallback/compatibility dan disinkronkan dengan `Plan.code`
+
+### Aturan Billing Berbasis Slot Siswa
+- `Free` hanya membuka CMS website publik
+- plan berbayar memberi full fitur SchoolPro
+- pembeda utama plan berbayar adalah `studentCapacity`
+- kuota dihitung berdasarkan jumlah `Siswa.status = AKTIF`
+- status `ALUMNI` dan `KELUAR` tidak memakai slot
+- saat kuota penuh, tenant tidak boleh menambah siswa aktif baru sampai slot tersedia atau subscription di-upgrade
+- `TenantSubscription` menjadi source of truth status langganan aktif, tetapi `Tenant.planId` dan `Tenant.paket` tetap disinkronkan untuk kompatibilitas modul lama
+- snapshot kuota siswa aktif kini juga diekspos lewat API tenant untuk dashboard dan modul data siswa agar warning 80/90/100 dapat dipakai lintas layar
+
+### Ringkasan Field `TenantSubscription`
+- `tenantId` — unique, satu subscription aktif per tenant
+- `planId` — relasi ke plan aktif saat ini
+- `status` — status langganan aktif tenant
+- `studentCapacity` — snapshot kapasitas siswa aktif yang berlaku untuk tenant
+- `startsAt` — awal periode subscription aktif
+- `endsAt` — akhir periode aktif atau akhir trial bila ada
+- `activatedAt` — waktu aktivasi plan berbayar
+- `lastPaidAt` — waktu pembayaran terakhir yang mengaktifkan periode berjalan
+
+### Ringkasan Field `SubscriptionOrder`
+- `tenantId` — pemilik order billing tenant
+- `currentPlanId` — plan aktif sebelum order diproses
+- `targetPlanId` — plan yang diminta tenant
+- `orderType` — `NEW_SUBSCRIPTION`, `UPGRADE`, atau `RENEWAL`
+- `status` — state order dari submit tenant sampai aktivasi atau penolakan
+- `amount` — nominal tahunan yang ditagihkan untuk order tersebut
+- `studentCapacity` — snapshot kapasitas siswa dari target plan
+- `paymentMethod` dan `paymentProofUrl` — bukti pembayaran tenant
+- `submittedAt`, `paidAt`, `verifiedAt`, `activatedAt` — jejak waktu operasional billing
+- `createdByUserId` dan `verifiedByUserId` — jejak actor tenant dan super admin
+- order `REJECTED`, `PENDING_PAYMENT`, atau `EXPIRED` dapat di-resubmit tenant dengan bukti pembayaran baru tanpa membuat order baru
+
 ## Enum Values (String)
 - `User.role`: ADMIN, KEUANGAN, TU, WALI, SISWA, STAF
 - `Siswa.status`: AKTIF, ALUMNI, KELUAR
@@ -72,8 +121,23 @@
 - `Berita.kategori`: BERITA, ARTIKEL, PENGUMUMAN
 - `TransaksiKas.jenis`: MASUK, KELUAR
 - `TransaksiTabungan.jenis`: SETOR, TARIK
+- `Tenant.tenantStatus`: TRIAL, ACTIVE, SUSPENDED, ARCHIVED
+- `TenantSubscription.status`: TRIAL, ACTIVE, EXPIRED, SUSPENDED
+- `SubscriptionOrder.orderType`: NEW_SUBSCRIPTION, UPGRADE, RENEWAL
+- `SubscriptionOrder.status`: PENDING_PAYMENT, WAITING_VERIFICATION, VERIFIED, ACTIVATED, REJECTED, CANCELLED, EXPIRED
+
+## Feature Key Platform
+- `website`
+- `cms`
+- `ppdb`
+- `keuangan`
+- `tabungan`
+- `laporan`
+- `ai_module`
+- `whatsapp_notifikasi`
 
 ## Aturan Query
 - Selalu filter dengan `tenantId` di setiap query
 - Gunakan `include` Prisma untuk relasi, hindari N+1
 - Decimal fields (nominal, saldo, dll) — gunakan `Number()` saat display
+- Untuk validasi kuota siswa, hitung berdasarkan subscription aktif tenant dan jumlah siswa `AKTIF`, bukan total seluruh data siswa

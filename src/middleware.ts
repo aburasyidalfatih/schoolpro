@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 
 const protectedRoutes = ['/app/dashboard', '/app/data-master', '/app/tagihan', '/app/pembayaran', '/app/transaksi', '/app/arus-kas', '/app/tabungan', '/app/laporan', '/app/berita', '/app/notifikasi', '/app/pengaturan', '/app/peralatan', '/app/e-kantin', '/app/ai', '/app/beranda', '/app/ppdb', '/app/profil']
+const superAdminRoutes = ['/super-admin']
 
 export default auth((req) => {
   const { pathname } = req.nextUrl
@@ -33,22 +34,45 @@ export default auth((req) => {
 
   // 2. Authentication Protection
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route))
+  const isSuperAdminRoute = superAdminRoutes.some(route => pathname.startsWith(route))
   const isAuthRoute = pathname.startsWith('/app/login')
+  const user = req.auth?.user as { role?: string } | undefined
+  const role = user?.role
+  const isPlatformUser = role === 'SUPER_ADMIN'
 
   if (isProtectedRoute && !isLoggedIn) {
     return NextResponse.redirect(new URL('/app/login', req.nextUrl))
   }
 
+  if (isSuperAdminRoute && !isLoggedIn) {
+    return NextResponse.redirect(new URL('/app/login', req.nextUrl))
+  }
+
+  if (isSuperAdminRoute && isLoggedIn && !isPlatformUser) {
+    if (role === 'WALI' || role === 'SISWA' || role === 'USER') {
+      return NextResponse.redirect(new URL('/app/beranda', req.nextUrl))
+    }
+    return NextResponse.redirect(new URL('/app/dashboard', req.nextUrl))
+  }
+
   // Redirect non-admin users away from admin dashboard
   if (pathname.startsWith('/app/dashboard') && isLoggedIn) {
-    const role = (req.auth?.user as any)?.role as string
+    if (isPlatformUser) {
+      return NextResponse.redirect(new URL('/super-admin/dashboard', req.nextUrl))
+    }
     if (role === 'WALI' || role === 'SISWA' || role === 'USER') {
       return NextResponse.redirect(new URL('/app/beranda', req.nextUrl))
     }
   }
 
+  if (pathname.startsWith('/app/') && isLoggedIn && isPlatformUser && !isAuthRoute) {
+    return NextResponse.redirect(new URL('/super-admin/dashboard', req.nextUrl))
+  }
+
   if (isAuthRoute && isLoggedIn) {
-    const role = (req.auth?.user as any)?.role as string
+    if (isPlatformUser) {
+      return NextResponse.redirect(new URL('/super-admin/dashboard', req.nextUrl))
+    }
     if (role === 'WALI' || role === 'SISWA' || role === 'USER') {
       return NextResponse.redirect(new URL('/app/beranda', req.nextUrl))
     }

@@ -1,6 +1,14 @@
 import { NextResponse } from 'next/server'
+import type { Prisma } from '@prisma/client'
 import { auth } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import { getSessionUser, hasAnyRole } from '@/lib/auth/session'
+import { prisma } from '@/lib/db/prisma'
+
+function getPengaturanRecord(value: Prisma.JsonValue | null): Record<string, unknown> {
+  return value && typeof value === 'object' && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : {}
+}
 
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -9,10 +17,9 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const userSession = session.user as any
-    const tenantId = userSession.tenantId
-
-    if (userSession.role !== 'SUPER_ADMIN' && userSession.role !== 'ADMIN' && userSession.role !== 'PPDB') {
+    const userSession = getSessionUser(session)
+    const tenantId = userSession?.tenantId
+    if (!tenantId || !hasAnyRole(userSession, ['SUPER_ADMIN', 'ADMIN', 'PPDB'])) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
@@ -27,14 +34,14 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     if (!existing) return NextResponse.json({ error: 'Gelombang tidak ditemukan' }, { status: 404 })
 
     // Merge pengaturan — support update partial atau full object
-    const existingPengaturan = (existing.pengaturan as object) || {}
+    const existingPengaturan = getPengaturanRecord(existing.pengaturan)
     const newPengaturan = pengaturan
       ? { ...existingPengaturan, ...pengaturan }
       : {
           ...existingPengaturan,
           biayaPendaftaran: biayaPendaftaran !== undefined
             ? Number(biayaPendaftaran)
-            : (existing.pengaturan as any)?.biayaPendaftaran,
+            : existingPengaturan.biayaPendaftaran,
         }
 
     const updated = await prisma.periodePpdb.update({
@@ -67,10 +74,9 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const userSession = session.user as any
-    const tenantId = userSession.tenantId
-
-    if (userSession.role !== 'SUPER_ADMIN' && userSession.role !== 'ADMIN') {
+    const userSession = getSessionUser(session)
+    const tenantId = userSession?.tenantId
+    if (!tenantId || !hasAnyRole(userSession, ['SUPER_ADMIN', 'ADMIN'])) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 

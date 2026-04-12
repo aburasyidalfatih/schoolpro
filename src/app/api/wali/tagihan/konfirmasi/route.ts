@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@/lib/db/prisma'
+import { getSessionUser } from '@/lib/auth/session'
 
 // POST — konfirmasi pembayaran manual (upload bukti / konfirmasi sudah transfer)
 export async function POST(req: Request) {
@@ -8,9 +9,12 @@ export async function POST(req: Request) {
     const session = await auth()
     if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-    const userSession = session.user as any
-    const tenantId = userSession.tenantId
-    const userId = session.user.id
+    const userSession = getSessionUser(session)
+    const tenantId = userSession?.tenantId
+    const userId = userSession?.id
+    if (!tenantId || !userId) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
     const body = await req.json()
     const { tagihanId, tipe, buktiUrl } = body
 

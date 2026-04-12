@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import { getSessionUser, hasAnyRole } from '@/lib/auth/session'
+import { prisma } from '@/lib/db/prisma'
 
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -10,8 +11,8 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     }
 
     const { id } = await params
-    const userSession = session.user as any
-    if (userSession.role !== 'SUPER_ADMIN' && userSession.role !== 'ADMIN') {
+    const userSession = getSessionUser(session)
+    if (!userSession?.tenantId || !hasAnyRole(userSession, ['SUPER_ADMIN', 'ADMIN'])) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
@@ -53,8 +54,8 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     }
 
     const { id } = await params
-    const userSession = session.user as any
-    if (userSession.role !== 'SUPER_ADMIN' && userSession.role !== 'ADMIN') {
+    const userSession = getSessionUser(session)
+    if (!userSession?.tenantId || !hasAnyRole(userSession, ['SUPER_ADMIN', 'ADMIN'])) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 

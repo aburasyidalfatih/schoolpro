@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
+import { Prisma } from '@prisma/client'
 import { auth } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@/lib/db/prisma'
+import { getSessionUser, hasAnyRole } from '@/lib/auth/session'
 
 export async function GET(req: Request) {
   try {
@@ -17,10 +19,14 @@ export async function GET(req: Request) {
     const tahunAjaranId = searchParams.get('tahunAjaranId')
     const search = searchParams.get('search') // Nama siswa
 
-    const userSession = session.user as any
-    const whereClause: any = {
-      tenantId: userSession.tenantId,
+    const userSession = getSessionUser(session)
+    const tenantId = userSession?.tenantId
+    if (!tenantId) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
+
+    const whereClause: Prisma.TagihanWhereInput = { tenantId }
+    const siswaFilter: Prisma.SiswaWhereInput = {}
 
     if (siswaId) whereClause.siswaId = siswaId
     if (kategoriId) whereClause.kategoriId = kategoriId
@@ -29,17 +35,16 @@ export async function GET(req: Request) {
     
     // Filter by class (joining through siswa)
     if (kelasId) {
-      whereClause.siswa = {
-        kelasId: kelasId
-      }
+      siswaFilter.kelasId = kelasId
     }
 
     // Search by student name
     if (search) {
-      whereClause.siswa = {
-        ...whereClause.siswa,
-        namaLengkap: { contains: search }
-      }
+      siswaFilter.namaLengkap = { contains: search }
+    }
+
+    if (Object.keys(siswaFilter).length > 0) {
+      whereClause.siswa = { is: siswaFilter }
     }
 
     const tagihans = await prisma.tagihan.findMany({
@@ -63,9 +68,9 @@ export async function GET(req: Request) {
     })
 
     return NextResponse.json({ data: tagihans })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[TAGIHAN_GET_ERROR]', error)
-    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 })
+    return NextResponse.json({ error: error instanceof Error ? error.message : 'Internal Server Error' }, { status: 500 })
   }
 }
 
@@ -76,9 +81,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const userSession = session.user as any
-    // Only certain roles can manage billing
-    if (userSession.role !== 'SUPER_ADMIN' && userSession.role !== 'ADMIN' && userSession.role !== 'KEUANGAN') {
+    const userSession = getSessionUser(session)
+    const tenantId = userSession?.tenantId
+    if (!tenantId || !hasAnyRole(userSession, ['SUPER_ADMIN', 'ADMIN', 'KEUANGAN'])) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
@@ -93,7 +98,7 @@ export async function POST(req: Request) {
 
     const newTagihan = await prisma.tagihan.create({
       data: {
-        tenantId: userSession.tenantId,
+        tenantId,
         siswaId,
         kategoriId,
         tahunAjaranId,
@@ -107,8 +112,8 @@ export async function POST(req: Request) {
     })
 
     return NextResponse.json({ data: newTagihan, message: 'Tagihan berhasil dibuat' }, { status: 201 })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[TAGIHAN_POST_ERROR]', error)
-    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 })
+    return NextResponse.json({ error: error instanceof Error ? error.message : 'Internal Server Error' }, { status: 500 })
   }
 }

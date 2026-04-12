@@ -1,0 +1,58 @@
+.noticeCard {
+  border: 1px solid var(--border-color);
+  border-radius: var(--sp-radius-xl);
+  padding: 1rem 1.15rem;
+  background: var(--bg-secondary);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+}
+
+.noticeCard[data-tone='warning'] {
+  background: rgba(245, 158, 11, 0.08);
+  border-color: rgba(245, 158, 11, 0.24);
+}
+
+.noticeCard[data-tone='full'] {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.22);
+}
+
+.noticeTitle {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.noticeDesc {
+  margin: 0.35rem 0 0;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+.noticeMeta {
+  display: grid;
+  gap: 0.2rem;
+  text-align: right;
+}
+
+.noticeMeta strong {
+  color: var(--text-primary);
+  font-size: 1.2rem;
+}
+
+.noticeMeta span {
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+}
+
+@media (max-width: 720px) {
+  .noticeCard {
+    grid-template-columns: 1fr;
+  }
+
+  .noticeMeta {
+    text-align: left;
+  }
+}

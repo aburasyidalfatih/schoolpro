@@ -1,8 +1,13 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@/lib/db/prisma'
 
 const ADMIN_ROLES = ['SUPER_ADMIN', 'ADMIN', 'PPDB']
+type SessionUser = {
+  id?: string
+  role?: string
+  tenantId?: string | null
+}
 
 // POST — generate tagihan daftar ulang untuk pendaftar yang DITERIMA
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -10,21 +15,25 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     const session = await auth()
     if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-    const userSession = session.user as any
-    if (!ADMIN_ROLES.includes(userSession.role)) {
+    const userSession = session.user as SessionUser
+    if (typeof userSession.role !== 'string' || !ADMIN_ROLES.includes(userSession.role)) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
     const { id } = await params
     const tenantId = userSession.tenantId
+    if (!tenantId) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
     const body = await req.json()
     const { nominal } = body
 
-    if (!nominal || Number(nominal) <= 0) {
+    const nominalValue = Number(nominal)
+    if (!Number.isFinite(nominalValue) || nominalValue <= 0) {
       return NextResponse.json({ error: 'Nominal daftar ulang wajib diisi' }, { status: 400 })
     }
 
-    const pendaftar = await prisma.pendaftarPpdb.findUnique({
+    const pendaftar = await prisma.pendaftarPpdb.findFirst({
       where: { id, tenantId },
       include: { tagihanPpdbs: true, periode: true },
     })
@@ -45,7 +54,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
         tenantId,
         pendaftarId: id,
         jenis: 'DAFTAR_ULANG',
-        nominal: Number(nominal),
+        nominal: nominalValue,
         status: 'BELUM_LUNAS',
       },
     })
@@ -56,7 +65,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
         userId: session.user.id,
         aksi: 'GENERATE_TAGIHAN_DAFTAR_ULANG',
         modul: 'PPDB',
-        detail: `Generate tagihan daftar ulang Rp ${Number(nominal).toLocaleString('id-ID')} untuk ${pendaftar.noPendaftaran}`,
+        detail: `Generate tagihan daftar ulang Rp ${nominalValue.toLocaleString('id-ID')} untuk ${pendaftar.noPendaftaran}`,
       },
     })
 

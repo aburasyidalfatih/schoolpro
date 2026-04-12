@@ -6,7 +6,7 @@ inclusion: always
 
 ## CSS Variables yang Benar
 
-Selalu gunakan variabel dari `globals.css`. Jangan hardcode warna atau ukuran.
+Prefer variabel yang sudah ada di `globals.css`, `website.css`, dan shared styles. Jangan hardcode warna jika token semantik yang sesuai sudah tersedia.
 
 ### Text
 - `--text-primary` — teks utama
@@ -23,6 +23,7 @@ Selalu gunakan variabel dari `globals.css`. Jangan hardcode warna atau ukuran.
 ### Website Skin Background
 - `--skin-surface` — background dasar section website yang mengikuti skin aktif
 - `--skin-section-alt` — background alternatif untuk section website yang perlu dibedakan dari `--skin-surface` tetapi tetap mengikuti skin aktif
+- `--skin-card-bg` — surface card/kontrol overlay website yang tetap terbaca di skin terang maupun gelap
 
 ### Alias (untuk kompatibilitas CSS modules lama)
 - `--text-color` → alias `--text-primary`
@@ -40,12 +41,12 @@ import { Button, Input, Select, Modal, DataTable, Badge, Pagination, SearchInput
 
 ## Shared Page Styles
 
-Untuk halaman admin baru, import shared styles:
+Untuk halaman admin baru yang mengikuti pola shared layout, import shared styles:
 ```tsx
 import shared from '@/styles/page.module.css'
 ```
 
-Gunakan class: `shared.container`, `shared.header`, `shared.title`, `shared.subtitle`, `shared.toolbar`, `shared.search`, `shared.formInput`, dll.
+Gunakan class seperti `shared.container`, `shared.header`, `shared.title`, `shared.subtitle`, `shared.toolbar`, `shared.search`, `shared.formInput`, dll. bila memang cocok dengan pola halaman tersebut.
 
 ## Pola Halaman Admin Standar
 
@@ -73,9 +74,10 @@ export default function HalamanPage() {
 
 ## Aturan Dark Mode
 
-- JANGAN hardcode `background: white` atau `color: black`
-- SELALU gunakan CSS variables
-- Test setiap komponen di dark mode
+- Hindari hardcoded `background: white` atau `color: black` pada komponen yang harus mengikuti tema
+- Prefer CSS variables atau token skin-aware
+- Jaga kompatibilitas dark mode pada area yang disentuh
+- Untuk card slider, panel testimonial, dan tombol outline website publik, gunakan token skin-aware seperti `--skin-card-bg` agar skin `midnight` tidak terlihat pecah oleh surface putih keras
 
 ## Aturan Responsive Mobile
 
@@ -94,4 +96,4 @@ toast.success('Data berhasil disimpan')
 toast.error('Terjadi kesalahan')
 ```
 
-Jangan gunakan `alert()` atau `window.confirm()` — ganti dengan Modal konfirmasi.
+Hindari `alert()` untuk flow aplikasi. Untuk konfirmasi, gunakan pola modal/dialog yang konsisten dengan area terkait.

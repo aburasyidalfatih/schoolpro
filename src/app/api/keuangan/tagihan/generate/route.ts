@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
+import { Prisma } from '@prisma/client'
 import { auth } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@/lib/db/prisma'
+import { getSessionUser, hasAnyRole } from '@/lib/auth/session'
 
 export async function POST(req: Request) {
   try {
@@ -9,8 +11,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const userSession = session.user as any
-    if (userSession.role !== 'SUPER_ADMIN' && userSession.role !== 'ADMIN' && userSession.role !== 'KEUANGAN') {
+    const userSession = getSessionUser(session)
+    const tenantId = userSession?.tenantId
+    if (!tenantId || !hasAnyRole(userSession, ['SUPER_ADMIN', 'ADMIN', 'KEUANGAN'])) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
@@ -24,8 +27,8 @@ export async function POST(req: Request) {
     }
 
     // 1. Get students to be processed
-    const studentQuery: any = {
-      tenantId: userSession.tenantId,
+    const studentQuery: Prisma.SiswaWhereInput = {
+      tenantId,
       status: 'AKTIF',
     }
     if (kelasId) {
@@ -45,7 +48,7 @@ export async function POST(req: Request) {
     // Duplicate = same siswa, kategori, tahunAjaran, and bulan
     const existingTagihans = await prisma.tagihan.findMany({
       where: {
-        tenantId: userSession.tenantId,
+        tenantId,
         kategoriId,
         tahunAjaranId,
         bulan: bulan || null,
@@ -68,14 +71,14 @@ export async function POST(req: Request) {
     // 3. Create Tagihans in Bulk
     // Note: SQLite supports createMany in recent Prisma versions
     const dataToInsert = studentsToBill.map(s => ({
-      tenantId: userSession.tenantId as string,
+      tenantId,
       siswaId: s.id,
       kategoriId,
       tahunAjaranId,
       bulan: bulan || null,
       nominal: parseFloat(nominal),
       total: parseFloat(nominal),
-      status: 'BELUM_LUNAS' as any,
+      status: 'BELUM_LUNAS',
       keterangan: keterangan || null,
       jatuhTempo: jatuhTempo ? new Date(jatuhTempo) : null,
     }))
@@ -90,8 +93,8 @@ export async function POST(req: Request) {
       skippedCount: students.length - result.count
     }, { status: 201 })
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('[TAGIHAN_GENERATE_ERROR]', error)
-    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 })
+    return NextResponse.json({ error: error instanceof Error ? error.message : 'Internal Server Error' }, { status: 500 })
   }
 }

@@ -1,7 +1,7 @@
 # SchoolPro — UI Components
 
 ## Import
-Semua komponen dari `@/components/ui` (barrel export via `index.ts`):
+Jika memakai komponen shared UI, import dari `@/components/ui` (barrel export via `index.ts`):
 ```tsx
 import { Button, Modal, DataTable, Badge, ... } from '@/components/ui'
 ```
@@ -88,12 +88,27 @@ toast.error('Gagal menyimpan')
 Pakai `recharts` — BarChart, LineChart, PieChart, dll.
 
 ## Aturan UI
-- Gunakan CSS Variables dari `globals.css`, jangan hardcode warna
-- Semua komponen harus support Dark Mode
+- Gunakan token dan shared styles yang sudah ada bila sesuai; jangan hardcode warna jika token yang tepat sudah tersedia
+- Pertahankan kompatibilitas Dark Mode pada area yang disentuh
 - Icon dari `lucide-react`
-- Landing SaaS `schoolpro.id` harus menonjolkan funnel `website sekolah gratis` sebagai CTA utama, dengan jalur sekunder ke demo admin dan penjelasan upgrade ke modul premium
-- Untuk komponen website publik di mobile, pastikan floating controls tidak saling menutupi CTA/konten bawah
+
+## Aturan Admin dan Super Admin
+- Prefer `DataTable`, `Modal`, `Badge`, `Button`, dan `@/styles/page.module.css` bila halaman mengikuti pola CRUD/tabel yang sudah ada
+- Pastikan loading, submit, error, success, dan empty state tertangani jika relevan
+- Utamakan layout yang rapih, padat, dan mudah dipindai daripada dekorasi baru
+- Untuk area `super-admin`, selaraskan shell visual dengan area `/app` bila memungkinkan, tetapi tetap gunakan navigasi platform yang terpisah dari menu tenant
+- Halaman tenant billing/langganan mengikuti pola admin card + table yang ringkas: summary subscription, grid plan, lalu riwayat order
+- Untuk area tenant yang terpengaruh kuota siswa, tampilkan warning ringkas dan kontekstual di atas fold sebelum user mencoba aksi yang berpotensi ditolak
+- Halaman tenant `Langganan` perlu mendukung retry/resubmit bukti pembayaran dari riwayat order tanpa memaksa tenant membuat order baru
+- Untuk flow verifikasi billing super admin, utamakan tabel order + modal review daripada wizard multi-langkah
+- Dashboard super admin dapat memakai hero ringkas + metric cards + panel operasional untuk menampilkan progres subscription tanpa mengubah shell platform
+
+## Aturan Website Publik
+- Jaga konsistensi visual dengan section sekitarnya; gunakan token skin-aware untuk surface website publik bila tersedia
+- Untuk CTA website publik, copy, label tombol, dan tujuan link harus sinkron
+- Untuk komponen website publik di mobile, pastikan floating controls tidak saling menutupi CTA atau konten bawah
 - Untuk slider/carousel mobile, sinkronkan kontrol yang tampil dengan interaksi yang benar-benar didukung
 - Jika slider utama konten publik dipakai di mobile, sediakan gesture swipe/touch selain autoplay agar navigasi tetap natural
-- Card konten publik seperti pengumuman, blog, atau agenda sebaiknya menampilkan preview yang benar-benar informatif; utamakan 1-2 kalimat bermakna dibanding teaser yang terlalu pendek
-- Untuk section homepage yang memakai tombol prev/next, samakan gaya kontrol dengan pola `Guru Terbaik Kami`: panah kiri/kanan ditempatkan di sisi konten utama pada desktop, dengan ukuran dan treatment visual yang konsisten
+- Card konten publik seperti pengumuman, blog, atau agenda sebaiknya menampilkan preview yang informatif
+- Untuk section homepage yang memakai tombol prev/next, jaga konsistensi posisi, ukuran, dan treatment visual kontrol
+- Hero website publik perlu padding horizontal yang aman agar heading, subtitle, dan kontrol tidak mepet viewport

@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import { getSessionUser, hasAnyRole } from '@/lib/auth/session'
+import { prisma } from '@/lib/db/prisma'
+import { buildStudentQuotaErrorMessage, hasAvailableStudentSlot, shouldConsumeStudentSlot } from '@/lib/student-quota'
 
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -10,8 +12,9 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     }
 
     const { id } = await params
-    const userSession = session.user as any
-    if (userSession.role !== 'SUPER_ADMIN' && userSession.role !== 'ADMIN' && userSession.role !== 'TU') {
+    const userSession = getSessionUser(session)
+    const tenantId = userSession?.tenantId
+    if (!tenantId || !hasAnyRole(userSession, ['SUPER_ADMIN', 'ADMIN', 'TU'])) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
@@ -28,44 +31,57 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
 
     // Check ownership
     const existing = await prisma.siswa.findUnique({ where: { id } })
-    if (!existing || existing.tenantId !== userSession.tenantId) {
+    if (!existing || existing.tenantId !== tenantId) {
       return NextResponse.json({ error: 'Data tidak ditemukan' }, { status: 404 })
     }
 
     // Check NIS uniqueness if it's changing
     if (nis !== existing.nis) {
-      const nisTaken = await prisma.siswa.findFirst({
-        where: { tenantId: userSession.tenantId, nis, NOT: { id } },
+        const nisTaken = await prisma.siswa.findFirst({
+        where: { tenantId, nis, NOT: { id } },
       })
       if (nisTaken) {
         return NextResponse.json({ error: 'NIS sudah digunakan oleh siswa lain' }, { status: 400 })
       }
     }
 
-    const updatedSiswa = await prisma.siswa.update({
-      where: { id },
-      data: {
-        nis,
-        nisn: nisn || null,
-        namaLengkap,
-        jenisKelamin: jenisKelamin || null,
-        tempatLahir: tempatLahir || null,
-        tanggalLahir: tanggalLahir ? new Date(tanggalLahir) : null,
-        alamat: alamat || null,
-        telepon: telepon || null,
-        fotoUrl: fotoUrl || null,
-        namaWali: namaWali || null,
-        teleponWali: teleponWali || null,
-        emailWali: emailWali || null,
-        kelasId: kelasId || null,
-        unitId: unitId || null,
-        status: status || 'AKTIF',
-      },
+    const nextStatus = status || 'AKTIF'
+    const updatedSiswa = await prisma.$transaction(async (tx) => {
+      if (!shouldConsumeStudentSlot(existing.status) && shouldConsumeStudentSlot(nextStatus)) {
+        const quotaCheck = await hasAvailableStudentSlot(tx, tenantId)
+        if (!quotaCheck.allowed) {
+          throw new Error(buildStudentQuotaErrorMessage(quotaCheck.snapshot))
+        }
+      }
+
+      return tx.siswa.update({
+        where: { id },
+        data: {
+          nis,
+          nisn: nisn || null,
+          namaLengkap,
+          jenisKelamin: jenisKelamin || null,
+          tempatLahir: tempatLahir || null,
+          tanggalLahir: tanggalLahir ? new Date(tanggalLahir) : null,
+          alamat: alamat || null,
+          telepon: telepon || null,
+          fotoUrl: fotoUrl || null,
+          namaWali: namaWali || null,
+          teleponWali: teleponWali || null,
+          emailWali: emailWali || null,
+          kelasId: kelasId || null,
+          unitId: unitId || null,
+          status: nextStatus,
+        },
+      })
     })
 
     return NextResponse.json({ data: updatedSiswa, message: 'Siswa berhasil diperbarui' })
   } catch (error) {
     console.error('[SISWA_PUT]', error)
+    if (error instanceof Error && error.message.includes('kuota siswa aktif')) {
+      return NextResponse.json({ error: error.message }, { status: 409 })
+    }
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 }
@@ -78,8 +94,9 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     }
 
     const { id } = await params
-    const userSession = session.user as any
-    if (userSession.role !== 'SUPER_ADMIN' && userSession.role !== 'ADMIN') {
+    const userSession = getSessionUser(session)
+    const tenantId = userSession?.tenantId
+    if (!tenantId || !hasAnyRole(userSession, ['SUPER_ADMIN', 'ADMIN'])) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
@@ -92,7 +109,7 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
       }
     })
 
-    if (!existing || existing.tenantId !== userSession.tenantId) {
+    if (!existing || existing.tenantId !== tenantId) {
       return NextResponse.json({ error: 'Data tidak ditemukan' }, { status: 404 })
     }
 

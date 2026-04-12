@@ -1,0 +1,7 @@
+ALTER TABLE "plans"
+ADD COLUMN "student_capacity" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN "is_public" BOOLEAN NOT NULL DEFAULT true,
+ADD COLUMN "full_access" BOOLEAN NOT NULL DEFAULT false;
+
+ALTER TABLE "plans"
+ALTER COLUMN "billing_period" SET DEFAULT 'YEARLY';

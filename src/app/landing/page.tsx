@@ -7,84 +7,60 @@ import {
   Globe,
   GraduationCap,
   LayoutDashboard,
-  Shield,
+  ShieldCheck,
   Sparkles,
   Wallet,
 } from 'lucide-react'
 import styles from './page.module.css'
 
 export const metadata = {
-  title: 'SchoolPro - Website Sekolah Gratis, Siap Upgrade ke Sistem Admin',
+  title: 'SchoolPro - Sistem Administrasi Sekolah Modern dan Profesional',
   description:
-    'Buat website sekolah profesional gratis dengan CMS konten yang mudah. Saat sekolah siap berkembang, upgrade ke PPDB online, keuangan, dan dashboard admin terintegrasi.',
+    'Kelola website sekolah, PPDB online, keuangan, dan administrasi dalam satu platform yang rapi, mudah dipakai, dan siap berkembang bersama sekolah Anda.',
 }
 
 const freeFeatures = [
-  {
-    icon: <Globe size={22} />,
-    title: 'Website sekolah siap publish',
-    desc: 'Halaman profil, berita, pengumuman, agenda, prestasi, ekskul, dan kontak sekolah langsung aktif.',
-  },
-  {
-    icon: <LayoutDashboard size={22} />,
-    title: 'Dashboard admin untuk kelola konten',
-    desc: 'Tim sekolah bisa mengatur konten website dari satu panel admin yang rapi dan mudah dipelajari.',
-  },
-  {
-    icon: <Sparkles size={22} />,
-    title: 'Tampilan profesional',
-    desc: 'Sekolah tampil lebih modern dengan struktur konten yang jelas, mobile-friendly, dan siap dipresentasikan ke calon wali murid.',
-  },
+  'Website sekolah profesional dengan halaman profil, berita, pengumuman, agenda, prestasi, dan kontak yang siap dipublikasikan.',
+  'Dashboard admin yang memudahkan tim sekolah memperbarui konten tanpa bergantung pada developer.',
+  'Tampilan sekolah yang lebih rapi dan kredibel untuk wali murid, calon siswa, dan masyarakat.',
 ]
 
 const premiumFeatures = [
-  {
-    icon: <GraduationCap size={22} />,
-    title: 'PPDB online terintegrasi',
-    desc: 'Buka pendaftaran siswa baru, verifikasi berkas, pantau status pendaftar, dan kelola tagihan PPDB dalam satu alur.',
-  },
-  {
-    icon: <Wallet size={22} />,
-    title: 'Keuangan dan tagihan sekolah',
-    desc: 'Kelola tagihan, pembayaran, tabungan, dan arus kas dengan laporan yang lebih mudah dipantau oleh tim sekolah.',
-  },
-  {
-    icon: <Shield size={22} />,
-    title: 'Operasional admin yang lebih lengkap',
-    desc: 'Saat kebutuhan sekolah bertambah, aktifkan modul data siswa, dashboard analitik, dan pengelolaan operasional yang lebih dalam.',
-  },
+  'PPDB online dengan alur pendaftaran, verifikasi berkas, dan pemantauan calon siswa dalam satu tempat.',
+  'Keuangan sekolah untuk tagihan, pembayaran, tabungan, dan arus kas yang lebih tertib dan mudah dipantau.',
+  'Data siswa, dashboard operasional, dan modul admin yang membantu pekerjaan sekolah berjalan lebih efisien.',
 ]
 
-const steps = [
+const journeySteps = [
   {
     number: '01',
-    title: 'Daftarkan sekolah',
-    desc: 'Mulai dari kebutuhan paling ringan: hadir secara profesional lewat website sekolah resmi.',
+    title: 'Mulai dari kebutuhan yang paling terasa',
+    desc: 'Sekolah dapat langsung memiliki website resmi dan panel admin yang rapi untuk mengelola informasi publik.',
   },
   {
     number: '02',
-    title: 'Kelola website dari dashboard',
-    desc: 'Admin sekolah masuk ke dashboard untuk mengisi profil, berita, pengumuman, dan konten publik lainnya.',
+    title: 'Satukan pekerjaan admin di satu dashboard',
+    desc: 'Tim sekolah tidak perlu berpindah-pindah alat untuk mengelola konten, pendaftaran, dan administrasi.',
   },
   {
     number: '03',
-    title: 'Upgrade saat sekolah siap',
-    desc: 'Ketika ingin membuka PPDB online, keuangan, atau modul operasional lain, upgrade bisa dilakukan tanpa pindah platform.',
+    title: 'Kembangkan sistem saat sekolah berkembang',
+    desc: 'Ketika kebutuhan bertambah, modul seperti PPDB dan keuangan dapat digunakan tanpa mengganti platform.',
   },
 ]
 
 const faqs = [
   {
-    q: 'Apa yang benar-benar gratis?',
-    a: 'Paket awal difokuskan untuk website sekolah dan pengelolaan konten publik. Ini bukan trial singkat, tetapi pintu masuk agar sekolah bisa mulai lebih cepat.',
+    q: 'Apa saja yang bisa dikelola dengan SchoolPro?',
+    a: 'SchoolPro membantu sekolah mengelola website resmi, konten informasi publik, PPDB online, keuangan, dan administrasi sekolah dari satu platform.',
   },
   {
-    q: 'Kapan sekolah perlu upgrade?',
-    a: 'Upgrade dibutuhkan saat sekolah ingin membuka modul operasional seperti PPDB online, keuangan, data siswa, atau workflow admin yang lebih lengkap.',
+    q: 'Apakah SchoolPro cocok untuk sekolah yang belum memiliki tim IT?',
+    a: 'Ya. SchoolPro dirancang agar admin sekolah dapat mengelola konten dan operasional harian dengan alur yang jelas dan tidak bergantung pada setup teknis yang rumit.',
   },
   {
-    q: 'Apakah sekolah bisa melihat dashboard meski belum upgrade?',
-    a: 'Ya. Dashboard tetap menjadi pusat pengelolaan website, sekaligus memperlihatkan modul premium yang bisa diaktifkan saat kebutuhan bertambah.',
+    q: 'Apa manfaat utamanya untuk sekolah?',
+    a: 'Sekolah mendapatkan proses kerja yang lebih rapi, informasi yang lebih mudah diakses, dan pengalaman yang lebih profesional bagi wali murid maupun calon siswa.',
   },
 ]
 
@@ -92,177 +68,273 @@ export default function LandingPage() {
   return (
     <div className={styles.landing}>
       <section className={styles.hero}>
-        <div className={styles.heroBackdrop} />
-        <div className={styles.heroInner}>
-          <div className={styles.heroContent}>
+        <div className={styles.heroGlow} />
+        <div className={styles.heroGrid}>
+          <div className={styles.heroCopy}>
             <div className={styles.heroBadge}>
               <Sparkles size={14} />
-              Funnel baru SchoolPro: mulai dari website sekolah gratis
+              Platform modern untuk operasional sekolah yang lebih rapi
             </div>
             <h1 className={styles.heroTitle}>
-              Buat <span className={styles.heroGradient}>Website Sekolah Profesional Gratis</span>,
-              lalu upgrade saat operasional sekolah siap berkembang
+              Kelola website, PPDB, dan administrasi sekolah
+              <span className={styles.heroHighlight}> dalam satu platform yang terasa profesional</span>
             </h1>
             <p className={styles.heroDesc}>
-              SchoolPro membantu sekolah mulai dari kebutuhan paling mudah dipahami:
-              website resmi yang bisa langsung dipublikasikan. Setelah itu, sekolah masuk ke
-              dashboard admin yang sama untuk mengelola konten dan membuka modul premium saat dibutuhkan.
+              Banyak sekolah masih bekerja dengan proses yang terpisah-pisah: website sulit diperbarui,
+              informasi publik tidak konsisten, PPDB memakan banyak waktu, dan administrasi berjalan manual.
+              SchoolPro menyatukan semuanya ke dalam dashboard yang lebih rapi, mudah dipakai, dan siap berkembang.
             </p>
             <div className={styles.heroActions}>
               <Link href="/app/register" className={styles.btnPrimary}>
-                Buat Website Gratis <ArrowRight size={18} />
+                Mulai Sekarang <ArrowRight size={18} />
               </Link>
               <Link href="https://demo.schoolpro.id" target="_blank" className={styles.btnSecondary}>
-                Lihat Demo Admin
+                Lihat Demo
+              </Link>
+              <Link href="#cta-final" className={styles.btnTertiary}>
+                Jadwalkan Demo
               </Link>
             </div>
-            <div className={styles.heroProof}>
-              <span>Tanpa pindah platform</span>
-              <span>Dashboard admin tetap sama</span>
-              <span>Upgrade saat kebutuhan jelas</span>
+            <div className={styles.heroMeta}>
+              <span>Informasi sekolah lebih tertata</span>
+              <span>Administrasi lebih efisien</span>
+              <span>Pengalaman wali murid lebih baik</span>
             </div>
           </div>
 
-          <div className={styles.heroPanel}>
-            <div className={styles.panelCard}>
-              <div className={styles.panelLabel}>Langsung aktif</div>
-              <h2 className={styles.panelTitle}>Website sekolah gratis</h2>
-              <ul className={styles.panelList}>
-                <li>
-                  <CheckCircle2 size={18} />
-                  Profil sekolah, berita, pengumuman, agenda, prestasi, dan kontak
-                </li>
-                <li>
-                  <CheckCircle2 size={18} />
-                  Dashboard untuk kelola konten website tanpa setup teknis yang rumit
-                </li>
-                <li>
-                  <CheckCircle2 size={18} />
-                  Tampilan profesional untuk membangun kepercayaan wali murid
-                </li>
+          <div className={styles.heroVisual}>
+            <div className={styles.dashboardShell}>
+              <div className={styles.windowBar}>
+                <span />
+                <span />
+                <span />
+              </div>
+              <div className={styles.dashboardBody}>
+                <aside className={styles.sidebarMock}>
+                  <div className={styles.sidebarBrand}>SchoolPro</div>
+                  <div className={styles.sidebarNavItemActive}>Website Sekolah</div>
+                  <div className={styles.sidebarNavItem}>Berita & Pengumuman</div>
+                  <div className={styles.sidebarNavItem}>Agenda & Prestasi</div>
+                  <div className={styles.sidebarNavItemLocked}>PPDB Online</div>
+                  <div className={styles.sidebarNavItemLocked}>Keuangan</div>
+                </aside>
+                <div className={styles.dashboardMain}>
+                  <div className={styles.dashboardTop}>
+                    <div>
+                      <div className={styles.dashboardEyebrow}>Aktif sekarang</div>
+                      <div className={styles.dashboardTitle}>Operasional sekolah lebih rapi dalam satu dashboard</div>
+                    </div>
+                    <div className={styles.dashboardStatus}>Siap digunakan</div>
+                  </div>
+
+                  <div className={styles.metricsRow}>
+                    <div className={styles.metricCard}>
+                      <span>Informasi Publik</span>
+                      <strong>Lebih terstruktur</strong>
+                    </div>
+                    <div className={styles.metricCard}>
+                      <span>Pekerjaan Admin</span>
+                      <strong>Lebih efisien</strong>
+                    </div>
+                    <div className={styles.metricCard}>
+                      <span>Layanan Sekolah</span>
+                      <strong>Lebih profesional</strong>
+                    </div>
+                  </div>
+
+                  <div className={styles.previewCanvas}>
+                    <div className={styles.previewWebsite}>
+                      <div className={styles.previewHeader}>
+                        <div className={styles.previewBadge}>Website Sekolah</div>
+                        <div className={styles.previewDomain}>profil yang siap dilihat publik</div>
+                      </div>
+                      <div className={styles.previewHeroCard}>
+                        <div className={styles.previewHeroText}>
+                          <strong>Sekolah tampil lebih kredibel</strong>
+                          <span>Profil, berita, pengumuman, agenda, dan informasi penting tersusun lebih jelas.</span>
+                        </div>
+                        <div className={styles.previewHeroVisual} />
+                      </div>
+                    </div>
+
+                    <div className={styles.unlockCard}>
+                      <div className={styles.unlockLabel}>Yang dapat dikelola</div>
+                      <div className={styles.unlockItem}>
+                        <GraduationCap size={16} />
+                        <span>PPDB Online</span>
+                      </div>
+                      <div className={styles.unlockItem}>
+                        <Wallet size={16} />
+                        <span>Keuangan Sekolah</span>
+                      </div>
+                      <div className={styles.unlockItem}>
+                        <LayoutDashboard size={16} />
+                        <span>Dashboard Administrasi</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.trustStrip}>
+          <div className={styles.trustInner}>
+            <div className={styles.trustItem}>
+              <strong>Informasi sekolah lebih mudah diakses</strong>
+              <span>Website dan konten publik sekolah tampil lebih rapi dan mudah diperbarui.</span>
+            </div>
+            <div className={styles.trustItem}>
+              <strong>Pekerjaan admin lebih efisien</strong>
+              <span>Tim sekolah tidak lagi mengelola banyak proses secara terpisah dan manual.</span>
+            </div>
+            <div className={styles.trustItem}>
+              <strong>Pengalaman yang lebih profesional</strong>
+              <span>Calon siswa, wali murid, dan pihak sekolah melihat sistem yang lebih tertata.</span>
+            </div>
+          </div>
+      </section>
+
+      <section className={styles.sectionShowcase}>
+        <div className={styles.sectionInner}>
+          <div className={styles.sectionLead}>
+            <div className={styles.sectionBadge}>Masalah Yang Diselesaikan</div>
+            <h2 className={styles.sectionTitle}>SchoolPro membantu sekolah yang ingin terlihat rapi dan bekerja lebih efisien</h2>
+            <p className={styles.sectionDesc}>
+              Ketika informasi sekolah tersebar, website jarang diperbarui, dan proses administrasi berjalan manual,
+              beban kerja tim sekolah bertambah dan pengalaman wali murid ikut menurun.
+            </p>
+          </div>
+
+          <div className={styles.showcaseLayout}>
+            <div className={styles.showcaseCardPrimary}>
+              <div className={styles.showcaseHeader}>
+                <Globe size={20} />
+                <div>
+                  <strong>Tampilan sekolah yang lebih profesional</strong>
+                  <span>Website dan dashboard yang membantu sekolah terlihat lebih siap dan tertata.</span>
+                </div>
+              </div>
+              <ul className={styles.featureList}>
+                {freeFeatures.map((item) => (
+                  <li key={item}>
+                    <CheckCircle2 size={18} />
+                    <span>{item}</span>
+                  </li>
+                ))}
               </ul>
             </div>
 
-            <div className={styles.panelAside}>
-              <div className={styles.panelAsideTitle}>Siap dibuka saat upgrade</div>
-              <div className={styles.panelAsideItem}>
-                <GraduationCap size={18} />
-                <div>
-                  <strong>PPDB Online</strong>
-                  <span>Pendaftaran, verifikasi, dan monitoring pendaftar</span>
-                </div>
+            <div className={styles.showcaseStack}>
+              <div className={styles.showcaseCardSecondary}>
+                <div className={styles.stackTitle}>Hasil yang langsung dirasakan</div>
+                <div className={styles.stackMetric}>Informasi sekolah lebih meyakinkan di mata publik</div>
+                <p>Konten lebih mudah diperbarui, informasi penting tidak tercecer, dan sekolah tampil lebih profesional.</p>
               </div>
-              <div className={styles.panelAsideItem}>
-                <Wallet size={18} />
-                <div>
-                  <strong>Keuangan Sekolah</strong>
-                  <span>Tagihan, pembayaran, tabungan, dan arus kas</span>
-                </div>
+              <div className={styles.showcaseQuote}>
+                <span>SchoolPro bukan hanya membuat sekolah terlihat modern, tetapi juga membantu pekerjaan administrasi berjalan lebih tertib.</span>
               </div>
-              <div className={styles.panelAsideItem}>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.sectionComparison}>
+        <div className={styles.sectionInner}>
+          <div className={styles.sectionLeadCenter}>
+            <div className={styles.sectionBadge}>Kemudahan Yang Didapat</div>
+            <h2 className={styles.sectionTitle}>Satu platform untuk kebutuhan publik sekolah sampai administrasi internal</h2>
+            <p className={styles.sectionDesc}>
+              SchoolPro membantu sekolah membangun kehadiran digital yang baik sekaligus menyiapkan fondasi untuk proses administrasi yang lebih efisien.
+            </p>
+          </div>
+
+          <div className={styles.comparisonGrid}>
+            <article className={styles.planCardFree}>
+              <div className={styles.planPill}>Website & Informasi Publik</div>
+              <h3 className={styles.planTitle}>Bangun kepercayaan lewat tampilan sekolah yang lebih baik</h3>
+              <p className={styles.planDesc}>Website sekolah yang rapi memudahkan orang tua, calon siswa, dan masyarakat menemukan informasi penting dengan cepat.</p>
+              <ul className={styles.planList}>
+                {freeFeatures.map((item) => (
+                  <li key={item}>
+                    <CheckCircle2 size={18} />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </article>
+
+            <article className={styles.planCardPremium}>
+              <div className={styles.planPillAccent}>Administrasi & Operasional</div>
+              <h3 className={styles.planTitle}>Rapikan proses kerja sekolah di dashboard yang sama</h3>
+              <p className={styles.planDesc}>Saat kebutuhan administrasi semakin kompleks, sekolah dapat mengelola proses penting tanpa berpindah-pindah sistem.</p>
+              <ul className={styles.planList}>
+                {premiumFeatures.map((item) => (
+                  <li key={item}>
+                    <CheckCircle2 size={18} />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.sectionJourney}>
+        <div className={styles.sectionInner}>
+          <div className={styles.sectionLead}>
+            <div className={styles.sectionBadge}>Cara Kerja</div>
+            <h2 className={styles.sectionTitle}>Tiga langkah menuju operasional sekolah yang lebih rapi</h2>
+          </div>
+
+          <div className={styles.journeyGrid}>
+            {journeySteps.map((step) => (
+              <article key={step.number} className={styles.journeyCard}>
+                <div className={styles.journeyNumber}>{step.number}</div>
+                <h3 className={styles.journeyTitle}>{step.title}</h3>
+                <p className={styles.journeyDesc}>{step.desc}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.sectionProof}>
+        <div className={styles.sectionInner}>
+          <div className={styles.proofPanel}>
+            <div className={styles.proofCopy}>
+              <div className={styles.sectionBadge}>Kenapa SchoolPro</div>
+              <h2 className={styles.sectionTitle}>Platform yang membantu sekolah tampil lebih baik sekaligus bekerja lebih tertib</h2>
+              <p className={styles.sectionDesc}>
+                SchoolPro dirancang untuk kebutuhan sekolah nyata: memperjelas informasi publik, menyederhanakan proses administrasi, dan membantu tim sekolah bekerja lebih efisien.
+              </p>
+            </div>
+            <div className={styles.proofList}>
+              <div>
+                <ShieldCheck size={18} />
+                <span>Informasi sekolah lebih mudah diakses oleh wali murid dan calon siswa.</span>
+              </div>
+              <div>
                 <LayoutDashboard size={18} />
-                <div>
-                  <strong>Admin Terintegrasi</strong>
-                  <span>Modul operasional tumbuh tanpa ganti sistem</span>
-                </div>
+                <span>Tim admin bekerja dari dashboard yang lebih tertata dan mudah dipahami.</span>
               </div>
-              <Link href="#alur" className={styles.inlineLink}>
-                Lihat alur penggunaan <ChevronRight size={16} />
-              </Link>
+              <div>
+                <ChevronRight size={18} />
+                <span>Sekolah dapat berkembang ke proses yang lebih terintegrasi tanpa mengganti sistem.</span>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className={styles.section}>
+      <section className={styles.sectionFaq}>
         <div className={styles.sectionInner}>
-          <div className={styles.sectionHeader}>
-            <div className={styles.sectionBadge}>Gratis Sekarang</div>
-            <h2 className={styles.sectionTitle}>Masuk lewat kebutuhan yang paling mudah diputuskan</h2>
-            <p className={styles.sectionDesc}>
-              Banyak sekolah belum siap membeli sistem operasional penuh di awal. Karena itu,
-              SchoolPro membuka pintu dengan produk yang langsung terasa manfaatnya: website sekolah resmi.
-            </p>
-          </div>
-
-          <div className={styles.cardGrid}>
-            {freeFeatures.map((feature) => (
-              <article key={feature.title} className={styles.featureCard}>
-                <div className={styles.featureIcon}>{feature.icon}</div>
-                <h3 className={styles.featureTitle}>{feature.title}</h3>
-                <p className={styles.featureDesc}>{feature.desc}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className={styles.sectionAlt}>
-        <div className={styles.sectionInner}>
-          <div className={styles.sectionHeader}>
-            <div className={styles.sectionBadge}>Upgrade Saat Dibutuhkan</div>
-            <h2 className={styles.sectionTitle}>Dashboard yang sama, kemampuan yang terus bertambah</h2>
-            <p className={styles.sectionDesc}>
-              Setelah website berjalan, admin sekolah sudah berada di ekosistem yang benar.
-              Saat kebutuhan tumbuh, modul premium dibuka tanpa migrasi platform.
-            </p>
-          </div>
-
-          <div className={styles.cardGrid}>
-            {premiumFeatures.map((feature) => (
-              <article key={feature.title} className={styles.featureCardAlt}>
-                <div className={styles.featureIconAlt}>{feature.icon}</div>
-                <h3 className={styles.featureTitle}>{feature.title}</h3>
-                <p className={styles.featureDesc}>{feature.desc}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className={styles.section}>
-        <div className={styles.sectionInner}>
-          <div className={styles.valueStrip}>
-            <div>
-              <span className={styles.valueLabel}>Kenapa model ini lebih kuat?</span>
-              <h2 className={styles.valueTitle}>Sekolah mendapat hasil nyata dulu, lalu keputusan upgrade jadi lebih mudah</h2>
-            </div>
-            <div className={styles.valuePoints}>
-              <div>Lead lebih mudah masuk karena tawarannya konkret dan ringan.</div>
-              <div>Admin sekolah langsung mengenal dashboard sebelum membeli modul premium.</div>
-              <div>Upsell terasa natural karena muncul saat kebutuhan sekolah benar-benar ada.</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="alur" className={styles.sectionSteps}>
-        <div className={styles.sectionInner}>
-          <div className={styles.sectionHeader}>
-            <div className={styles.sectionBadge}>Alur Penggunaan</div>
-            <h2 className={styles.sectionTitle}>Funnel yang sederhana dan mudah dijelaskan ke calon sekolah</h2>
-            <p className={styles.sectionDesc}>
-              Visitor tidak dipaksa langsung membeli. Mereka masuk, merasakan value, lalu naik ke kebutuhan berikutnya.
-            </p>
-          </div>
-
-          <div className={styles.stepsGrid}>
-            {steps.map((step) => (
-              <article key={step.number} className={styles.stepCard}>
-                <div className={styles.stepNumber}>{step.number}</div>
-                <h3 className={styles.stepTitle}>{step.title}</h3>
-                <p className={styles.stepDesc}>{step.desc}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className={styles.sectionAlt}>
-        <div className={styles.sectionInner}>
-          <div className={styles.sectionHeader}>
+          <div className={styles.sectionLeadCenter}>
             <div className={styles.sectionBadge}>FAQ Singkat</div>
-            <h2 className={styles.sectionTitle}>Hal yang biasanya ingin dipastikan sekolah sejak awal</h2>
+            <h2 className={styles.sectionTitle}>Hal yang biasanya ingin diketahui calon pengguna</h2>
           </div>
 
           <div className={styles.faqGrid}>
@@ -279,20 +351,25 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section id="get-started" className={styles.cta}>
-        <div className={styles.ctaInner}>
-          <div className={styles.ctaBadge}>Mulai dari yang paling mudah</div>
-          <h2 className={styles.ctaTitle}>Aktifkan website sekolah gratis hari ini, lalu upgrade saat sekolah siap</h2>
+      <section id="cta-final" className={styles.ctaSection}>
+        <div className={styles.ctaCard}>
+          <div className={styles.ctaBadge}>Siap Melihat SchoolPro Lebih Dekat?</div>
+          <h2 className={styles.ctaTitle}>Pilih cara terbaik untuk mulai mengenal SchoolPro</h2>
           <p className={styles.ctaDesc}>
-            Pilih jalur yang sesuai. Jika ingin langsung mencoba, buat akun sekolah sekarang.
-            Jika ingin melihat gambaran dashboard lebih dulu, buka demo admin.
+            Mulai langsung, lihat demonstrasi produk, atau jadwalkan sesi agar tim sekolah Anda bisa menilai apakah SchoolPro sesuai dengan kebutuhan.
           </p>
-          <div className={styles.ctaActions}>
-            <Link href="/app/register" className={styles.btnPrimary}>
-              Buat Website Gratis <ArrowRight size={18} />
+          <div className={styles.ctaGrid}>
+            <Link href="/app/register" className={styles.ctaPrimary}>
+              <span>Mulai Sekarang</span>
+              <small>Untuk sekolah yang ingin langsung mencoba platform.</small>
             </Link>
-            <Link href="https://demo.schoolpro.id" target="_blank" className={styles.btnGhost}>
-              Lihat Demo Admin
+            <Link href="https://demo.schoolpro.id" target="_blank" className={styles.ctaSecondary}>
+              <span>Lihat Demo</span>
+              <small>Lihat gambaran produk dan pengalaman admin SchoolPro.</small>
+            </Link>
+            <Link href="/app/register" className={styles.ctaTertiary}>
+              <span>Jadwalkan Demo</span>
+              <small>Diskusikan kebutuhan sekolah Anda bersama tim SchoolPro.</small>
             </Link>
           </div>
         </div>

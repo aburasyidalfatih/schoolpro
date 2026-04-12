@@ -30,7 +30,7 @@ export default function AdminHeader({ initialUser }: { initialUser?: HeaderUser 
   }
 
   const breadcrumbs = getBreadcrumbs()
-  const sessionUser = session?.user as any
+  const sessionUser = session?.user as HeaderUser | undefined
   const user = sessionUser || initialUser
   const isSessionLoading = status === 'loading' && !user
   const profileName = isSessionLoading ? 'Memuat...' : user?.name || 'User'

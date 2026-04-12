@@ -1,0 +1,127 @@
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.summaryCard,
+.infoPanel {
+  border: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+  backdrop-filter: blur(18px);
+}
+
+.summaryCard {
+  border-radius: 22px;
+  padding: 1.2rem;
+}
+
+.summaryLabel {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.summaryValue {
+  margin-top: 0.45rem;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.04em;
+}
+
+.summaryCell {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.summaryCell span {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.3rem 0.65rem;
+  background: rgba(79, 70, 229, 0.05);
+  color: var(--text-secondary);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.planBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 86px;
+  padding: 0.28rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: rgba(79, 70, 229, 0.08);
+  color: var(--primary-700);
+}
+
+.planBadge[data-plan='FREE'] {
+  background: rgba(245, 158, 11, 0.12);
+  color: #b45309;
+}
+
+.planBadge[data-plan='STARTER'] {
+  background: rgba(59, 130, 246, 0.12);
+  color: #1d4ed8;
+}
+
+.planBadge[data-plan='GROWTH'] {
+  background: rgba(16, 185, 129, 0.12);
+  color: #047857;
+}
+
+.planBadge[data-plan='FULL_SUITE'] {
+  background: rgba(99, 102, 241, 0.14);
+  color: #4338ca;
+}
+
+.toggleWrap {
+  display: flex;
+  align-items: flex-end;
+}
+
+.infoPanel {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+  border-radius: 22px;
+  padding: 1rem;
+}
+
+.infoPanel div {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.infoPanel strong {
+  font-size: 0.82rem;
+  color: var(--text-primary);
+}
+
+.infoPanel span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+@media (max-width: 1100px) {
+  .summaryGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .summaryGrid,
+  .infoPanel {
+    grid-template-columns: 1fr;
+  }
+}

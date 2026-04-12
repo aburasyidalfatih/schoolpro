@@ -20,11 +20,15 @@ model Tenant {
   mediaSosial          Json?                  @map("media_sosial")
   pengaturan           Json?
   paket                String                 @default("FREE")
+  planId               String?                @map("plan_id")
+  tenantStatus         String                 @default("TRIAL") @map("tenant_status")
   berlanggananSampai   DateTime?              @map("berlangganan_sampai")
+  trialEndsAt          DateTime?              @map("trial_ends_at")
   isActive             Boolean                @default(true) @map("is_active")
   profileWebsite       Json?                  @map("profile_website")
   createdAt            DateTime               @default(now()) @map("created_at")
   updatedAt            DateTime               @updatedAt @map("updated_at")
+  activeSubscription   TenantSubscription?
   agendas              Agenda[]
   alumnis              Alumni[]
   akunKas              AkunKas[]
@@ -39,7 +43,11 @@ model Tenant {
   logAktivitas         LogAktivitas[]
   pembayarans          Pembayaran[]
   pendaftarPpdbs       PendaftarPpdb[]
+  featureOverrides     TenantFeatureOverride[]
+  subscriptionOrders   SubscriptionOrder[]
+  auditLogs            PlatformAuditLog[]
   pengaturanNotifikasi PengaturanNotifikasi[]
+  plan                 Plan?                  @relation(fields: [planId], references: [id], onDelete: SetNull)
   pengumumans          Pengumuman[]
   periodePpdbs         PeriodePpdb[]
   persyaratanBerkas    PersyaratanBerkas[]
@@ -59,6 +67,124 @@ model Tenant {
   editorials           Editorial[]
 
   @@map("tenants")
+}
+
+model Plan {
+  id          String                 @id @default(uuid())
+  code        String                 @unique
+  name        String
+  description String?
+  price       Decimal                @default(0)
+  studentCapacity Int                @default(0) @map("student_capacity")
+  billingPeriod String               @default("YEARLY") @map("billing_period")
+  isDefault   Boolean                @default(false) @map("is_default")
+  isActive    Boolean                @default(true) @map("is_active")
+  isPublic    Boolean                @default(true) @map("is_public")
+  fullAccess  Boolean                @default(false) @map("full_access")
+  sortOrder   Int                    @default(0) @map("sort_order")
+  createdAt   DateTime               @default(now()) @map("created_at")
+  updatedAt   DateTime               @updatedAt @map("updated_at")
+  features    PlanFeature[]
+  currentOrders SubscriptionOrder[]  @relation("CurrentPlanOrders")
+  targetOrders  SubscriptionOrder[]  @relation("TargetPlanOrders")
+  subscriptions TenantSubscription[]
+  tenants     Tenant[]
+
+  @@map("plans")
+}
+
+model PlanFeature {
+  id        String   @id @default(uuid())
+  planId    String   @map("plan_id")
+  featureKey String  @map("feature_key")
+  isEnabled Boolean  @default(true) @map("is_enabled")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  plan      Plan     @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@unique([planId, featureKey])
+  @@map("plan_features")
+}
+
+model TenantSubscription {
+  id              String    @id @default(uuid())
+  tenantId        String    @unique @map("tenant_id")
+  planId          String?   @map("plan_id")
+  status          String    @default("TRIAL")
+  studentCapacity Int       @default(0) @map("student_capacity")
+  startsAt        DateTime  @default(now()) @map("starts_at")
+  endsAt          DateTime? @map("ends_at")
+  activatedAt     DateTime? @map("activated_at")
+  lastPaidAt      DateTime? @map("last_paid_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+  tenant          Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  plan            Plan?     @relation(fields: [planId], references: [id], onDelete: SetNull)
+
+  @@map("tenant_subscriptions")
+}
+
+model SubscriptionOrder {
+  id              String    @id @default(uuid())
+  tenantId        String    @map("tenant_id")
+  currentPlanId   String?   @map("current_plan_id")
+  targetPlanId    String    @map("target_plan_id")
+  orderType       String    @default("NEW_SUBSCRIPTION") @map("order_type")
+  status          String    @default("PENDING_PAYMENT")
+  amount          Decimal   @default(0)
+  billingPeriod   String    @default("YEARLY") @map("billing_period")
+  studentCapacity Int       @default(0) @map("student_capacity")
+  paymentMethod   String?   @map("payment_method")
+  paymentProofUrl String?   @map("payment_proof_url")
+  submittedAt     DateTime  @default(now()) @map("submitted_at")
+  paidAt          DateTime? @map("paid_at")
+  verifiedAt      DateTime? @map("verified_at")
+  activatedAt     DateTime? @map("activated_at")
+  expiresAt       DateTime? @map("expires_at")
+  notes           String?
+  rejectionReason String?   @map("rejection_reason")
+  createdByUserId String?   @map("created_by_user_id")
+  verifiedByUserId String?  @map("verified_by_user_id")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+  tenant          Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  currentPlan     Plan?     @relation("CurrentPlanOrders", fields: [currentPlanId], references: [id], onDelete: SetNull)
+  targetPlan      Plan      @relation("TargetPlanOrders", fields: [targetPlanId], references: [id], onDelete: Restrict)
+
+  @@map("subscription_orders")
+}
+
+model TenantFeatureOverride {
+  id          String   @id @default(uuid())
+  tenantId     String   @map("tenant_id")
+  featureKey   String   @map("feature_key")
+  isEnabled    Boolean  @map("is_enabled")
+  reason       String?
+  expiresAt    DateTime? @map("expires_at")
+  createdById  String?  @map("created_by_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  tenant       Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, featureKey])
+  @@map("tenant_feature_overrides")
+}
+
+model PlatformAuditLog {
+  id          String   @id @default(uuid())
+  actorUserId String?  @map("actor_user_id")
+  actorName   String?  @map("actor_name")
+  actorRole   String?  @map("actor_role")
+  tenantId    String?  @map("tenant_id")
+  action      String
+  targetType  String   @map("target_type")
+  targetId    String?  @map("target_id")
+  summary     String
+  metadata    Json?
+  createdAt   DateTime @default(now()) @map("created_at")
+  tenant      Tenant?  @relation(fields: [tenantId], references: [id], onDelete: SetNull)
+
+  @@map("platform_audit_logs")
 }
 
 model User {

@@ -1,6 +1,6 @@
 import { headers } from 'next/headers'
 import { getTenantBySlug } from '@/lib/tenant'
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@/lib/db/prisma'
 import Link from 'next/link'
 import {
   ArrowRight, Calendar, MapPin, GraduationCap,

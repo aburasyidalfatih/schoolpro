@@ -128,6 +128,29 @@
   letter-spacing: -0.01em;
 }
 
+.navAlertDot {
+  position: absolute;
+  top: 10px;
+  left: 33px;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  border: 2px solid var(--sidebar-bg);
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.04);
+}
+
+.navAlertDotWARNING_80 {
+  background: var(--warning-500);
+}
+
+.navAlertDotWARNING_90 {
+  background: #f97316;
+}
+
+.navAlertDotFULL {
+  background: var(--danger-500);
+}
+
 .navItem:hover {
   color: var(--sidebar-item-hover);
   background: var(--sidebar-hover-bg);
@@ -166,6 +189,41 @@
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: var(--sp-text-sm);
+}
+
+.parentQuotaBadge,
+.quotaBadgeWarn,
+.quotaBadgeHigh,
+.quotaBadgeFull {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  margin-left: auto;
+}
+
+.quotaBadgeWarn {
+  color: #92400e;
+  background: rgba(245, 158, 11, 0.18);
+}
+
+.quotaBadgeHigh {
+  color: #c2410c;
+  background: rgba(249, 115, 22, 0.16);
+}
+
+.quotaBadgeFull {
+  color: var(--danger-600);
+  background: rgba(239, 68, 68, 0.14);
+}
+
+.parentQuotaBadge {
+  margin-right: 0.25rem;
 }
 
 /* ── Chevron ── */

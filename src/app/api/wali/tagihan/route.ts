@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@/lib/db/prisma'
+import { getSessionUser } from '@/lib/auth/session'
 
 // GET — semua tagihan milik user yang login (PPDB + tagihan siswa reguler)
 export async function GET() {
@@ -8,9 +9,12 @@ export async function GET() {
     const session = await auth()
     if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-    const userSession = session.user as any
-    const tenantId = userSession.tenantId
-    const userId = session.user.id
+    const userSession = getSessionUser(session)
+    const tenantId = userSession?.tenantId
+    const userId = userSession?.id
+    if (!tenantId || !userId) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
 
     // 1. Tagihan PPDB (dari semua pendaftaran user ini)
     const pendaftarans = await prisma.pendaftarPpdb.findMany({

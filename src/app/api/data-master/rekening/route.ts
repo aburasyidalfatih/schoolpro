@@ -1,6 +1,14 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import { getSessionUser, hasAnyRole } from '@/lib/auth/session'
+import { prisma } from '@/lib/db/prisma'
+
+type TripaySettings = {
+  merchantCode?: string
+  apiKey?: string
+  privateKey?: string
+  isSandbox?: boolean
+}
 
 export async function GET() {
   try {
@@ -9,7 +17,10 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const userSession = session.user as any
+    const userSession = getSessionUser(session)
+    if (!userSession?.tenantId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
     
     // 1. Fetch Manual Bank Accounts
     const rekenings = await prisma.rekening.findMany({
@@ -23,8 +34,10 @@ export async function GET() {
       select: { pengaturan: true },
     })
 
-    const pengaturan = (tenant?.pengaturan as any) || {}
-    const tripay = pengaturan.tripay || {
+    const pengaturan = tenant?.pengaturan && typeof tenant.pengaturan === 'object'
+      ? (tenant.pengaturan as Record<string, unknown>)
+      : {}
+    const tripay = (pengaturan.tripay as TripaySettings | undefined) || {
         merchantCode: '',
         apiKey: '',
         privateKey: '',
@@ -55,8 +68,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const userSession = session.user as any
-    if (userSession.role !== 'SUPER_ADMIN' && userSession.role !== 'ADMIN') {
+    const userSession = getSessionUser(session)
+    if (!userSession?.tenantId || !hasAnyRole(userSession, ['SUPER_ADMIN', 'ADMIN'])) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
@@ -69,7 +82,7 @@ export async function POST(req: Request) {
 
     const newRekening = await prisma.rekening.create({
       data: {
-        tenantId: userSession.tenantId as string,
+        tenantId: userSession.tenantId,
         namaBank,
         noRekening,
         atasNama,

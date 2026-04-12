@@ -1,13 +1,16 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import { getSessionUser } from '@/lib/auth/session'
+import { prisma } from '@/lib/db/prisma'
 import { slugify } from '@/lib/utils'
 
 export async function GET() {
   try {
     const session = await auth()
     if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const { tenantId } = session.user as any
+    const userSession = getSessionUser(session)
+    if (!userSession?.tenantId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const { tenantId } = userSession
     const data = await prisma.blog.findMany({
       where: { tenantId },
       orderBy: { tanggal: 'desc' },
@@ -22,7 +25,9 @@ export async function POST(req: Request) {
   try {
     const session = await auth()
     if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const { tenantId } = session.user as any
+    const userSession = getSessionUser(session)
+    if (!userSession?.tenantId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const { tenantId } = userSession
     const body = await req.json()
     if (!body.judul) return NextResponse.json({ error: 'Judul wajib diisi' }, { status: 400 })
     const data = await prisma.blog.create({

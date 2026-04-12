@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import { getTenantBySlug } from '@/lib/tenant'
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@/lib/db/prisma'
+import { derivePpdbWorkflow } from '@/features/ppdb/lib/ppdb-workflow'
 
 // GET publik — cek status pendaftaran berdasarkan nomor pendaftaran
 export async function GET(req: Request) {
@@ -24,14 +25,61 @@ export async function GET(req: Request) {
         status: true,
         tanggalDaftar: true,
         dataFormulir: true,
-        periode: { select: { nama: true, unit: { select: { nama: true } } } },
+        dataOrangtua: true,
+        tagihanPpdbs: {
+          select: {
+            jenis: true,
+            status: true,
+            pembayarans: {
+              select: { status: true },
+            },
+          },
+        },
+        berkas: {
+          select: {
+            persyaratanId: true,
+            status: true,
+            persyaratan: {
+              select: {
+                isWajib: true,
+              },
+            },
+          },
+        },
+        periode: {
+          select: {
+            nama: true,
+            unit: { select: { nama: true } },
+            persyaratanBerkas: {
+              select: {
+                id: true,
+                isWajib: true,
+              },
+            },
+          },
+        },
       },
     })
 
     if (!pendaftar) return NextResponse.json({ error: 'Nomor pendaftaran tidak ditemukan' }, { status: 404 })
 
+    const syncedStudent = await prisma.siswa.findFirst({
+      where: {
+        tenantId: tenant.id,
+        dataTambahan: {
+          path: ['sumberPpdb'],
+          equals: pendaftar.noPendaftaran,
+        },
+      },
+      select: { id: true },
+    })
+
+    const workflow = derivePpdbWorkflow(pendaftar, {
+      isSyncedToStudent: !!syncedStudent,
+    })
+
     // Hanya expose data yang aman (tidak ada data pribadi sensitif)
-    const pengumuman = (pendaftar.dataFormulir as any)?.pengumuman || null
+    const pengumuman = (pendaftar.dataFormulir as { pengumuman?: unknown } | null)?.pengumuman || null
 
     return NextResponse.json({
       data: {
@@ -41,6 +89,13 @@ export async function GET(req: Request) {
         tanggalDaftar: pendaftar.tanggalDaftar,
         periode: pendaftar.periode,
         pengumuman,
+        workflow: {
+          state: workflow.state,
+          label: workflow.label,
+          description: workflow.description,
+          nextAction: workflow.nextAction,
+          flags: workflow.flags,
+        },
       },
     })
   } catch (error) {

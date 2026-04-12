@@ -1,0 +1,166 @@
+.heroCard {
+  border: 1px solid var(--border-color);
+  border-radius: 28px;
+  padding: 1.5rem;
+  background:
+    radial-gradient(circle at top right, rgba(99, 102, 241, 0.14), transparent 24%),
+    rgba(255, 255, 255, 0.86);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+  backdrop-filter: blur(18px);
+}
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.48rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(79, 70, 229, 0.08);
+  color: var(--primary-700);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.heroTitle {
+  margin: 1rem 0 0;
+  font-size: 1.45rem;
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+}
+
+.heroDesc {
+  margin: 0.7rem 0 0;
+  color: var(--text-secondary);
+  line-height: 1.75;
+}
+
+.featurePills,
+.planMetaStack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.actionGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.featurePill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.28rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(8, 145, 178, 0.08);
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.metaBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.32rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.metaBadge[data-tone="success"] {
+  background: rgba(22, 163, 74, 0.12);
+  color: rgb(21, 128, 61);
+}
+
+.metaBadge[data-tone="info"] {
+  background: rgba(8, 145, 178, 0.08);
+  color: rgb(14, 116, 144);
+}
+
+.metaBadge[data-tone="neutral"] {
+  background: rgba(15, 23, 42, 0.08);
+  color: var(--text-secondary);
+}
+
+.metaBadge[data-tone="warning"] {
+  background: rgba(245, 158, 11, 0.14);
+  color: rgb(180, 83, 9);
+}
+
+.featureGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.pricingHint {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.95rem 1rem;
+  border: 1px solid rgba(8, 145, 178, 0.18);
+  border-radius: 18px;
+  background: rgba(8, 145, 178, 0.06);
+}
+
+.pricingHint strong {
+  color: var(--text-primary);
+}
+
+.pricingHint span,
+.fieldHint {
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+.featureCard,
+.checkboxItem {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  border: 1px solid var(--border-color);
+  border-radius: 18px;
+  padding: 0.95rem 1rem;
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.featureCard strong {
+  display: block;
+  color: var(--text-primary);
+}
+
+.featureCard span,
+.checkboxItem span {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.deleteDialog {
+  display: grid;
+  gap: 1rem;
+}
+
+.deleteAlert {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem 1.1rem;
+  border-radius: 18px;
+  border: 1px solid var(--danger-100);
+  background: var(--danger-50);
+}
+
+.deleteAlert strong {
+  color: var(--danger-700);
+}
+
+.deleteAlert span {
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+@media (max-width: 760px) {
+  .featureGrid {
+    grid-template-columns: 1fr;
+  }
+}

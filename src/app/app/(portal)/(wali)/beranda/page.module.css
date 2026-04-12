@@ -1,0 +1,358 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  padding: var(--space-4) 0;
+}
+
+.welcomeHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.welcomeTitle {
+  font-size: var(--sp-text-3xl);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.welcomeSubtitle {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* ── Empty State ── */
+.emptyState {
+  background: var(--bg-secondary);
+  border-radius: var(--sp-radius-2xl);
+  padding: 4rem 2rem;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--sp-shadow-md);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.rocketIcon {
+  width: 5rem;
+  height: 5rem;
+  background: var(--primary-50);
+  color: var(--primary-600);
+  border-radius: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(79, 70, 229, 0.1);
+  margin: 0 auto;
+}
+
+.emptyTitle { font-size: 1.5rem; font-weight: 800; }
+.emptyDesc { color: var(--text-secondary); max-width: 400px; margin: 0 auto; }
+
+/* ── Section ── */
+.pendaftaranSection { display: flex; flex-direction: column; gap: var(--space-4); }
+
+.sectionTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: var(--space-4);
+}
+
+.pendaftaranGrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* ── Card ── */
+.pendaftaranCard {
+  background: var(--bg-secondary);
+  border-radius: var(--sp-radius-xl);
+  padding: var(--space-6);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--sp-shadow-sm);
+  transition: all var(--transition-base);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.pendaftaranCard:hover {
+  border-color: var(--primary-200);
+  box-shadow: var(--sp-shadow-md);
+}
+
+.cardSiswa {
+  border-color: var(--success-200) !important;
+  background: linear-gradient(135deg, var(--bg-secondary), var(--success-50));
+}
+
+.cardDitolak {
+  border-color: var(--danger-100) !important;
+  opacity: 0.8;
+}
+
+/* ── Card Header ── */
+.cardTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.studentInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.studentAvatar {
+  width: 3rem;
+  height: 3rem;
+  background: var(--primary-50);
+  color: var(--primary-600);
+  border-radius: var(--sp-radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.125rem;
+  flex-shrink: 0;
+}
+
+.avatarSiswa {
+  background: var(--success-100);
+  color: var(--success-600);
+}
+
+.studentName { font-size: var(--sp-text-base); font-weight: 700; }
+.studentMeta {
+  font-size: var(--sp-text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.noDaftar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.workflowSummary {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border-radius: var(--sp-radius-lg);
+  background: color-mix(in srgb, var(--primary-50) 70%, var(--bg-secondary));
+  border: 1px solid var(--primary-100);
+}
+
+.workflowLabel {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--primary-600);
+  margin-bottom: 0.25rem;
+}
+
+.workflowTitle {
+  font-size: var(--sp-text-base);
+  font-weight: 800;
+  margin-bottom: 0.25rem;
+}
+
+.workflowDesc {
+  margin: 0;
+  font-size: var(--sp-text-sm);
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.workflowMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 220px;
+  font-size: var(--sp-text-xs);
+  font-weight: 700;
+  color: var(--primary-700);
+}
+
+/* ── Progress Bar ── */
+.progressBarWrap { display: flex; flex-direction: column; }
+
+.progressBarTrack {
+  height: 6px;
+  background: var(--bg-tertiary);
+  border-radius: var(--sp-radius-full);
+  overflow: hidden;
+}
+
+.progressBarFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary-500), var(--primary-400));
+  border-radius: var(--sp-radius-full);
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fillComplete {
+  background: linear-gradient(90deg, var(--success-500), var(--success-400));
+}
+
+/* ── Stepper 7 Tahap ── */
+.progressStepper {
+  display: flex;
+  align-items: flex-start;
+}
+
+.progressStep {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.progressDotWrap {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: var(--space-2);
+}
+
+.progressDot {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 800;
+  flex-shrink: 0;
+  z-index: 2;
+  transition: all var(--transition-base);
+}
+
+.dotDone     { background: var(--success-500); color: white; }
+.dotActive   { background: var(--primary-600); color: white; box-shadow: 0 0 0 3px var(--primary-100); animation: pulseDot 2s ease-in-out infinite; }
+.dotPending  { background: var(--bg-tertiary); border: 2px solid var(--border-color); color: var(--text-tertiary); }
+.dotRejected { background: var(--danger-500); color: white; }
+
+@keyframes pulseDot {
+  0%, 100% { box-shadow: 0 0 0 3px var(--primary-100); }
+  50%       { box-shadow: 0 0 0 5px var(--primary-50); }
+}
+
+.progressLine {
+  flex: 1;
+  height: 2px;
+  background: var(--border-color);
+  margin: 0 1px;
+}
+
+.lineDone { background: var(--success-500); }
+
+.progressLabel {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  text-align: center;
+  line-height: 1.3;
+  max-width: 52px;
+}
+
+.labelActive   { color: var(--primary-600); font-weight: 800; }
+.labelDone     { color: var(--success-600); }
+.labelRejected { color: var(--danger-600); }
+
+/* ── Card Footer ── */
+.cardBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-color);
+  flex-wrap: wrap;
+}
+
+.currentStatus {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--sp-text-xs);
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* ── Buttons ── */
+.btnAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  border-radius: var(--sp-radius-lg);
+  font-weight: 700;
+  font-size: var(--sp-text-sm);
+  padding: 0.625rem 1.25rem;
+  transition: all var(--transition-base);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  border: none;
+}
+
+.btnPrimary {
+  background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+  color: white;
+  box-shadow: 0 4px 12px -2px rgba(79, 70, 229, 0.3);
+}
+.btnPrimary:hover { transform: translateY(-1px); box-shadow: 0 6px 16px -2px rgba(79, 70, 229, 0.4); color: white; }
+
+.btnWarning {
+  background: linear-gradient(135deg, var(--warning-500), var(--warning-600));
+  color: white;
+  box-shadow: 0 4px 12px -2px rgba(245, 158, 11, 0.3);
+}
+.btnWarning:hover { transform: translateY(-1px); color: white; }
+
+.btnSecondary {
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--border-color);
+  color: var(--text-primary);
+}
+.btnSecondary:hover { background: var(--bg-tertiary); border-color: var(--primary-300); color: var(--text-primary); }
+
+.btnSuccess {
+  background: linear-gradient(135deg, var(--success-500), var(--success-600));
+  color: white;
+}
+.btnSuccess:hover { transform: translateY(-1px); color: white; }
+
+/* ── Wali Stats ── */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .workflowSummary { flex-direction: column; }
+  .workflowMeta { min-width: 0; }
+  .progressLabel { max-width: 40px; font-size: 8px; }
+  .progressDot   { width: 1.25rem; height: 1.25rem; }
+  .cardBottom    { flex-direction: column; align-items: stretch; }
+}

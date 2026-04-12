@@ -7,12 +7,13 @@
 - **Deploy Flow**: Setelah perubahan di `schoolpro-dev` dinyatakan fix oleh user, deploy ke production dilakukan hanya atas instruksi eksplisit user.
 - **Documentation Discipline**: Saat ada perubahan schema, UI, atau scope fitur, update dokumen di `.kiro/steering` yang relevan sebelum pekerjaan ditutup.
 - **Before Push**: Jika user meminta push ke GitHub, pastikan dokumen steering yang relevan sudah diperbarui agar konteks terbaru bisa dipakai pada pengembangan berikutnya.
+- **Codex Guidance**: Untuk workflow Codex yang lebih operasional dan hemat token, lihat `.kiro/steering/codex.md`.
 
 ## Core Principles
 1. **Multi-Tenant First**: Every action must be scoped to a `tenantId`. Data isolation between schools is the highest priority.
-2. **Premium Aesthetics**: UI must look state-of-the-art. No plain colors; use HSL-tailored variables, glassmorphism (`backdrop-filter`), and smooth transitions.
-3. **SaaS-Ready Architecture**: Code should be "Shared DB + Tenant ID" compliant. Avoid provider-specific features to allow switching between MySQL/PostgreSQL/SQLite.
-4. **Performance**: Use server components where possible, but prioritize UX for data-heavy administrative pages with responsive loading states.
+2. **UI Consistency**: Follow the existing visual language of the touched area. Reuse current tokens, shared styles, and components before introducing new patterns.
+3. **SaaS-Ready Architecture**: Code should remain compatible with the project's shared DB + `tenantId` model. Avoid unnecessary vendor lock-in in core data flows.
+4. **Performance**: Prefer simple, predictable patterns that match the current module. Use the narrowest approach that preserves UX and maintainability.
 
 ## Database Rules (Prisma)
 - **Always Include `tenantId`**: When fetching or creating any record (except Tenant itself), always include `tenantId` from the current user session.
@@ -20,13 +21,13 @@
 - **Numeric Fields**: Use `Decimal` (mapped via Prisma) for financial values. In code, handle as `number` carefully.
 
 ## UI & Design Standards
-- **CSS Variables**: Use only tokens defined in `globals.css` (e.g., `--primary-600`, `--glass-bg`).
-- **Dark Mode**: All components MUST be tested for Dark Mode. Use `var()` for colors.
+- **CSS Variables**: Prefer existing tokens from `globals.css`, `website.css`, and shared styles when suitable tokens already exist.
+- **Dark Mode**: Preserve dark-mode compatibility in touched components and avoid introducing hardcoded surfaces that break existing themes.
 - **Components**:
-  - `DataTable`: Always use for lists. Pass appropriate align and width props.
-  - `Modal`: Standard for forms. Ensure `isSubmitting` state is handled.
-  - `Badge`: Use for status (Lunas, Belum Lunas, etc.) with consistent colors.
-- **Aesthetics**: Apply `animate-fade-in` and `stagger` classes for a smooth entrance.
+  - `DataTable`: Prefer for standard tabular admin/super-admin lists.
+  - `Modal`: Prefer for focused form/edit flows. Ensure `isSubmitting` state is handled.
+  - `Badge`: Reuse for status and state labeling where it matches existing patterns.
+- **Aesthetics**: Reuse existing animation and glass styles where the touched area already uses them; do not force them into unrelated screens.
 
 ## API Standards
 - **Middleware**: Aware that `tenantSlug` determines the active tenant.
@@ -38,7 +39,7 @@
 - **Reporting (PDF)**: 
   - Use `@react-pdf/renderer` for official documents (Report Cards, Invoices, Certificates).
   - Use `jsPDF` only for simple, fast client-side exports.
-- **Data Tables**: Use `TanStack Table` for complex stateful tables (sorting, filtering, large datasets). Use a custom UI layer to maintain Vanilla CSS aesthetics.
-- **Notifications**: Use `Sonner` for all toasts and feedback. It is clean, accessible, and supports premium animations.
+- **Data Tables**: Use `TanStack Table` when complex table state is needed. Do not introduce it for simple read-only lists without need.
+- **Notifications**: Use `Sonner` for toast feedback.
 - **Excel**: Use `ExcelJS` for all data imports/exports. Always provide a template for imports.
-Build SchoolPro to be the gold standard of School Information Systems. If a feature looks basic, improve the design. If code is repetitive, create a reusable utility or component. Prioritize data integrity and user experience above all.
+Build changes to be safe, clear, and consistent with the existing product. Prioritize data integrity, tenant safety, and maintainability above novelty.

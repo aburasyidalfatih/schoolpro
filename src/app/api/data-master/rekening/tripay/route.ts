@@ -1,6 +1,14 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import { getSessionUser, hasAnyRole } from '@/lib/auth/session'
+import { prisma } from '@/lib/db/prisma'
+
+type TripaySettings = {
+  merchantCode?: string
+  apiKey?: string
+  privateKey?: string
+  isSandbox?: boolean
+}
 
 export async function POST(req: Request) {
   try {
@@ -9,8 +17,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const userSession = session.user as any
-    if (userSession.role !== 'SUPER_ADMIN' && userSession.role !== 'ADMIN') {
+    const userSession = getSessionUser(session)
+    if (!userSession?.tenantId || !hasAnyRole(userSession, ['SUPER_ADMIN', 'ADMIN'])) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
@@ -25,8 +33,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Tenant tidak ditemukan' }, { status: 404 })
     }
 
-    const currentPengaturan = (tenant.pengaturan as any) || {}
-    const currentTripay = currentPengaturan.tripay || {}
+    const currentPengaturan = tenant.pengaturan && typeof tenant.pengaturan === 'object'
+      ? (tenant.pengaturan as Record<string, unknown>)
+      : {}
+    const currentTripay = (currentPengaturan.tripay as TripaySettings | undefined) || {}
 
     // Logic: If the user didn't change the masked fields (they contain '...'), keep current values
     const finalApiKey = (apiKey && apiKey.includes('...')) ? currentTripay.apiKey : apiKey

@@ -3,6 +3,46 @@
 import { useState } from 'react'
 import { Search, CheckCircle2, Clock, XCircle, AlertCircle, Loader2 } from 'lucide-react'
 
+type WorkflowFlags = {
+  isRegistrationFeePaid: boolean
+  hasStartedFullForm: boolean
+  hasSubmittedFullForm: boolean
+  requiredDocumentsUploadedCount: number
+  requiredDocumentsApprovedCount: number
+  requiredDocumentsTotal: number
+  hasRejectedRequiredDocument: boolean
+  isEligibleForVerification: boolean
+  isEligibleForAcceptance: boolean
+  hasReenrollmentBill: boolean
+  isReenrollmentPaid: boolean
+  isSyncedToStudent: boolean
+}
+
+type StatusResult = {
+  noPendaftaran: string
+  namaLengkap: string
+  status: string
+  tanggalDaftar: string
+  periode?: {
+    nama?: string
+    unit?: {
+      nama?: string
+    } | null
+  } | null
+  pengumuman?: {
+    status?: string
+    pesan?: string
+    jadwalDaftarUlang?: string | null
+  } | null
+  workflow?: {
+    state: string
+    label: string
+    description: string
+    nextAction: string
+    flags: WorkflowFlags
+  } | null
+}
+
 const STATUS_CONFIG: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
   MENUNGGU:      { label: 'Menunggu Verifikasi', color: 'var(--warning-600)', icon: <Clock size={20} /> },
   TERVERIFIKASI: { label: 'Berkas Terverifikasi', color: 'var(--primary-600)', icon: <AlertCircle size={20} /> },
@@ -10,9 +50,24 @@ const STATUS_CONFIG: Record<string, { label: string; color: string; icon: React.
   DITOLAK:       { label: 'Tidak Diterima', color: 'var(--danger-600)', icon: <XCircle size={20} /> },
 }
 
+const WORKFLOW_COLOR: Record<string, string> = {
+  REGISTRATION_CREATED: 'var(--primary-600)',
+  PAYMENT_PENDING: 'var(--warning-600)',
+  PAYMENT_REVIEW: 'var(--warning-600)',
+  FULL_FORM_UNLOCKED: 'var(--primary-600)',
+  FULL_FORM_IN_PROGRESS: 'var(--warning-600)',
+  SUBMITTED_FOR_REVIEW: 'var(--primary-600)',
+  VERIFIED_READY_FOR_DECISION: 'var(--primary-600)',
+  REJECTED: 'var(--danger-600)',
+  ACCEPTED_AWAITING_REENROLLMENT_BILL: 'var(--success-600)',
+  REENROLLMENT_PAYMENT_PENDING: 'var(--warning-600)',
+  READY_TO_SYNC: 'var(--success-600)',
+  SYNCED_TO_STUDENT: 'var(--success-600)',
+}
+
 export default function CekStatusPage() {
   const [noPendaftaran, setNoPendaftaran] = useState('')
-  const [result, setResult] = useState<any>(null)
+  const [result, setResult] = useState<StatusResult | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -35,6 +90,9 @@ export default function CekStatusPage() {
   }
 
   const statusCfg = result ? STATUS_CONFIG[result.status] || STATUS_CONFIG.MENUNGGU : null
+  const workflowColor = result?.workflow?.state
+    ? WORKFLOW_COLOR[result.workflow.state] || 'var(--primary-600)'
+    : 'var(--primary-600)'
 
   return (
     <div style={{ maxWidth: 560, margin: '3rem auto', padding: '0 1.5rem' }}>
@@ -84,6 +142,21 @@ export default function CekStatusPage() {
 
           {/* Detail */}
           <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {result.workflow && (
+              <div style={{ padding: '1rem', background: 'var(--bg-tertiary)', borderRadius: 'var(--sp-radius-lg)', border: '1px solid var(--border-color)' }}>
+                <div style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', color: workflowColor, marginBottom: 6 }}>
+                  Tahap Saat Ini
+                </div>
+                <div style={{ fontWeight: 800, fontSize: '0.95rem', marginBottom: 4 }}>{result.workflow.label}</div>
+                <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: 10 }}>
+                  {result.workflow.description}
+                </div>
+                <div style={{ fontSize: '0.82rem', fontWeight: 700, color: workflowColor }}>
+                  Langkah berikutnya: {result.workflow.nextAction}
+                </div>
+              </div>
+            )}
+
             {[
               { label: 'Nama Calon Siswa', value: result.namaLengkap },
               { label: 'Gelombang', value: result.periode?.nama },

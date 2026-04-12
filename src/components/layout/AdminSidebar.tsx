@@ -12,6 +12,8 @@ import {
 import { cn } from '@/lib/utils'
 import styles from './AdminSidebar.module.css'
 
+type StudentQuotaWarningLevel = 'NONE' | 'NORMAL' | 'WARNING_80' | 'WARNING_90' | 'FULL'
+
 interface NavItem {
   label: string
   href: string
@@ -113,11 +115,11 @@ const navSections: NavSection[] = [
       {
         label: 'Data Master', href: '/app/data-master', icon: <Database size={20} />,
         children: [
-          { label: 'Petugas', href: '/data-master/petugas' },
-          { label: 'Unit/Jenjang', href: '/data-master/unit' },
-          { label: 'Tahun Ajaran', href: '/data-master/tahun-ajaran' },
-          { label: 'Kelas', href: '/data-master/kelas' },
-          { label: 'Siswa', href: '/data-master/siswa' },
+          { label: 'Petugas', href: '/app/data-master/petugas' },
+          { label: 'Unit/Jenjang', href: '/app/data-master/unit' },
+          { label: 'Tahun Ajaran', href: '/app/data-master/tahun-ajaran' },
+          { label: 'Kelas', href: '/app/data-master/kelas' },
+          { label: 'Siswa', href: '/app/data-master/siswa' },
           { label: 'Akun Siswa', href: '/app/data-master/akun-siswa' },
           { label: 'Kategori Tagihan', href: '/app/data-master/kategori-tagihan' },
           { label: 'Rekening', href: '/app/data-master/rekening' },
@@ -127,6 +129,7 @@ const navSections: NavSection[] = [
         label: 'Pengaturan', href: '/app/pengaturan', icon: <Settings size={20} />,
         children: [
           { label: 'Profil Sekolah', href: '/app/pengaturan/umum' },
+          { label: 'Langganan', href: '/app/pengaturan/langganan' },
           { label: 'Tampilan', href: '/app/pengaturan/tampilan' },
           { label: 'Portal Publik', href: '/app/pengaturan/portal' },
           { label: 'Sistem', href: '/app/pengaturan/sistem' },
@@ -168,6 +171,7 @@ export default function AdminSidebar() {
   const pathname = usePathname()
   const [collapsed, setCollapsed] = useState(false)
   const [openMenus, setOpenMenus] = useState<string[]>([])
+  const [quotaWarningLevel, setQuotaWarningLevel] = useState<StudentQuotaWarningLevel>('NONE')
 
   useEffect(() => {
     document.documentElement.style.setProperty(
@@ -185,6 +189,21 @@ export default function AdminSidebar() {
       })
     })
   }, [pathname])
+
+  useEffect(() => {
+    const loadQuotaWarning = async () => {
+      try {
+        const res = await fetch('/api/keuangan/dashboard/stats')
+        const json = await res.json()
+        if (!res.ok) return
+        setQuotaWarningLevel(json.studentQuota?.warningLevel || 'NONE')
+      } catch {
+        setQuotaWarningLevel('NONE')
+      }
+    }
+
+    loadQuotaWarning()
+  }, [])
 
   const toggleMenu = (label: string) => {
     if (collapsed) {
@@ -209,6 +228,21 @@ export default function AdminSidebar() {
     if (badge === 'new') return 'New'
     if (badge === 'beta') return 'Beta'
     return 'Soon'
+  }
+
+  const hasQuotaIndicator = ['WARNING_80', 'WARNING_90', 'FULL'].includes(quotaWarningLevel)
+
+  const getQuotaIndicatorLabel = () => {
+    if (quotaWarningLevel === 'FULL') return 'Penuh'
+    if (quotaWarningLevel === 'WARNING_90') return '90%'
+    if (quotaWarningLevel === 'WARNING_80') return '80%'
+    return ''
+  }
+
+  const getQuotaIndicatorClass = () => {
+    if (quotaWarningLevel === 'FULL') return styles.quotaBadgeFull
+    if (quotaWarningLevel === 'WARNING_90') return styles.quotaBadgeHigh
+    return styles.quotaBadgeWarn
   }
 
   return (
@@ -239,12 +273,20 @@ export default function AdminSidebar() {
                       title={collapsed ? item.label : undefined}
                     >
                       <span className={styles.navIcon}>{item.icon}</span>
+                      {item.href === '/app/pengaturan' && hasQuotaIndicator && (
+                        <span className={cn(styles.navAlertDot, styles[`navAlertDot${quotaWarningLevel}`])} />
+                      )}
                       {!collapsed && (
                         <>
                           <span className={styles.navLabel}>{item.label}</span>
                           {item.badge && (
                             <span className={getBadgeClass(item.badge)}>
                               {getBadgeLabel(item.badge)}
+                            </span>
+                          )}
+                          {item.href === '/app/pengaturan' && hasQuotaIndicator && (
+                            <span className={cn(getQuotaIndicatorClass(), styles.parentQuotaBadge)}>
+                              {getQuotaIndicatorLabel()}
                             </span>
                           )}
                           <ChevronRight
@@ -263,6 +305,11 @@ export default function AdminSidebar() {
                             className={cn(styles.subItem, isActive(child.href) && styles.active)}
                           >
                             {child.label}
+                            {child.href === '/app/pengaturan/langganan' && hasQuotaIndicator && (
+                              <span className={getQuotaIndicatorClass()}>
+                                {getQuotaIndicatorLabel()}
+                              </span>
+                            )}
                             {child.badge && (
                               <span className={getBadgeClass(child.badge)} style={{ marginLeft: 'auto' }}>
                                 {getBadgeLabel(child.badge)}
@@ -280,6 +327,9 @@ export default function AdminSidebar() {
                     title={collapsed ? item.label : undefined}
                   >
                     <span className={styles.navIcon}>{item.icon}</span>
+                    {item.href === '/app/pengaturan' && hasQuotaIndicator && (
+                      <span className={cn(styles.navAlertDot, styles[`navAlertDot${quotaWarningLevel}`])} />
+                    )}
                     {!collapsed && (
                       <>
                         <span className={styles.navLabel}>{item.label}</span>

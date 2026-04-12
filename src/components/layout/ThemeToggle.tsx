@@ -4,17 +4,25 @@ import { useState, useEffect } from 'react'
 import { Sun, Moon } from 'lucide-react'
 import styles from './ThemeToggle.module.css'
 
+function resolveInitialTheme(): 'light' | 'dark' {
+  if (typeof window === 'undefined') {
+    return 'light'
+  }
+
+  const saved = localStorage.getItem('schoolpro-theme')
+  if (saved === 'light' || saved === 'dark') {
+    return saved
+  }
+
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+}
+
 export default function ThemeToggle() {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light')
+  const [theme, setTheme] = useState<'light' | 'dark'>(resolveInitialTheme)
 
   useEffect(() => {
-    // Check saved preference or system preference
-    const saved = localStorage.getItem('schoolpro-theme') as 'light' | 'dark' | null
-    const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    const initial = saved || (systemDark ? 'dark' : 'light')
-    setTheme(initial)
-    document.documentElement.setAttribute('data-theme', initial)
-  }, [])
+    document.documentElement.setAttribute('data-theme', theme)
+  }, [theme])
 
   const toggle = () => {
     const next = theme === 'light' ? 'dark' : 'light'

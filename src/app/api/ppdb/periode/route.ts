@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
+import { Prisma } from '@prisma/client'
 import { auth } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import { getSessionUser, hasAnyRole } from '@/lib/auth/session'
+import { prisma } from '@/lib/db/prisma'
 
 export async function GET(req: Request) {
   try {
@@ -9,12 +11,15 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const userSession = session.user as any
-    const tenantId = userSession.tenantId
+    const userSession = getSessionUser(session)
+    const tenantId = userSession?.tenantId
+    if (!tenantId) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
     const { searchParams } = new URL(req.url)
     const activeOnly = searchParams.get('active') === 'true'
 
-    const where: any = { tenantId }
+    const where: Prisma.PeriodePpdbWhereInput = { tenantId }
     if (activeOnly) {
       where.isActive = true
       where.tanggalTutup = { gte: new Date() }
@@ -46,10 +51,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const userSession = session.user as any
-    const tenantId = userSession.tenantId
-
-    if (userSession.role !== 'SUPER_ADMIN' && userSession.role !== 'ADMIN' && userSession.role !== 'PPDB') {
+    const userSession = getSessionUser(session)
+    const tenantId = userSession?.tenantId
+    if (!tenantId || !hasAnyRole(userSession, ['SUPER_ADMIN', 'ADMIN', 'PPDB'])) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
