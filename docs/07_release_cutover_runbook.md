@@ -70,12 +70,19 @@
 4. Jalankan verifikasi teknis minimum:
    - `npx eslint ...` pada file target
    - `npm run build`
-5. Jalankan smoke test dev:
-   - login `SUPER_ADMIN`
-   - login `ADMIN`
-   - login `WALI`
+5. Jalankan smoke test dev terstruktur:
+   - host marketing: `https://dev.schoolpro.id`
+   - host platform: `https://ops-dev.schoolpro.id/app/login`
+   - host tenant demo: `https://demo-dev.schoolpro.id/app/login`
+   - auth callback: `https://ops-dev.schoolpro.id/api/auth/csrf`
+   - route publik tenant minimum: `https://demo-dev.schoolpro.id/ppdb`
+6. Jika perubahan menyentuh role flow, tambahkan cek manual:
+   - `SUPER_ADMIN`
+   - `ADMIN`
+   - `WALI`
+7. Jika perubahan menyentuh onboarding atau auth publik, tambahkan cek:
    - register akun baru
-   - alur PPDB minimal
+   - submit form publik yang terdampak
 
 ## Gate Sebelum Deploy Production
 1. Backup repo production lama
@@ -128,6 +135,42 @@ pm2 restart schoolpro
 - platform: `https://ops.schoolpro.id/app/login`
 - tenant demo: `https://demo.schoolpro.id/app/login`
 - auth callback: `https://ops.schoolpro.id/api/auth/csrf`
+
+## Smoke Test Matrix Yang Disarankan
+### Development
+- marketing host:
+  - `curl -I https://dev.schoolpro.id`
+  - pastikan host marketing tidak mengarah ke tenant/platform yang salah
+- platform host:
+  - `curl -I https://ops-dev.schoolpro.id/app/login`
+  - `curl -i https://ops-dev.schoolpro.id/api/auth/csrf`
+  - pastikan callback auth kembali ke `ops-dev.schoolpro.id`
+- tenant demo host:
+  - `curl -I https://demo-dev.schoolpro.id/app/login`
+  - `curl -I https://demo-dev.schoolpro.id/ppdb`
+  - pastikan host tenant tidak mental ke platform kecuali rule memang mengharuskannya
+
+### Production
+- marketing host:
+  - `curl -I https://schoolpro.id`
+  - `curl -I https://schoolpro.id/app/login`
+  - pastikan login marketing mengikuti rule aktif: diarahkan ke host platform jika marketing bukan entry login
+- platform host:
+  - `curl -I https://ops.schoolpro.id/app/login`
+  - `curl -i https://ops.schoolpro.id/api/auth/csrf`
+  - pastikan callback auth kembali ke `ops.schoolpro.id`
+- tenant demo host:
+  - `curl -I https://demo.schoolpro.id/app/login`
+  - `curl -I https://demo.schoolpro.id/ppdb`
+  - pastikan tenant login tetap hidup setelah deploy
+
+## Checklist Verifikasi Setelah Restart
+1. `pm2 status schoolpro` atau `pm2 status schoolpro-dev` harus `online`
+2. `npm run build` pada repo target harus sukses tanpa error blocking
+3. endpoint auth callback host harus mengarah ke host yang benar, bukan `localhost` atau host tenant lain
+4. host marketing, platform, dan tenant demo harus merespons sesuai boundary produk
+5. jika ada schema change, verifikasi route yang membaca model baru tidak error
+6. jika ada route publik atau CTA baru, cek satu surface publik yang benar-benar mewakili perubahan
 
 ## Runtime Audit Gaps Yang Masih Terbuka
 - `demo.schoolpro.id` pada konfigurasi Nginx aktif masih belum memuat seluruh proxy header forwarded seperti host `schoolpro.id` dan `dev.schoolpro.id`
