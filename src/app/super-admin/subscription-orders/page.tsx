@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { CheckCircle2, Search, XCircle } from 'lucide-react'
 import { toast } from 'sonner'
@@ -111,7 +111,7 @@ export default function SubscriptionOrdersPage() {
   const [rejectionReason, setRejectionReason] = useState('')
   const [currentHostname, setCurrentHostname] = useState('schoolpro.id')
 
-  const loadOrders = async () => {
+  const loadOrders = useCallback(async () => {
     setLoading(true)
     try {
       const params = new URLSearchParams()
@@ -131,12 +131,12 @@ export default function SubscriptionOrdersPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [searchQuery, statusFilter])
 
   useEffect(() => {
     const timer = setTimeout(loadOrders, 300)
     return () => clearTimeout(timer)
-  }, [searchQuery, statusFilter])
+  }, [loadOrders])
 
   useEffect(() => {
     if (typeof window !== 'undefined') {

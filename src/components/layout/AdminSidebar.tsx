@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import {
   Building2, LayoutDashboard, Database, FileText, CreditCard,
   ArrowRightLeft, Wallet, Landmark, ClipboardList, Settings,
-  Wrench, ChevronRight, ChevronLeft, ShoppingBag, Newspaper,
+  Wrench, ChevronRight, ChevronLeft, ShoppingBag,
   MessageCircle, BarChart3, BrainCircuit, Bot, ShieldAlert, Globe,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'

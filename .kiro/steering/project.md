@@ -16,6 +16,16 @@
 - **Startup**: `pm2-ubuntu.service` (auto-start saat reboot via systemd)
 - **Domain strategy (dev)**: gunakan first-level subdomain `*-dev.schoolpro.id` untuk tenant/super-admin dev agar kompatibel dengan Cloudflare Universal SSL; hindari pola second-level seperti `tenant.dev.schoolpro.id` kecuali nanti edge certificate khusus sudah disiapkan
 
+## Workflow Branch & Release
+
+- Repo development `/var/www/schoolpro-dev` harus memakai branch kerja aktif `develop`
+- Repo production `/var/www/schoolpro` harus tetap memakai branch `main`
+- Semua coding, verifikasi, build, dan smoke test dilakukan dulu di repo development
+- Push GitHub dilakukan dari repo development ke `origin/develop`
+- Promote ke production dilakukan dengan menarik commit yang sudah lolos dari `origin/develop` ke repo production `main`
+- Hindari bekerja harian di branch `main` pada repo development, karena itu rawan membuat status branch lokal dan steering tidak sinkron
+- Jika repo development terlanjur berada di `main`, fast-forward dulu `develop` ke commit terbaru lalu pindahkan HEAD kembali ke `develop` sebelum melanjutkan pekerjaan
+
 ## Tech Stack
 - Next.js 15 (App Router, TypeScript)
 - PostgreSQL (localhost:5432, db: `schoolpro`)
@@ -84,7 +94,8 @@
 - Empty state billing tenant dan label teknis utama seperti metode pembayaran serta billing period kini juga sudah dibuat lebih mudah dipahami tenant
 - Handoff kerja berikutnya: jika diperlukan, evaluasi perilaku indicator kuota sidebar pada mode mobile; selain itu billing tenant sudah siap masuk fase stabilisasi/QA
 - Kandidat fitur besar berikutnya: `Tenant Application + Approval + Provisioning` agar tenant baru tidak langsung aktif sebelum diverifikasi super admin
-- Fondasi phase 1 `Tenant Application` kini mulai dipasang di development: form publik `landing/daftarkan-sekolah`, intake API publik, model aplikasi calon tenant sudah dipisahkan dari `Tenant`, dan inbox review super admin sudah tersedia di `/super-admin/tenant-applications`
+- Fondasi phase 1 `Tenant Application` kini mulai dipasang di development: form publik kanonis di `/daftarkan-sekolah` dengan redirect dari URL lama `/landing/daftarkan-sekolah`, intake API publik, model aplikasi calon tenant sudah dipisahkan dari `Tenant`, dan inbox review super admin sudah tersedia di `/super-admin/tenant-applications`
+- Homepage marketing `/landing` kini memakai implementasi baru berbasis asset bundle `lp-schoolpro`; source HTML referensi disimpan di `src/features/marketing/lp-schoolpro/index.html`, lalu dirender lewat route Next.js agar CTA tetap bisa dipetakan ke host demo dan alur tenant signup SchoolPro
 - Mapping host development kini sudah dipisah mengikuti boundary produk: `dev.schoolpro.id` untuk marketing, `demo-dev.schoolpro.id` untuk tenant demo, `ops-dev.schoolpro.id` untuk super-admin, dan `*-dev.schoolpro.id` untuk tenant dev lain; pola lama `*.dev.schoolpro.id` tidak lagi dipakai karena tidak kompatibel dengan Cloudflare Universal SSL
 - CTA `Lihat Demo` di landing dev dan label domain tenant pada layar super-admin kini sudah mengikuti host aktif, sehingga surface host utama yang disentuh pada sesi ini tidak lagi menunjuk ke domain production saat dibuka dari environment development
 - Auth platform dev kini sudah membiarkan request `SUPER_ADMIN` ke `/api/auth/*` dan `/api/super-admin/*` di runtime aplikasi, sehingga login dan fetch data super-admin bisa lolos pada app lokal port `3001`

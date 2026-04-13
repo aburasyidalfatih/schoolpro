@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Search, Loader2, Trash2, Send } from 'lucide-react'
 import { DataTable, Column } from '@/components/ui/DataTable'
 import { Modal } from '@/components/ui/Modal'
@@ -9,8 +9,33 @@ import styles from './page.module.css'
 
 type TabType = 'generate' | 'manual'
 
+type SelectOption = {
+  id: string
+  nama: string
+}
+
+type SiswaOption = {
+  id: string
+  namaLengkap: string
+  nis: string
+}
+
+type TagihanRow = {
+  id: string
+  nominal: number | string
+  status: string
+  bulan?: string | null
+  siswa?: {
+    namaLengkap?: string | null
+    nis?: string | null
+    kelas?: { nama?: string | null } | null
+  } | null
+  kategori?: { nama?: string | null } | null
+  tahunAjaran?: { nama?: string | null } | null
+}
+
 export default function TagihanPage() {
-  const [data, setData] = useState<any[]>([])
+  const [data, setData] = useState<TagihanRow[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -20,10 +45,10 @@ export default function TagihanPage() {
   const [filterTahun] = useState('')
 
   // Dependency Data
-  const [kelases, setKelases] = useState<any[]>([])
-  const [kategoris, setKategoris] = useState<any[]>([])
-  const [tahunAjarans, setTahunAjarans] = useState<any[]>([])
-  const [siswas, setSiswas] = useState<any[]>([])
+  const [kelases, setKelases] = useState<SelectOption[]>([])
+  const [kategoris, setKategoris] = useState<SelectOption[]>([])
+  const [tahunAjarans, setTahunAjarans] = useState<SelectOption[]>([])
+  const [siswas, setSiswas] = useState<SiswaOption[]>([])
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -43,7 +68,7 @@ export default function TagihanPage() {
     jatuhTempo: '',
   })
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true)
     try {
       let url = '/api/keuangan/tagihan?'
@@ -60,9 +85,9 @@ export default function TagihanPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [filterKategori, filterKelas, filterTahun, searchQuery])
 
-  const fetchDependencies = async () => {
+  const fetchDependencies = useCallback(async () => {
     try {
       const [resKelases, resKats, resTahun, resSiswas] = await Promise.all([
         fetch('/api/data-master/kelas'),
@@ -82,18 +107,18 @@ export default function TagihanPage() {
     } catch (e) {
       console.error('Error fetching dependencies', e)
     }
-  }
+  }, [])
 
   useEffect(() => {
     fetchDependencies()
-  }, [])
+  }, [fetchDependencies])
 
   useEffect(() => {
     const timer = setTimeout(() => {
       fetchData()
     }, 300)
     return () => clearTimeout(timer)
-  }, [searchQuery, filterKelas, filterKategori, filterTahun])
+  }, [fetchData])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -164,7 +189,7 @@ export default function TagihanPage() {
     }
   }
 
-  const columns: Column<any>[] = [
+  const columns: Column<TagihanRow>[] = [
     {
       header: 'Siswa',
       accessor: (row) => (
@@ -209,7 +234,7 @@ export default function TagihanPage() {
         <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
           <button className={styles.actionBtn} title="Hapus" onClick={(e) => {
               e.stopPropagation()
-              handleDelete(row.id, row.siswa?.namaLengkap)
+              handleDelete(row.id, row.siswa?.namaLengkap || 'siswa ini')
           }}>
             <Trash2 size={14} style={{ color: 'var(--danger-500)' }} />
           </button>
@@ -251,11 +276,11 @@ export default function TagihanPage() {
         <div className={styles.filters}>
             <select className={styles.filterSelect} value={filterKelas} onChange={e => setFilterKelas(e.target.value)}>
                 <option value="">Semua Kelas</option>
-                {kelases.map(k => <option key={k.id} value={k.id}>{k.nama}</option>)}
+                {kelases.map((k) => <option key={k.id} value={k.id}>{k.nama}</option>)}
             </select>
             <select className={styles.filterSelect} value={filterKategori} onChange={e => setFilterKategori(e.target.value)}>
                 <option value="">Semua Kategori</option>
-                {kategoris.map(k => <option key={k.id} value={k.id}>{k.nama}</option>)}
+                {kategoris.map((k) => <option key={k.id} value={k.id}>{k.nama}</option>)}
             </select>
         </div>
       </div>
@@ -295,14 +320,14 @@ export default function TagihanPage() {
                 <label className={styles.label}>Kategori Tagihan</label>
                 <select required name="kategoriId" value={formData.kategoriId} onChange={handleInputChange} className={styles.input}>
                     <option value="">Pilih Kategori</option>
-                    {kategoris.map(k => <option key={k.id} value={k.id}>{k.nama}</option>)}
+                    {kategoris.map((k) => <option key={k.id} value={k.id}>{k.nama}</option>)}
                 </select>
               </div>
               <div className={styles.formGroup}>
                 <label className={styles.label}>Tahun Ajaran</label>
                 <select required name="tahunAjaranId" value={formData.tahunAjaranId} onChange={handleInputChange} className={styles.input}>
                     <option value="">Pilih Tahun</option>
-                    {tahunAjarans.map(t => <option key={t.id} value={t.id}>{t.nama}</option>)}
+                    {tahunAjarans.map((t) => <option key={t.id} value={t.id}>{t.nama}</option>)}
                 </select>
               </div>
           </div>
@@ -312,7 +337,7 @@ export default function TagihanPage() {
                 <label className={styles.label}>Target Kelas (Opsional)</label>
                 <select name="kelasId" value={formData.kelasId} onChange={handleInputChange} className={styles.input}>
                     <option value="">Semua Kelas</option>
-                    {kelases.map(k => <option key={k.id} value={k.id}>{k.nama}</option>)}
+                    {kelases.map((k) => <option key={k.id} value={k.id}>{k.nama}</option>)}
                 </select>
                 <p className={styles.subtext} style={{marginTop: '4px'}}>Jika kosong, tagihan akan dibuat untuk seluruh siswa aktif.</p>
             </div>
@@ -321,7 +346,7 @@ export default function TagihanPage() {
                 <label className={styles.label}>Pilih Siswa</label>
                 <select required name="siswaId" value={formData.siswaId} onChange={handleInputChange} className={styles.input}>
                     <option value="">Cari Siswa</option>
-                    {siswas.map(s => <option key={s.id} value={s.id}>{s.namaLengkap} ({s.nis})</option>)}
+                    {siswas.map((s) => <option key={s.id} value={s.id}>{s.namaLengkap} ({s.nis})</option>)}
                 </select>
             </div>
           )}

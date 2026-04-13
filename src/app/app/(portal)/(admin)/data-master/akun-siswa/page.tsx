@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Loader2, Trash2, Key, ShieldCheck, UserPlus, RefreshCw, GraduationCap } from 'lucide-react'
 import { toast } from 'sonner'
 import { DataTable, Column } from '@/components/ui/DataTable'
@@ -9,8 +9,21 @@ import { Button } from '@/components/ui/Button'
 import { SearchInput } from '@/components/ui/SearchInput'
 import shared from '@/styles/page.module.css'
 
+type SiswaAccountRow = {
+  id: string
+  namaLengkap: string
+  nis: string
+  kelas: { nama: string } | null
+  user: {
+    id: string
+    username: string
+    isActive: boolean
+    lastLogin: string | Date | null
+  } | null
+}
+
 export default function AkunSiswaPage() {
-  const [data, setData] = useState<any[]>([])
+  const [data, setData] = useState<SiswaAccountRow[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [filterAccount, setFilterAccount] = useState('all')
@@ -25,7 +38,7 @@ export default function AkunSiswaPage() {
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; nama: string } | null>(null)
   const [confirmGenerate, setConfirmGenerate] = useState(false)
 
-  const fetchAkunSiswa = async () => {
+  const fetchAkunSiswa = useCallback(async () => {
     setLoading(true)
     try {
       let url = `/api/data-master/akun-siswa?search=${encodeURIComponent(searchQuery)}`
@@ -35,16 +48,17 @@ export default function AkunSiswaPage() {
       const json = await res.json()
       if (json.data) setData(json.data)
     } catch { toast.error('Gagal memuat data') } finally { setLoading(false) }
-  }
+  }, [filterAccount, searchQuery])
 
-  useEffect(() => { const t = setTimeout(fetchAkunSiswa, 300); return () => clearTimeout(t) }, [searchQuery, filterAccount])
+  useEffect(() => { const t = setTimeout(fetchAkunSiswa, 300); return () => clearTimeout(t) }, [fetchAkunSiswa])
 
-  const openCreateModal = (siswa: any) => {
+  const openCreateModal = (siswa: SiswaAccountRow) => {
     setSelectedSiswaId(siswa.id); setSelectedUserId(null); setSelectedSiswaName(siswa.namaLengkap)
     setPassword(siswa.nis); setErrorMsg(''); setIsModalOpen(true)
   }
 
-  const openResetModal = (siswa: any) => {
+  const openResetModal = (siswa: SiswaAccountRow) => {
+    if (!siswa.user) return
     setSelectedSiswaId(null); setSelectedUserId(siswa.user.id); setSelectedSiswaName(siswa.namaLengkap)
     setPassword(''); setErrorMsg(''); setIsModalOpen(true)
   }
@@ -90,7 +104,7 @@ export default function AkunSiswaPage() {
     finally { setIsSubmitting(false) }
   }
 
-  const columns: Column<any>[] = [
+  const columns: Column<SiswaAccountRow>[] = [
     {
       header: 'Nama Siswa',
       accessor: (row) => (
@@ -117,18 +131,22 @@ export default function AkunSiswaPage() {
     },
     {
       header: 'Aksi', align: 'center', width: '200px',
-      accessor: (row) => (
-        <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
-          {row.user ? (
-            <>
-              <button className={shared.actionBtn} title="Reset Password" onClick={() => openResetModal(row)}><Key size={14} /></button>
-              <button className={`${shared.actionBtn} ${shared.actionBtnDanger}`} title="Hapus Akun" onClick={() => setDeleteTarget({ id: row.user.id, nama: row.namaLengkap })}><Trash2 size={14} /></button>
-            </>
-          ) : (
-            <Button size="sm" variant="secondary" leftIcon={<UserPlus size={13} />} onClick={() => openCreateModal(row)}>Aktivasi</Button>
-          )}
-        </div>
-      ),
+      accessor: (row) => {
+        const user = row.user
+
+        return (
+          <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
+            {user ? (
+              <>
+                <button className={shared.actionBtn} title="Reset Password" onClick={() => openResetModal(row)}><Key size={14} /></button>
+                <button className={`${shared.actionBtn} ${shared.actionBtnDanger}`} title="Hapus Akun" onClick={() => setDeleteTarget({ id: user.id, nama: row.namaLengkap })}><Trash2 size={14} /></button>
+              </>
+            ) : (
+              <Button size="sm" variant="secondary" leftIcon={<UserPlus size={13} />} onClick={() => openCreateModal(row)}>Aktivasi</Button>
+            )}
+          </div>
+        )
+      },
     },
   ]
 

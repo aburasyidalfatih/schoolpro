@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { Building2, Pencil, Users } from 'lucide-react'
 import { toast } from 'sonner'
@@ -115,7 +115,7 @@ export default function SuperAdminTenantsPage() {
     trialEndsAt: '',
   })
 
-  const fetchTenants = async () => {
+  const fetchTenants = useCallback(async () => {
     setLoading(true)
     try {
       const url = searchQuery
@@ -134,12 +134,12 @@ export default function SuperAdminTenantsPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [searchQuery])
 
   useEffect(() => {
     const timer = setTimeout(fetchTenants, 300)
     return () => clearTimeout(timer)
-  }, [searchQuery])
+  }, [fetchTenants])
 
   useEffect(() => {
     if (typeof window !== 'undefined') {

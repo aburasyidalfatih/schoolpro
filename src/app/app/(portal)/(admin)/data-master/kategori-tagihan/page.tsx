@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Plus, Pencil, Trash2, CreditCard, History, CircleCheck, CircleX } from 'lucide-react'
 import { toast } from 'sonner'
 import { DataTable, Column } from '@/components/ui/DataTable'
@@ -9,8 +9,16 @@ import { Button } from '@/components/ui/Button'
 import { SearchInput } from '@/components/ui/SearchInput'
 import shared from '@/styles/page.module.css'
 
+type KategoriTagihanRow = {
+  id: string
+  nama: string
+  kode: string
+  isBulanan: boolean
+  isActive: boolean
+}
+
 export default function KategoriTagihanPage() {
-  const [data, setData] = useState<any[]>([])
+  const [data, setData] = useState<KategoriTagihanRow[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -20,7 +28,7 @@ export default function KategoriTagihanPage() {
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; nama: string } | null>(null)
   const [formData, setFormData] = useState({ nama: '', kode: '', isBulanan: false, isActive: true })
 
-  const fetchKategori = async () => {
+  const fetchKategori = useCallback(async () => {
     setLoading(true)
     try {
       const url = searchQuery ? `/api/data-master/kategori-tagihan?search=${encodeURIComponent(searchQuery)}` : '/api/data-master/kategori-tagihan'
@@ -28,9 +36,9 @@ export default function KategoriTagihanPage() {
       const json = await res.json()
       if (json.data) setData(json.data)
     } catch { toast.error('Gagal memuat data') } finally { setLoading(false) }
-  }
+  }, [searchQuery])
 
-  useEffect(() => { const t = setTimeout(fetchKategori, 300); return () => clearTimeout(t) }, [searchQuery])
+  useEffect(() => { const t = setTimeout(fetchKategori, 300); return () => clearTimeout(t) }, [fetchKategori])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target
@@ -41,7 +49,7 @@ export default function KategoriTagihanPage() {
     setEditId(null); setFormData({ nama: '', kode: '', isBulanan: false, isActive: true }); setErrorMsg(''); setIsModalOpen(true)
   }
 
-  const openEditModal = (row: any) => {
+  const openEditModal = (row: KategoriTagihanRow) => {
     setEditId(row.id); setFormData({ nama: row.nama, kode: row.kode, isBulanan: row.isBulanan, isActive: row.isActive }); setErrorMsg(''); setIsModalOpen(true)
   }
 
@@ -71,7 +79,7 @@ export default function KategoriTagihanPage() {
     finally { setIsSubmitting(false) }
   }
 
-  const columns: Column<any>[] = [
+  const columns: Column<KategoriTagihanRow>[] = [
     {
       header: 'Kategori Tagihan',
       accessor: (row) => (

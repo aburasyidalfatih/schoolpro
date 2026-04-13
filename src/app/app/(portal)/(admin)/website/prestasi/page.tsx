@@ -58,7 +58,14 @@ export default function PrestasiPage() {
   }
 
   const columns: Column<Prestasi>[] = [
-    { header: 'Gambar', accessor: (r) => r.gambarUrl ? <img src={r.gambarUrl} alt={r.judul} style={{ height: 40, width: 60, objectFit: 'cover', borderRadius: 6 }} /> : '-', width: '80px' },
+    {
+      header: 'Gambar',
+      accessor: (r) => r.gambarUrl ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={r.gambarUrl} alt={r.judul} style={{ height: 40, width: 60, objectFit: 'cover', borderRadius: 6 }} />
+      ) : '-',
+      width: '80px',
+    },
     { header: 'Judul', accessor: 'judul' },
     { header: 'Tingkat', accessor: 'tingkat', width: '110px' },
     { header: 'Tahun', accessor: 'tahun', align: 'center', width: '80px' },

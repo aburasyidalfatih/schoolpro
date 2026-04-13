@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Plus, Pencil, Trash2, User, Users, Home, GraduationCap, Building2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { DataTable, Column } from '@/components/ui/DataTable'
@@ -19,6 +19,37 @@ type StudentQuota = {
   usagePercent: number
   warningLevel: 'NONE' | 'NORMAL' | 'WARNING_80' | 'WARNING_90' | 'FULL'
 } | null
+
+type UnitOption = {
+  id: string
+  nama: string
+}
+
+type KelasOption = {
+  id: string
+  nama: string
+}
+
+type SiswaRow = {
+  id: string
+  nis: string
+  nisn?: string | null
+  namaLengkap: string
+  jenisKelamin?: string | null
+  tempatLahir?: string | null
+  tanggalLahir?: string | null
+  alamat?: string | null
+  telepon?: string | null
+  fotoUrl?: string | null
+  namaWali?: string | null
+  teleponWali?: string | null
+  emailWali?: string | null
+  kelasId?: string | null
+  unitId?: string | null
+  status: string
+  kelas?: { nama?: string | null } | null
+  unit?: { nama?: string | null } | null
+}
 
 function getQuotaMessage(quota: StudentQuota) {
   if (!quota) return null
@@ -47,12 +78,12 @@ function getQuotaMessage(quota: StudentQuota) {
 }
 
 export default function SiswaPage() {
-  const [data, setData] = useState<any[]>([])
+  const [data, setData] = useState<SiswaRow[]>([])
   const [studentQuota, setStudentQuota] = useState<StudentQuota>(null)
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const [units, setUnits] = useState<any[]>([])
-  const [kelases, setKelases] = useState<any[]>([])
+  const [units, setUnits] = useState<UnitOption[]>([])
+  const [kelases, setKelases] = useState<KelasOption[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
@@ -67,7 +98,7 @@ export default function SiswaPage() {
     kelasId: '', unitId: '', status: 'AKTIF',
   })
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true)
     try {
       const url = searchQuery ? `/api/data-master/siswa?search=${encodeURIComponent(searchQuery)}` : '/api/data-master/siswa'
@@ -76,19 +107,19 @@ export default function SiswaPage() {
       if (json.data) setData(json.data)
       setStudentQuota(json.meta?.studentQuota || null)
     } catch { toast.error('Gagal memuat data') } finally { setLoading(false) }
-  }
+  }, [searchQuery])
 
-  const fetchDependencies = async () => {
+  const fetchDependencies = useCallback(async () => {
     try {
       const [resUnits, resKelases] = await Promise.all([fetch('/api/data-master/unit'), fetch('/api/data-master/kelas')])
       const [jsonUnits, jsonKelases] = await Promise.all([resUnits.json(), resKelases.json()])
       if (jsonUnits.data) setUnits(jsonUnits.data)
       if (jsonKelases.data) setKelases(jsonKelases.data)
     } catch { console.error('Error fetching dependencies') }
-  }
+  }, [])
 
-  useEffect(() => { fetchDependencies() }, [])
-  useEffect(() => { const t = setTimeout(fetchData, 300); return () => clearTimeout(t) }, [searchQuery])
+  useEffect(() => { fetchDependencies() }, [fetchDependencies])
+  useEffect(() => { const t = setTimeout(fetchData, 300); return () => clearTimeout(t) }, [fetchData])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -101,7 +132,7 @@ export default function SiswaPage() {
     setEditId(null); setFormData(emptyForm); setActiveTab('profil'); setErrorMsg(''); setIsModalOpen(true)
   }
 
-  const openEditModal = (row: any) => {
+  const openEditModal = (row: SiswaRow) => {
     setEditId(row.id)
     setFormData({ nis: row.nis, nisn: row.nisn || '', namaLengkap: row.namaLengkap, jenisKelamin: row.jenisKelamin || 'LAKI_LAKI', tempatLahir: row.tempatLahir || '', tanggalLahir: row.tanggalLahir ? row.tanggalLahir.split('T')[0] : '', alamat: row.alamat || '', telepon: row.telepon || '', fotoUrl: row.fotoUrl || '', namaWali: row.namaWali || '', teleponWali: row.teleponWali || '', emailWali: row.emailWali || '', kelasId: row.kelasId || '', unitId: row.unitId || '', status: row.status })
     setActiveTab('profil'); setErrorMsg(''); setIsModalOpen(true)
@@ -135,12 +166,13 @@ export default function SiswaPage() {
 
   const STATUS_COLORS: Record<string, string> = { AKTIF: 'success', TIDAK_AKTIF: 'danger', LULUS: 'primary', PINDAH: 'warning' }
 
-  const columns: Column<any>[] = [
+  const columns: Column<SiswaRow>[] = [
     {
       header: 'Bio Siswa',
       accessor: (row) => (
         <div className={shared.userCell}>
           <div className={shared.avatar}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             {row.fotoUrl ? <img src={row.fotoUrl} alt={row.namaLengkap} /> : <User size={16} />}
           </div>
           <div>

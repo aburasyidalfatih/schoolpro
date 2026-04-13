@@ -14,6 +14,35 @@ import styles from './page.module.css'
 
 type FilterType = 'semua' | 'belum' | 'lunas'
 
+type TagihanRow = {
+  id: string
+  tipe: string
+  jenis: string
+  keterangan: string
+  nominal: number
+  status: 'BELUM_LUNAS' | 'SEBAGIAN' | 'LUNAS' | string
+  createdAt: string | Date
+  jatuhTempo?: string | Date | null
+  noPendaftaran?: string | null
+  pendaftarId?: string | null
+  pembayarans?: Array<{ tanggalBayar: string | Date }>
+}
+
+type RekeningRow = {
+  id: string
+  namaBank: string
+  noRekening: string
+  atasNama: string
+  isActive: boolean
+}
+
+type TagihanStats = {
+  total: number
+  belumLunas: number
+  lunas: number
+  totalNominal: number
+}
+
 function formatRp(n: number) {
   return `Rp ${n.toLocaleString('id-ID')}`
 }
@@ -23,14 +52,14 @@ function formatDate(d: string | Date) {
 }
 
 export default function TagihanSayaPage() {
-  const [tagihans, setTagihans] = useState<any[]>([])
-  const [stats, setStats] = useState({ total: 0, belumLunas: 0, lunas: 0, totalNominal: 0 })
+  const [tagihans, setTagihans] = useState<TagihanRow[]>([])
+  const [stats, setStats] = useState<TagihanStats>({ total: 0, belumLunas: 0, lunas: 0, totalNominal: 0 })
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<FilterType>('semua')
 
   // Modal konfirmasi bayar
-  const [konfirmasiTarget, setKonfirmasiTarget] = useState<any>(null)
-  const [rekenings, setRekenings] = useState<any[]>([])
+  const [konfirmasiTarget, setKonfirmasiTarget] = useState<TagihanRow | null>(null)
+  const [rekenings, setRekenings] = useState<RekeningRow[]>([])
   const [submitting, setSubmitting] = useState(false)
 
   const fetchTagihan = useCallback(async () => {
@@ -48,7 +77,7 @@ export default function TagihanSayaPage() {
   useEffect(() => {
     fetch('/api/data-master/rekening')
       .then(r => r.json())
-      .then(j => setRekenings(j.data?.filter((r: any) => r.isActive) || []))
+      .then(j => setRekenings(j.data?.filter((rekening: RekeningRow) => rekening.isActive) || []))
   }, [])
 
   const filtered = tagihans.filter(t => {
@@ -219,11 +248,15 @@ export default function TagihanSayaPage() {
                     </div>
                   )}
 
-                  {isLunas && t.pembayarans?.length > 0 && (
+                  {(() => {
+                    const latestPembayaran = t.pembayarans?.[t.pembayarans.length - 1]
+
+                    return isLunas && latestPembayaran ? (
                     <span style={{ fontSize: '10px', color: 'var(--text-tertiary)' }}>
-                      Dibayar {formatDate(t.pembayarans[t.pembayarans.length - 1].tanggalBayar)}
+                      Dibayar {formatDate(latestPembayaran.tanggalBayar)}
                     </span>
-                  )}
+                    ) : null
+                  })()}
                 </div>
               </div>
             )
@@ -256,7 +289,7 @@ export default function TagihanSayaPage() {
                   Transfer ke salah satu rekening berikut:
                 </p>
                 <div className={styles.rekeningList}>
-                  {rekenings.map((r: any) => (
+                  {rekenings.map((r) => (
                     <div key={r.id} className={styles.rekeningItem}>
                       <div className={styles.rekeningBank}>
                         <Building2 size={13} style={{ display: 'inline', marginRight: 4 }} />

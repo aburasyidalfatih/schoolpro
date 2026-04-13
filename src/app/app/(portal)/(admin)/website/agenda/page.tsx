@@ -8,7 +8,7 @@ import type { Column } from '@/components/ui/DataTable'
 import shared from '@/styles/page.module.css'
 import { formatDate } from '@/lib/utils'
 
-type Agenda = { id: string; judul: string; deskripsi: string | null; tanggalMulai: string; tanggalAkhir: string | null; lokasi: string | null; penanggungjawab: string | null; isPublished: boolean }
+type Agenda = { id: string; judul: string; deskripsi: string | null; tanggalMulai: string; tanggalAkhir: string | null; lokasi: string | null; penanggungjawab: string | null; isPublished: boolean; gambarUrl?: string | null }
 const empty = { judul: '', deskripsi: '', tanggalMulai: '', tanggalAkhir: '', lokasi: '', penanggungjawab: '', gambarUrl: '', isPublished: true }
 
 export default function AgendaPage() {
@@ -34,7 +34,7 @@ export default function AgendaPage() {
   const openAdd = () => { setEditing(null); setForm(empty); setModal(true) }
   const openEdit = (row: Agenda) => {
     setEditing(row)
-    setForm({ judul: row.judul, deskripsi: row.deskripsi || '', tanggalMulai: toDateInput(row.tanggalMulai), tanggalAkhir: toDateInput(row.tanggalAkhir), lokasi: row.lokasi || '', penanggungjawab: row.penanggungjawab || '', gambarUrl: (row as any).gambarUrl || '', isPublished: row.isPublished })
+    setForm({ judul: row.judul, deskripsi: row.deskripsi || '', tanggalMulai: toDateInput(row.tanggalMulai), tanggalAkhir: toDateInput(row.tanggalAkhir), lokasi: row.lokasi || '', penanggungjawab: row.penanggungjawab || '', gambarUrl: row.gambarUrl || '', isPublished: row.isPublished })
     setModal(true)
   }
 

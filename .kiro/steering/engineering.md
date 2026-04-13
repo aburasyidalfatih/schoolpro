@@ -127,6 +127,7 @@ Refactor harus ditunda jika:
 ## Quality Gates
 
 - bugfix lokal: verifikasi paling sempit yang cukup
+- sebelum push atau deploy, repo development harus lolos `npm run lint` dan `npm run build`
 - perubahan route/auth/prisma/integration: `npm run build`
 - perubahan runtime-sensitive: cek `pm2` atau hit route dev seperlunya
 - perubahan dokumentasi arsitektur: sinkronkan steering dan roadmap jika keputusan arah berubah
@@ -138,6 +139,7 @@ Refactor harus ditunda jika:
 - host `marketing` tidak boleh menjadi entry login utama; `/app/login` di host marketing harus diarahkan ke host `platform`
 - untuk host `marketing`, `platform`, dan `tenant`, reverse proxy wajib meneruskan `Host`, `X-Forwarded-Host`, `X-Forwarded-Proto`, `X-Forwarded-Port`, `X-Real-IP`, dan `X-Forwarded-For`
 - kalau callback auth tiba-tiba mengarah ke `localhost` atau host tenant lain, cek header proxy aktif dan matcher middleware lebih dulu sebelum menambal route handler
+- jangan anggap semua vhost production otomatis seragam; audit `sites-enabled` aktif sebelum menyimpulkan header proxy sudah konsisten untuk semua host
 
 ## Rule of Stability
 
