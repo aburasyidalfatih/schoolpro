@@ -174,7 +174,7 @@ pm2 restart schoolpro
 
 ## Runtime Audit Gaps Yang Masih Terbuka
 - konfigurasi Nginx aktif yang terdeteksi belum menampilkan vhost `ops.schoolpro.id` secara eksplisit, walau host publiknya berjalan; sumber route ini perlu didokumentasikan atau distandarkan
-- remote `origin` pada server masih menyimpan token GitHub langsung di URL; ini perlu dipindahkan ke mekanisme yang lebih aman dan token lama sebaiknya dirotasi
+- akses Git server sekarang sudah memakai `credential.helper=store` dan remote `origin` bersih tanpa token di URL, tetapi token masih tersimpan plaintext di `~/.git-credentials`; mekanisme ini sebaiknya diganti ke SSH atau credential manager yang lebih aman, lalu token lama dirotasi
 
 ## Smoke Test Production Minimum
 - `SUPER_ADMIN` bisa login dan masuk ke `/super-admin/dashboard`
