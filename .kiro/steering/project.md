@@ -16,6 +16,16 @@
 - **Startup**: `pm2-ubuntu.service` (auto-start saat reboot via systemd)
 - **Domain strategy (dev)**: gunakan first-level subdomain `*-dev.schoolpro.id` untuk tenant/super-admin dev agar kompatibel dengan Cloudflare Universal SSL; hindari pola second-level seperti `tenant.dev.schoolpro.id` kecuali nanti edge certificate khusus sudah disiapkan
 
+## Workflow Branch & Release
+
+- Repo development `/var/www/schoolpro-dev` harus memakai branch kerja aktif `develop`
+- Repo production `/var/www/schoolpro` harus tetap memakai branch `main`
+- Semua coding, verifikasi, build, dan smoke test dilakukan dulu di repo development
+- Push GitHub dilakukan dari repo development ke `origin/develop`
+- Promote ke production dilakukan dengan menarik commit yang sudah lolos dari `origin/develop` ke repo production `main`
+- Hindari bekerja harian di branch `main` pada repo development, karena itu rawan membuat status branch lokal dan steering tidak sinkron
+- Jika repo development terlanjur berada di `main`, fast-forward dulu `develop` ke commit terbaru lalu pindahkan HEAD kembali ke `develop` sebelum melanjutkan pekerjaan
+
 ## Tech Stack
 - Next.js 15 (App Router, TypeScript)
 - PostgreSQL (localhost:5432, db: `schoolpro`)
