@@ -117,7 +117,15 @@ export default auth((req) => {
       if (context.appType === 'platform') {
         return NextResponse.redirect(new URL('/super-admin/dashboard', req.nextUrl))
       }
-      return NextResponse.redirect(buildExternalUrl(req, getPlatformHost(hostname), '/super-admin/dashboard'))
+      if (context.appType !== 'tenant') {
+        return NextResponse.redirect(buildExternalUrl(req, getPlatformHost(hostname), '/super-admin/dashboard'))
+      }
+
+      return NextResponse.next({
+        request: {
+          headers: buildForwardedHeaders(req, hostname),
+        },
+      })
     }
     if (context.appType !== 'tenant' && req.auth?.user && 'tenantSlug' in req.auth.user && typeof req.auth.user.tenantSlug === 'string') {
       const tenantHost = getTenantHost(req.auth.user.tenantSlug, hostname)
