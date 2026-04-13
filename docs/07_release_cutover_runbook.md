@@ -22,6 +22,33 @@
   5. build, restart, lalu smoke test production
 - Jangan gunakan repo production untuk eksperimen, debugging awal, atau edit source harian
 
+## Runtime Contract
+- PM2 authoritative config: `/home/ubuntu/ecosystem.config.js`
+- Production app:
+  - repo: `/var/www/schoolpro`
+  - PM2 name: `schoolpro`
+  - port: `3000`
+  - command: `next start -p 3000`
+  - `NODE_ENV=production`
+- Development app:
+  - repo: `/var/www/schoolpro-dev`
+  - PM2 name: `schoolpro-dev`
+  - port: `3001`
+  - command: `next start -p 3001`
+  - `NODE_ENV=production`
+- Environment contract:
+  - dev harus memakai database `schoolpro_dev`
+  - production harus memakai database `schoolpro`
+  - jangan set `AUTH_URL` atau `NEXTAUTH_URL` hardcoded pada multi-host runtime ini
+  - `AUTH_SECRET`, `NEXTAUTH_SECRET`, dan `AUTH_TRUST_HOST=true` harus konsisten di dev dan production
+- Reverse proxy contract untuk setiap host aktif:
+  - `Host`
+  - `X-Forwarded-Host`
+  - `X-Forwarded-Proto`
+  - `X-Forwarded-Port`
+  - `X-Real-IP`
+  - `X-Forwarded-For`
+
 ## Scope Release Saat Ini
 - Foundation portal/auth baru
 - Login tenant berbasis `email + password`
@@ -101,6 +128,11 @@ pm2 restart schoolpro
 - platform: `https://ops.schoolpro.id/app/login`
 - tenant demo: `https://demo.schoolpro.id/app/login`
 - auth callback: `https://ops.schoolpro.id/api/auth/csrf`
+
+## Runtime Audit Gaps Yang Masih Terbuka
+- `demo.schoolpro.id` pada konfigurasi Nginx aktif masih belum memuat seluruh proxy header forwarded seperti host `schoolpro.id` dan `dev.schoolpro.id`
+- konfigurasi Nginx aktif yang terdeteksi belum menampilkan vhost `ops.schoolpro.id` secara eksplisit, walau host publiknya berjalan; sumber route ini perlu didokumentasikan atau distandarkan
+- identitas git server masih default `Ubuntu <ubuntu@localhost.localdomain>` dan perlu dirapikan sebelum workflow release dianggap benar-benar matang
 
 ## Smoke Test Production Minimum
 - `SUPER_ADMIN` bisa login dan masuk ke `/super-admin/dashboard`
