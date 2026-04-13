@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- SEO Meta Tags -->
+  <title>SchoolPro — Platform Manajemen Sekolah All-in-One | Website, PPDB, Keuangan</title>
+  <meta name="description" content="SchoolPro adalah platform manajemen sekolah berbasis web yang menggabungkan website sekolah, PPDB online, administrasi akademik, dan keuangan dalam satu sistem terpadu. Mulai gratis!">
+  <meta name="keywords" content="sistem informasi sekolah, website sekolah, PPDB online, manajemen sekolah, aplikasi sekolah, keuangan sekolah, tabungan siswa, administrasi sekolah">
+  <meta name="author" content="SchoolPro">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://schoolpro.id/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="SchoolPro — Platform Manajemen Sekolah All-in-One">
+  <meta property="og:description" content="Gabungkan website sekolah, PPDB online, administrasi, dan keuangan dalam satu platform terpadu.">
+  <meta property="og:url" content="https://schoolpro.id/">
+  <meta property="og:site_name" content="SchoolPro">
+  <meta property="og:locale" content="id_ID">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SchoolPro — Platform Manajemen Sekolah All-in-One">
+  <meta name="twitter:description" content="Gabungkan website sekolah, PPDB online, administrasi, dan keuangan dalam satu platform terpadu.">
+
+  <!-- OG & Twitter Image -->
+  <meta property="og:image" content="https://schoolpro.id/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:image" content="https://schoolpro.id/og-image.jpg">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+  <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "SchoolPro",
+      "description": "Platform manajemen sekolah berbasis web yang menggabungkan website sekolah, PPDB online, administrasi akademik, dan keuangan dalam satu sistem terpadu.",
+      "applicationCategory": "EducationalApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "IDR",
+        "description": "Paket Starter gratis"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "SchoolPro",
+        "url": "https://schoolpro.id/"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "SchoolPro",
+      "url": "https://schoolpro.id/",
+      "logo": "https://schoolpro.id/favicon.svg",
+      "sameAs": [
+        "https://www.instagram.com/#",
+        "https://www.youtube.com/#",
+        "https://www.linkedin.com/company/#"
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Apakah SchoolPro benar-benar gratis?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ya, kami menyediakan paket Starter yang 100% gratis selamanya untuk fitur Website Sekolah Profesional. Anda bisa melakukan upgrade ke paket Professional dan Premium kapan saja sesuai kebutuhan."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Apakah orang tua siswa harus menginstal aplikasi?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Tidak perlu. SchoolPro berbasis web dan sangat responsif. Orang tua dapat mengakses portal wali, melihat info PPDB, dan memantau status pembayaran melalui browser di HP tanpa perlu instalasi aplikasi."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Bagaimana dengan keamanan data?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Kami menggunakan infrastruktur server berstandar tinggi dengan enkripsi data (SSL) dan backup otomatis harian. Privasi dan keamanan data sekolah, guru, serta siswa adalah prioritas utama kami."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Bisakah saya menggunakan domain sekolah sendiri?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Tentu saja. Anda bisa memetakan domain sekolah Anda sendiri (contoh: www.sekolahanda.sch.id) baik pada paket Starter maupun Professional."
+          }
+        }
+      ]
+    }
+  ]
+  </script>
+
+  <!-- Google Analytics Placeholder (G-XXXXXXXXXX) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
+</head>
+<body>
+  <a href="#hero" class="skip-to-content">Langsung ke Konten</a>
+  <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+
+  <!-- ========================
+       Mobile Overlay
+       ======================== -->
+  <div class="mobile-overlay" id="mobile-overlay"></div>
+
+  <!-- ========================
+       Navigation
+       ======================== -->
+  <header class="navbar" id="navbar">
+    <div class="container">
+      <a href="#" class="navbar-brand" aria-label="SchoolPro Home">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+          <defs><linearGradient id="brand-grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs>
+          <rect width="32" height="32" rx="8" fill="url(#brand-grad)"/>
+          <text x="16" y="22" text-anchor="middle" font-family="Inter,sans-serif" font-weight="800" font-size="18" fill="#fff">S</text>
+        </svg>
+        School<span>Pro</span>
+      </a>
+
+      <nav class="navbar-links" id="navbar-links" aria-label="Main Navigation">
+        <a href="#fitur">Fitur</a>
+        <a href="#website-sekolah">Website</a>
+        <a href="#ppdb">PPDB</a>
+        <a href="#harga">Harga</a>
+        <a href="#roadmap">Roadmap</a>
+      </nav>
+
+      <div class="navbar-cta">
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle Theme">
+          <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+          <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+        <a href="#harga" class="btn btn-primary btn-sm">Mulai Gratis</a>
+        <button class="navbar-toggle" id="navbar-toggle" aria-label="Toggle Menu" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ========================
+         Hero Section
+         ======================== -->
+    <section class="hero" id="hero">
+      <!-- Dynamic Constellation Canvas -->
+      <canvas id="hero-canvas"></canvas>
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="hero-line" aria-hidden="true"></div>
+
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="badge-dot" aria-hidden="true"></span>
+          Platform Manajemen Sekolah Modern — Dipercaya 150+ Sekolah
+        </div>
+
+        <h1>
+          Satu Platform untuk<br>
+          <span class="gradient-text">Semua Kebutuhan Sekolah</span>
+        </h1>
+
+        <p class="hero-description">
+          Hemat waktu, kurangi pekerjaan manual, dan tingkatkan citra sekolah Anda.
+          Mulai dari website profesional, bertumbuh ke sistem administrasi dan keuangan lengkap.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#harga" class="btn btn-primary btn-lg btn-shimmer" id="cta-hero-primary">
+            Mulai Gratis
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+          <a href="#fitur" class="btn btn-outline btn-lg" id="cta-hero-demo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Lihat Fitur
+          </a>
+        </div>
+
+        <!-- NEW: CSS Dashboard Mockup in Hero -->
+        <div class="hero-mockup" aria-hidden="true">
+          <div class="hero-mockup-glow"></div>
+          <div class="mockup-frame">
+            <div class="mockup-chrome">
+              <div class="mockup-dots">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="mockup-url">dashboard.schoolpro.id/admin</div>
+            </div>
+            <div class="mockup-body">
+              <div class="mockup-sidebar">
+                <div class="mockup-sidebar-brand"></div>
+                <div class="mockup-sidebar-item active"></div>
+                <div class="mockup-sidebar-item"></div>
+                <div class="mockup-sidebar-item"></div>
+                <div class="mockup-sidebar-item mockup-sidebar-bottom"></div>
+              </div>
+              <div class="mockup-main">
+                <div class="mockup-topbar">
+                  <div class="mockup-search"></div>
+                  <div class="mockup-avatar"></div>
+                </div>
+                <div class="mockup-cards">
+                  <div class="mockup-card">
+                    <div class="mockup-card-value"></div>
+                    <div class="mockup-card-label"></div>
+                  </div>
+                  <div class="mockup-card">
+                    <div class="mockup-card-value" style="width:30%"></div>
+                    <div class="mockup-card-label" style="width:40%"></div>
+                  </div>
+                  <div class="mockup-card">
+                    <div class="mockup-card-value" style="width:60%"></div>
+                    <div class="mockup-card-label" style="width:80%"></div>
+                  </div>
+                  <div class="mockup-card">
+                    <div class="mockup-card-value" style="width:25%"></div>
+                    <div class="mockup-card-label" style="width:50%"></div>
+                  </div>
+                </div>
+                <div class="mockup-grid">
+                  <div class="mockup-chart">
+                    <div class="mockup-chart-title"></div>
+                    <div class="mockup-chart-bars">
+                      <div class="mockup-bar" style="height:30%"></div>
+                      <div class="mockup-bar" style="height:45%"></div>
+                      <div class="mockup-bar" style="height:20%"></div>
+                      <div class="mockup-bar" style="height:60%"></div>
+                      <div class="mockup-bar" style="height:85%"></div>
+                      <div class="mockup-bar" style="height:55%"></div>
+                      <div class="mockup-bar" style="height:70%"></div>
+                      <div class="mockup-bar" style="height:40%"></div>
+                      <div class="mockup-bar" style="height:95%"></div>
+                    </div>
+                  </div>
+                  <div class="mockup-table">
+                    <div class="mockup-table-title"></div>
+                    <div class="mockup-table-row">
+                      <div class="mockup-table-dot"></div><div class="mockup-table-line" style="width: 60%"></div><div class="mockup-table-tag"></div>
+                    </div>
+                    <div class="mockup-table-row">
+                      <div class="mockup-table-dot"></div><div class="mockup-table-line" style="width: 45%"></div><div class="mockup-table-tag"></div>
+                    </div>
+                    <div class="mockup-table-row">
+                      <div class="mockup-table-dot"></div><div class="mockup-table-line" style="width: 75%"></div><div class="mockup-table-tag"></div>
+                    </div>
+                    <div class="mockup-table-row">
+                      <div class="mockup-table-dot"></div><div class="mockup-table-line" style="width: 30%"></div><div class="mockup-table-tag"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================
+         Trusted By Marquee
+         ======================== -->
+    <section class="trusted-by" aria-label="Partner Sekolah">
+      <div class="container">
+        <h3 class="trusted-by-label">Dipercaya oleh 150+ Sekolah Terkemuka</h3>
+        <div class="marquee-wrapper">
+          <div class="marquee-track">
+            <!-- First set -->
+            <div class="marquee-item"><div class="marquee-icon"></div> SMA Negeri 1 Unggulan</div>
+            <div class="marquee-item"><div class="marquee-icon"></div> SMK Bina Prestasi</div>
+            <div class="marquee-item"><div class="marquee-icon"></div> Pesantren Al-Hidayah</div>
+            <div class="marquee-item"><div class="marquee-icon"></div> Yayasan Tunas Bangsa</div>
+            <div class="marquee-item"><div class="marquee-icon"></div> SMP IT Luqman Hakim</div>
+            <div class="marquee-item"><div class="marquee-icon"></div> SD Global Islamic School</div>
+            <div class="marquee-item"><div class="marquee-icon"></div> MAN Insan Cendekia</div>
+            
+            <!-- Duplicated set for infinite scroll -->
+            <div class="marquee-item"><div class="marquee-icon"></div> SMA Negeri 1 Unggulan</div>
+            <div class="marquee-item"><div class="marquee-icon"></div> SMK Bina Prestasi</div>
+            <div class="marquee-item"><div class="marquee-icon"></div> Pesantren Al-Hidayah</div>
+            <div class="marquee-item"><div class="marquee-icon"></div> Yayasan Tunas Bangsa</div>
+            <div class="marquee-item"><div class="marquee-icon"></div> SMP IT Luqman Hakim</div>
+            <div class="marquee-item"><div class="marquee-icon"></div> SD Global Islamic School</div>
+            <div class="marquee-item"><div class="marquee-icon"></div> MAN Insan Cendekia</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================
+         Stats Bar
+         ======================== -->
+    <section class="stats" id="stats" aria-label="Statistik SchoolPro">
+      <div class="container">
+        <div class="stat-item reveal">
+          <div class="stat-number"><span class="accent" data-count="150" data-suffix="+">0</span></div>
+          <div class="stat-label">Sekolah Terdaftar</div>
+        </div>
+        <div class="stat-item reveal">
+          <div class="stat-number"><span class="accent" data-count="12000" data-suffix="+">0</span></div>
+          <div class="stat-label">Siswa Terkelola</div>
+        </div>
+        <div class="stat-item reveal">
+          <div class="stat-number"><span class="accent" data-count="50000" data-suffix="+">0</span></div>
+          <div class="stat-label">Transaksi Diproses</div>
+        </div>
+        <div class="stat-item reveal">
+          <div class="stat-number"><span class="accent" data-count="99" data-suffix=".9%">0</span></div>
+          <div class="stat-label">Uptime Server</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================
+         Features Bento Grid
+         ======================== -->
+    <section class="features section section-glow section-glow--indigo" id="fitur" aria-labelledby="features-heading">
+      <div class="container">
+        <div class="text-center">
+          <div class="section-label reveal">Fitur Lengkap</div>
+          <h2 class="section-heading reveal" id="features-heading">Tinggalkan Cara Lama yang Menguras Waktu</h2>
+          <p class="section-description reveal">
+            Kelola sekolah lebih cerdas cukup dari satu layar. 7 modul terintegrasi yang siap menyederhanakan administrasi harian tanpa komplikasi.
+          </p>
+        </div>
+
+        <div class="bento-grid reveal-stagger reveal">
+
+          <!-- Card 1: Website Sekolah (Large) -->
+          <article class="bento-card bento-card--large bento-card--indigo bento-card--accent-top">
+            <div class="card-accent-line card-accent-line--indigo"></div>
+            <div class="bento-card-icon bento-card-icon--indigo">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+            </div>
+            <h3>Website Sekolah Profesional</h3>
+            <p>Website resmi instan yang rapi, responsif, dan mudah dikelola. Lengkap dengan profil, berita, pengumuman, agenda, prestasi, ekstrakurikuler, dan banyak lagi.</p>
+            <div class="bento-card-features">
+              <span class="tag">Profil Sekolah</span>
+              <span class="tag">Berita & Artikel</span>
+              <span class="tag">Pengumuman</span>
+              <span class="tag">Agenda</span>
+              <span class="tag">Prestasi</span>
+              <span class="tag">Ekskul</span>
+              <span class="tag">Fasilitas</span>
+              <span class="tag">Data Guru</span>
+              <span class="tag">Alumni</span>
+              <span class="tag">Blog</span>
+              <span class="tag">Editorial</span>
+              <span class="tag">Slider Banner</span>
+              <span class="tag">Responsif</span>
+              <span class="tag">CMS Mandiri</span>
+            </div>
+          </article>
+
+          <!-- Card 2: PPDB Online -->
+          <article class="bento-card bento-card--cyan bento-card--accent-top">
+            <div class="card-accent-line card-accent-line--cyan"></div>
+            <div class="bento-card-icon bento-card-icon--cyan">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+            </div>
+            <h3>PPDB Online</h3>
+            <p>Alur pendaftaran peserta didik baru yang praktis dan rapi. Daftar, upload berkas, verifikasi — semua online.</p>
+          </article>
+
+          <!-- Card 3: Data Master -->
+          <article class="bento-card bento-card--emerald bento-card--accent-top">
+            <div class="card-accent-line card-accent-line--emerald"></div>
+            <div class="bento-card-icon bento-card-icon--emerald">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg>
+            </div>
+            <h3>Data Master</h3>
+            <p>Kelola unit, tahun ajaran, kelas, siswa, dan petugas dengan terstruktur. Siap multi-unit.</p>
+          </article>
+
+          <!-- Card 4: Keuangan -->
+          <article class="bento-card bento-card--indigo bento-card--accent-top">
+            <div class="card-accent-line card-accent-line--indigo"></div>
+            <div class="bento-card-icon bento-card-icon--indigo">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            </div>
+            <h3>Sistem Keuangan</h3>
+            <p>Tagihan, pembayaran, arus kas, dan rekening — semua tercatat rapi dan terpusat.</p>
+          </article>
+
+          <!-- Card 5: Tabungan -->
+          <article class="bento-card bento-card--cyan bento-card--accent-top">
+            <div class="card-accent-line card-accent-line--cyan"></div>
+            <div class="bento-card-icon bento-card-icon--cyan">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.7-1 2-2h2v-4h-2c0-1-.5-1.5-1-2"/><path d="M2 9.1C1.5 10 1.2 11.1 1 12"/><circle cx="12.5" cy="11.5" r=".5"/></svg>
+            </div>
+            <h3>Tabungan Siswa</h3>
+            <p>Setor, tarik, dan pantau mutasi tabungan siswa secara digital tanpa pencatatan manual.</p>
+          </article>
+
+          <!-- Card 6: Dashboard (Full Width) -->
+          <article class="bento-card bento-card--full bento-card--emerald bento-card--accent-top">
+            <div class="card-accent-line card-accent-line--emerald"></div>
+            <div class="bento-card-row">
+              <div>
+                <div class="bento-card-icon bento-card-icon--emerald">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+                </div>
+                <h3>Dashboard Admin & Multi User</h3>
+                <p>Area kerja admin dengan ringkasan operasional, akses cepat ke modul penting, dan monitoring kuota siswa. Mendukung 6 role pengguna dengan hak akses terpisah.</p>
+              </div>
+              <div class="bento-card-features">
+                <span class="tag">Admin</span>
+                <span class="tag">Keuangan</span>
+                <span class="tag">Tata Usaha</span>
+                <span class="tag">Wali</span>
+                <span class="tag">Siswa</span>
+                <span class="tag">Staf</span>
+                <span class="tag">Dashboard Ringkas</span>
+                <span class="tag">Monitoring Kuota</span>
+                <span class="tag">Status Langganan</span>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================
+         Showcase: Website Sekolah
+         ======================== -->
+    <section class="showcase section" id="website-sekolah" aria-labelledby="showcase-website-heading">
+      <div class="container">
+        <div class="showcase-grid">
+          <div class="showcase-content reveal-left">
+            <div class="section-label">Website Sekolah</div>
+            <h2 id="showcase-website-heading">Website Resmi Sekolah<br><span class="gradient-text">Siap Pakai dalam Hitungan Menit</span></h2>
+            <p>Tidak perlu developer. Cukup daftar, isi konten, dan website sekolah Anda langsung tayang. Responsif di semua perangkat, mudah dikelola oleh siapa saja.</p>
+            <ul class="showcase-list">
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Halaman profil, visi misi, dan sambutan kepala sekolah
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Publikasi berita, artikel, dan pengumuman sekolah
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Agenda kegiatan, prestasi, dan ekstrakurikuler
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Data guru, staf, fasilitas, dan alumni
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Blog sekolah dan slider homepage yang dinamis
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                14+ fitur konten — kelola mandiri tanpa developer
+              </li>
+            </ul>
+          </div>
+
+          <div class="showcase-visual reveal-right">
+            <div class="showcase-feature-grid">
+              <div class="feature-mini-card">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <h3>Berita & Artikel</h3>
+                <p>Publikasi konten dengan editor yang mudah digunakan</p>
+              </div>
+              <div class="feature-mini-card">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <h3>Agenda Kegiatan</h3>
+                <p>Kalender aktivitas sekolah yang terorganisir</p>
+              </div>
+              <div class="feature-mini-card">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5C7 4 9 7 12 7s5-3 7.5-3a2.5 2.5 0 0 1 0 5H18"/><path d="M12 7v10"/><path d="M8 17h8"/><path d="M6 21h12"/></svg>
+                <h3>Prestasi</h3>
+                <p>Tampilkan pencapaian siswa dan sekolah</p>
+              </div>
+              <div class="feature-mini-card">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <h3>Data Guru & Staf</h3>
+                <p>Profil lengkap tenaga pendidik sekolah</p>
+              </div>
+              <div class="feature-mini-card">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                <h3>Responsif</h3>
+                <p>Tampil sempurna di desktop, tablet, dan mobile</p>
+              </div>
+              <div class="feature-mini-card">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                <h3>CMS Mandiri</h3>
+                <p>Kelola konten sendiri tanpa bantuan developer</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================
+         Showcase: PPDB Online
+         ======================== -->
+    <section class="showcase section" id="ppdb" aria-labelledby="showcase-ppdb-heading">
+      <div class="container">
+        <div class="showcase-grid showcase-grid--reverse">
+          <div class="showcase-content reveal-right">
+            <div class="section-label">PPDB Online</div>
+            <h2 id="showcase-ppdb-heading">Pendaftaran Siswa Baru<br><span class="gradient-text">Lebih Praktis & Transparan</span></h2>
+            <p>Tidak perlu antre. Wali murid mendaftar dari rumah, upload berkas, bayar online, dan pantau status pendaftaran secara real-time.</p>
+            <ul class="showcase-list">
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Publikasi periode dan kuota PPDB
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Form pendaftaran online dengan upload berkas
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Verifikasi dokumen dan update status pendaftar
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Tagihan dan pencatatan pembayaran PPDB
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Sinkronisasi data pendaftar ke siswa aktif
+              </li>
+            </ul>
+          </div>
+
+          <div class="showcase-visual reveal-left">
+            <div class="ppdb-flow">
+              <div class="flow-step">
+                <div class="flow-step-number">1</div>
+                <div class="flow-step-content">
+                  <h3>Pendaftaran Online</h3>
+                  <p>Wali murid mengisi form dan data calon siswa</p>
+                </div>
+              </div>
+              <div class="flow-step">
+                <div class="flow-step-number">2</div>
+                <div class="flow-step-content">
+                  <h3>Upload Berkas</h3>
+                  <p>Unggah dokumen persyaratan secara digital</p>
+                </div>
+              </div>
+              <div class="flow-step">
+                <div class="flow-step-number">3</div>
+                <div class="flow-step-content">
+                  <h3>Verifikasi & Pembayaran</h3>
+                  <p>Admin memverifikasi dokumen, wali membayar biaya PPDB</p>
+                </div>
+              </div>
+              <div class="flow-step">
+                <div class="flow-step-number">4</div>
+                <div class="flow-step-content">
+                  <h3>Resmi Terdaftar</h3>
+                  <p>Selamat Datang! Calon siswa otomatis terdaftar tanpa entri manual ulang oleh admin.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================
+         Pricing Section
+         ======================== -->
+    <section class="pricing section" id="harga" aria-labelledby="pricing-heading">
+      <div class="container">
+        <div class="text-center">
+          <div class="section-label reveal">Harga</div>
+          <h2 class="section-heading reveal" id="pricing-heading">Pilih Paket yang Sesuai<br><span class="gradient-text">Kebutuhan Sekolah Anda</span></h2>
+          <p class="section-description reveal">
+            Mulai gratis dengan website sekolah, lalu upgrade kapan saja sesuai kebutuhan.
+            Tanpa kontrak. Tanpa biaya tersembunyi. Cancel kapan saja.
+          </p>
+        </div>
+
+        <div class="pricing-grid">
+
+          <!-- Starter -->
+          <article class="pricing-card reveal">
+            <h3 class="pricing-name">Starter</h3>
+            <p class="pricing-description">Cocok untuk sekolah yang baru ingin memiliki website resmi profesional.</p>
+            <div class="pricing-price">
+              <div class="pricing-amount">Gratis</div>
+              <div class="pricing-period">Selamanya</div>
+            </div>
+            <ul class="pricing-features">
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Website Sekolah Profesional
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                14+ Fitur Konten
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Responsif Desktop &amp; Mobile
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                CMS Mandiri
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                1 Admin
+              </li>
+              <li class="disabled">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                PPDB Online
+              </li>
+              <li class="disabled">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                Sistem Keuangan
+              </li>
+            </ul>
+            <a href="#" class="btn btn-outline" id="cta-starter">Mulai Gratis</a>
+          </article>
+
+          <!-- Professional (Featured) -->
+          <article class="pricing-card pricing-card--featured reveal">
+            <div class="pricing-badge">Populer</div>
+            <h3 class="pricing-name">Professional</h3>
+            <p class="pricing-description">Solusi lengkap untuk sekolah yang ingin digitalisasi menyeluruh.</p>
+            <div class="pricing-price">
+              <div class="pricing-amount"><span class="currency">Rp</span> 30K</div>
+              <div class="pricing-period">per siswa / tahun</div>
+            </div>
+            <ul class="pricing-features">
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Semua fitur Starter
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                PPDB Online Lengkap
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Sistem Keuangan &amp; Tabungan
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Administrasi Data Master
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Dashboard Admin Multi User
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                6 Role Pengguna
+              </li>
+              <li>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Dukungan Prioritas
+              </li>
+            </ul>
+            <a href="#" class="btn btn-primary" id="cta-professional">Pilih Professional</a>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================
+         Testimonials
+         ======================== -->
+    <hr class="section-divider">
+    <section class="testimonials section section-glow section-glow--cyan" aria-labelledby="testimonials-heading">
+      <div class="container">
+        <div class="text-center">
+          <div class="section-label reveal">Kisah Sukses</div>
+          <h2 class="section-heading reveal" id="testimonials-heading">Apa Kata Mereka<br>Tentang SchoolPro</h2>
+        </div>
+
+        <div class="testimonial-grid reveal-stagger reveal">
+          <!-- Testimonial 1 -->
+          <article class="testimonial-card">
+            <div class="testimonial-stars">
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <p class="testimonial-quote">"Pekerjaan admin PPDB yang biasanya butuh 3 minggu, sekarang cukup 5 hari. Tidak ada lagi tumpukan berkas fisik dan semua data langsung tersinkron ke sistem keuangan."</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar testimonial-avatar--indigo">A</div>
+              <div>
+                <div class="testimonial-name">Ahmad Fauzi</div>
+                <div class="testimonial-role">Kepala Sekolah, SMA N 1</div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Testimonial 2 -->
+          <article class="testimonial-card">
+            <div class="testimonial-stars">
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <p class="testimonial-quote">"Website sekolah kami langsung terlihat profesional dalam hitungan jam. Orangtua siswa memberi respons positif dan jumlah pengunjung naik 3x lipat sejak kami beralih ke SchoolPro."</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar testimonial-avatar--cyan">S</div>
+              <div>
+                <div class="testimonial-name">Siti Aminah</div>
+                <div class="testimonial-role">Staff TU, SMP IT Luqman</div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Testimonial 3 -->
+          <article class="testimonial-card">
+            <div class="testimonial-stars">
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <p class="testimonial-quote">"Modul keuangan sangat menghemat waktu. Wali murid bisa cek status SPP langsung di HP mereka. Tingkat keterlambatan pembayaran turun 60% sejak kami pakai fitur tagihan otomatis."</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar testimonial-avatar--emerald">R</div>
+              <div>
+                <div class="testimonial-name">Rudi Santoso</div>
+                <div class="testimonial-role">Bendahara, SMK Bina</div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ========================
+         Roadmap / Coming Soon
+         ======================== -->
+    <section class="roadmap section" id="roadmap" aria-labelledby="roadmap-heading">
+      <div class="container">
+        <div class="text-center">
+          <div class="section-label section-label--amber reveal">Segera Hadir</div>
+          <h2 class="section-heading reveal" id="roadmap-heading">Terus Berkembang untuk<br><span class="gradient-text">Menjawab Kebutuhan Sekolah</span></h2>
+          <p class="section-description reveal">
+            SchoolPro terus dikembangkan agar operasional sekolah makin terintegrasi,
+            efisien, dan modern. Berikut fitur yang sedang dalam pengembangan.
+          </p>
+        </div>
+
+        <div class="roadmap-grid reveal-stagger reveal">
+
+          <!-- 1. Absensi Digital -->
+          <article class="roadmap-card">
+            <div class="roadmap-card-badge">Segera</div>
+            <div class="roadmap-card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/></svg>
+            </div>
+            <h3>Absensi Digital</h3>
+            <p>Absensi berbasis QR Code dengan rekap otomatis, monitoring keterlambatan, dan riwayat kehadiran yang terhubung ke dashboard.</p>
+          </article>
+
+          <!-- 2. Raport Digital -->
+          <article class="roadmap-card">
+            <div class="roadmap-card-badge">Segera</div>
+            <div class="roadmap-card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><path d="M8 7h6"/><path d="M8 11h8"/></svg>
+            </div>
+            <h3>Raport Digital</h3>
+            <p>Pengelolaan nilai, penyusunan raport digital, dan rekap hasil belajar per semester. Akses lebih cepat dan rapi untuk administrasi akademik modern.</p>
+          </article>
+
+          <!-- 3. Kepegawaian & HR -->
+          <article class="roadmap-card">
+            <div class="roadmap-card-badge">Segera</div>
+            <div class="roadmap-card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect x="1" y="10" width="22" height="12" rx="2"/></svg>
+            </div>
+            <h3>Kepegawaian & HR</h3>
+            <p>Kelola data guru dan pegawai, struktur jabatan, riwayat kepegawaian, dan administrasi staf dalam satu sistem tertata.</p>
+          </article>
+
+          <!-- 4. Aplikasi Mobile / PWA -->
+          <article class="roadmap-card">
+            <div class="roadmap-card-badge">Segera</div>
+            <div class="roadmap-card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+            </div>
+            <h3>Aplikasi Mobile / PWA</h3>
+            <p>Akses SchoolPro seperti aplikasi di smartphone. Lebih cepat dan praktis untuk admin, wali, dan pengguna sekolah di lapangan.</p>
+          </article>
+
+          <!-- 5. Notifikasi WhatsApp -->
+          <article class="roadmap-card">
+            <div class="roadmap-card-badge">Segera</div>
+            <div class="roadmap-card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M13 8h.01"/><path d="M9 8h.01"/><path d="M17 8h.01"/></svg>
+            </div>
+            <h3>Notifikasi WhatsApp</h3>
+            <p>Notifikasi tagihan, pengingat pembayaran, status PPDB, dan pengumuman penting langsung ke WhatsApp wali dan pengguna.</p>
+          </article>
+
+          <!-- 6. Billing Otomatis -->
+          <article class="roadmap-card">
+            <div class="roadmap-card-badge">Segera</div>
+            <div class="roadmap-card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <h3>Billing Otomatis</h3>
+            <p>Tagihan langganan otomatis, pengingat jatuh tempo, aktivasi layanan lebih cepat, dan riwayat billing untuk self-service subscription.</p>
+          </article>
+
+          <!-- 7. Analitik -->
+          <article class="roadmap-card roadmap-card--wide">
+            <div class="roadmap-card-badge">Segera</div>
+            <div class="roadmap-card-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </div>
+            <h3>Analitik Sekolah & SaaS</h3>
+            <p>Ringkasan performa operasional, statistik pertumbuhan siswa, insight pembayaran, analitik penggunaan platform, dan monitoring pertumbuhan tenant.</p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ========================
+         FAQ Section
+         ======================== -->
+    <section class="faq section" id="faq" aria-labelledby="faq-heading">
+      <div class="container">
+        <div class="text-center">
+          <div class="section-label reveal">FAQ</div>
+          <h2 class="section-heading reveal" id="faq-heading">Pertanyaan yang Sering<br><span class="gradient-text">Diajukan</span></h2>
+          <p class="section-description reveal">
+            Temukan jawaban untuk pertanyaan umum seputar layanan SchoolPro.
+          </p>
+        </div>
+
+        <div class="faq-accordion reveal-stagger reveal">
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <h3>Apakah SchoolPro benar-benar gratis?</h3>
+              <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="faq-icon"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="faq-answer">
+              <p>Ya, kami menyediakan paket Starter yang 100% gratis selamanya untuk fitur Website Sekolah Profesional. Anda bisa melakukan upgrade ke paket Professional dan Premium kapan saja sesuai kebutuhan.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <h3>Apakah orang tua siswa harus menginstal aplikasi?</h3>
+              <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="faq-icon"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="faq-answer">
+              <p>Tidak perlu. SchoolPro berbasis web dan sangat responsif. Orang tua dapat mengakses portal wali, melihat info PPDB, dan memantau status pembayaran melalui browser di HP tanpa perlu instalasi aplikasi.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <h3>Bagaimana dengan keamanan data?</h3>
+              <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="faq-icon"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="faq-answer">
+              <p>Kami menggunakan infrastruktur server berstandar tinggi dengan enkripsi data (SSL) dan backup otomatis harian. Privasi dan keamanan data sekolah, guru, serta siswa adalah prioritas utama kami.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question" aria-expanded="false">
+              <h3>Bisakah saya menggunakan domain sekolah sendiri?</h3>
+              <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="faq-icon"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div class="faq-answer">
+              <p>Tentu saja. Anda bisa memetakan domain sekolah Anda sendiri (contoh: www.sekolahanda.sch.id) baik pada paket Starter maupun Professional.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ========================
+         CTA Final
+         ======================== -->
+    <section class="cta-final" id="cta" aria-labelledby="cta-heading">
+      <div class="cta-final-aurora" aria-hidden="true">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+      </div>
+
+      <div class="container">
+        <div class="cta-final-content reveal">
+          <h2 id="cta-heading">Ratusan Institusi Telah Bertransformasi.<br><span class="gradient-text">Sekolah Anda Kapan?</span></h2>
+          <p>Jangan tertinggal dengan sistem administrasi yang usang. Buktikan sendiri kemudahan SchoolPro sekarang. Mulai gratis, tanpa kartu kredit.</p>
+          <div class="cta-final-actions">
+            <a href="#harga" class="btn btn-primary btn-lg btn-shimmer" id="cta-final-primary">
+              Mulai Sekarang — Gratis
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+            <!-- ⚠️ Ganti dengan nomor WhatsApp Business Anda sebelum go-live -->
+            <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-lg" id="cta-final-wa">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              Hubungi Kami
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========================
+       Footer
+       ======================== -->
+  <footer class="footer" id="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="navbar-brand" aria-label="SchoolPro">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+              <defs><linearGradient id="footer-grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs>
+              <rect width="32" height="32" rx="8" fill="url(#footer-grad)"/>
+              <text x="16" y="22" text-anchor="middle" font-family="Inter,sans-serif" font-weight="800" font-size="18" fill="#fff">S</text>
+            </svg>
+            School<span>Pro</span>
+          </a>
+          <p>Platform manajemen sekolah all-in-one. Website, PPDB online, administrasi, dan keuangan dalam satu sistem terpadu.</p>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Produk</h4>
+          <nav class="footer-links">
+            <a href="#fitur">Fitur</a>
+            <a href="#website-sekolah">Website Sekolah</a>
+            <a href="#ppdb">PPDB Online</a>
+            <a href="#harga">Harga</a>
+          </nav>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Informasi</h4>
+          <nav class="footer-links">
+            <a href="#fitur">Tentang Produk</a>
+            <a href="#roadmap">Roadmap</a>
+            <a href="#harga">Paket Harga</a>
+            <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer">Kontak</a>
+          </nav>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Legal</h4>
+          <nav class="footer-links">
+            <a href="#">Syarat & Ketentuan</a>
+            <a href="#">Kebijakan Privasi</a>
+            <a href="#">SLA</a>
+          </nav>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 SchoolPro. Hak cipta dilindungi.</p>
+        <div class="footer-social">
+          <!-- Instagram -->
+          <a href="#" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <!-- YouTube -->
+          <a href="#" aria-label="YouTube" target="_blank" rel="noopener noreferrer">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.13C5.12 19.56 12 19.56 12 19.56s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>
+          </a>
+          <!-- LinkedIn -->
+          <a href="#" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script src="js/main.js" defer></script>
+</body>
+</html>

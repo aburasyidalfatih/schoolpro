@@ -315,7 +315,7 @@ Hal yang perlu diputuskan sebelum implementasi:
 
 Progress development saat ini:
 - selesai: model `TenantApplication`
-- selesai: form publik `landing/daftarkan-sekolah`
+- selesai: form publik kanonis `/daftarkan-sekolah` dengan redirect kompatibilitas dari `/landing/daftarkan-sekolah`
 - selesai: API intake publik `POST /api/tenant-applications`
 - selesai: inbox super admin `tenant-applications`
 - selesai: aksi review `approve`, `reject`, dan `request revision`
