@@ -135,6 +135,7 @@ Refactor harus ditunda jika:
 
 - route `src/app/api/auth/[...nextauth]/route.ts` harus tetap tipis dan fokus pada handler Auth.js; jangan tambahkan middleware auth kedua di jalur yang sama
 - `middleware.ts` tidak boleh menangkap `/api/auth/*`, karena request auth yang melewati dua lapis auth akan menggandakan cookie session/callback
+- host `marketing` tidak boleh menjadi entry login utama; `/app/login` di host marketing harus diarahkan ke host `platform`
 - untuk host `marketing`, `platform`, dan `tenant`, reverse proxy wajib meneruskan `Host`, `X-Forwarded-Host`, `X-Forwarded-Proto`, `X-Forwarded-Port`, `X-Real-IP`, dan `X-Forwarded-For`
 - kalau callback auth tiba-tiba mengarah ke `localhost` atau host tenant lain, cek header proxy aktif dan matcher middleware lebih dulu sebelum menambal route handler
 
