@@ -63,6 +63,7 @@
 ### Platform / Super Admin
 | Model | Tabel | Keterangan |
 |---|---|---|
+| TenantApplication | tenant_applications | Intake aplikasi calon tenant sebelum approval/provisioning menjadi tenant aktif |
 | Plan | plans | Paket SchoolPro lintas tenant, diarahkan menjadi katalog plan berbasis `studentCapacity` dan harga tahunan |
 | PlanFeature | plan_features | Mapping fitur default per plan, dipertahankan untuk override/internal control, bukan pembeda pricing utama |
 | TenantSubscription | tenant_subscriptions | Source of truth langganan aktif tenant: plan aktif, kapasitas siswa, masa aktif, status subscription, dan relasi 1-to-1 per tenant |
@@ -109,6 +110,18 @@
 - `createdByUserId` dan `verifiedByUserId` — jejak actor tenant dan super admin
 - order `REJECTED`, `PENDING_PAYMENT`, atau `EXPIRED` dapat di-resubmit tenant dengan bukti pembayaran baru tanpa membuat order baru
 
+### Ringkasan Field `TenantApplication`
+- `applicationCode` — nomor aplikasi publik untuk tracking aplikasi tenant
+- `namaSekolah`, `jenjang`, `statusSekolah`, `npsn`, `emailSekolah`, `teleponSekolah`, `alamat`, `provinsi`, `kotaKabupaten`, `websiteSaatIni`, `jumlahSiswaSaatIni` — data inti sekolah
+- `namaPic`, `jabatanPic`, `emailPic`, `whatsappPic` — kontak PIC sekolah
+- `slugRequest` — usulan slug sekolah saat aplikasi dibuat
+- `slugApproved` — slug final setelah review dan approval super admin
+- `kebutuhanUtama`, `catatanTambahan`, `sumberLead` — konteks onboarding awal
+- `status` — status aplikasi tenant dari submit sampai provisioning
+- `submittedAt`, `reviewedAt`, `provisionedAt` — jejak waktu operasional intake dan onboarding
+- `reviewedByUserId`, `reviewNotes`, `revisionNotes`, `rejectedReason` — catatan review internal
+- `approvedTenantId` — relasi ke tenant aktif setelah provisioning berhasil
+
 ## Enum Values (String)
 - `User.role`: ADMIN, KEUANGAN, TU, WALI, SISWA, STAF
 - `Siswa.status`: AKTIF, ALUMNI, KELUAR
@@ -122,6 +135,7 @@
 - `TransaksiKas.jenis`: MASUK, KELUAR
 - `TransaksiTabungan.jenis`: SETOR, TARIK
 - `Tenant.tenantStatus`: TRIAL, ACTIVE, SUSPENDED, ARCHIVED
+- `TenantApplication.status`: DRAFT, SUBMITTED, UNDER_REVIEW, REVISION_REQUESTED, APPROVED, REJECTED, PROVISIONED
 - `TenantSubscription.status`: TRIAL, ACTIVE, EXPIRED, SUSPENDED
 - `SubscriptionOrder.orderType`: NEW_SUBSCRIPTION, UPGRADE, RENEWAL
 - `SubscriptionOrder.status`: PENDING_PAYMENT, WAITING_VERIFICATION, VERIFIED, ACTIVATED, REJECTED, CANCELLED, EXPIRED

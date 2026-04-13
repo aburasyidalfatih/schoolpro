@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import { Building2, Mail, Lock, Eye, EyeOff, LogIn, Loader2 } from 'lucide-react'
+import { resolveAppContext, resolveTenantSlugForAuth } from '@/lib/runtime/app-context'
 import styles from './page.module.css'
 
 export default function LoginPage() {
@@ -21,16 +22,19 @@ export default function LoginPage() {
     const email = formData.get('email') as string
     const password = formData.get('password') as string
 
-    // Extract tenant slug from hostname if possible
-    let tenantSlug = 'demo'
+    let hostname = ''
+    let isPlatformLogin = false
+    let tenantSlug = ''
     if (typeof window !== 'undefined') {
-      const hostname = window.location.hostname
-      if (!hostname.includes('localhost') && !hostname.match(/^\d/)) {
-        const parts = hostname.split('.')
-        if (parts.length >= 3) {
-          tenantSlug = parts[0]
-        }
-      }
+      hostname = window.location.hostname
+      isPlatformLogin = resolveAppContext(hostname).appType === 'platform'
+      tenantSlug = resolveTenantSlugForAuth(window.location.hostname)
+    }
+
+    if (!isPlatformLogin && !tenantSlug) {
+      setError('Silakan login melalui subdomain sekolah Anda atau gunakan domain platform untuk super admin.')
+      setLoading(false)
+      return
     }
 
     try {
@@ -38,6 +42,7 @@ export default function LoginPage() {
         redirect: false,
         email,
         password,
+        hostname,
         tenantSlug,
       })
 

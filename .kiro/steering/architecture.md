@@ -109,6 +109,11 @@ Prinsip penting:
 - jika helper hanya dipakai satu area produk, jangan simpan di `lib`
 - jangan menambahkan file ke `lib` hanya karena belum sempat memilih boundary yang benar
 
+Catatan boundary runtime:
+- helper resolusi host, environment, dan app context lintas subdomain masih layak berada di `src/lib/runtime` atau `src/lib/constants` selama fungsinya tetap murni infrastructural
+- untuk SchoolPro, boundary host minimum yang harus dijaga adalah `marketing`, `platform`, dan `tenant`
+- pada environment development, gunakan first-level subdomain seperti `dev.schoolpro.id`, `demo-dev.schoolpro.id`, `ops-dev.schoolpro.id`, dan `*-dev.schoolpro.id`; jangan andalkan pola `tenant.dev.schoolpro.id` bila edge SSL Cloudflare belum mendukungnya
+
 ### 5. Provider idealnya disatukan
 
 Targetnya semua React provider berada di `src/providers`.

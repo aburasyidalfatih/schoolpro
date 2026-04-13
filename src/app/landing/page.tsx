@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { headers } from 'next/headers'
 import {
   ArrowRight,
   CheckCircle2,
@@ -11,6 +12,7 @@ import {
   Sparkles,
   Wallet,
 } from 'lucide-react'
+import { getDemoHost } from '@/lib/runtime/app-context'
 import styles from './page.module.css'
 
 export const metadata = {
@@ -64,7 +66,10 @@ const faqs = [
   },
 ]
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const host = (await headers()).get('host') || ''
+  const demoUrl = `https://${getDemoHost(host)}`
+
   return (
     <div className={styles.landing}>
       <section className={styles.hero}>
@@ -85,10 +90,10 @@ export default function LandingPage() {
               SchoolPro menyatukan semuanya ke dalam dashboard yang lebih rapi, mudah dipakai, dan siap berkembang.
             </p>
             <div className={styles.heroActions}>
-              <Link href="/app/register" className={styles.btnPrimary}>
-                Mulai Sekarang <ArrowRight size={18} />
+              <Link href="/landing/daftarkan-sekolah" className={styles.btnPrimary}>
+                Daftarkan Sekolah <ArrowRight size={18} />
               </Link>
-              <Link href="https://demo.schoolpro.id" target="_blank" className={styles.btnSecondary}>
+              <Link href={demoUrl} target="_blank" className={styles.btnSecondary}>
                 Lihat Demo
               </Link>
               <Link href="#cta-final" className={styles.btnTertiary}>
@@ -359,17 +364,17 @@ export default function LandingPage() {
             Mulai langsung, lihat demonstrasi produk, atau jadwalkan sesi agar tim sekolah Anda bisa menilai apakah SchoolPro sesuai dengan kebutuhan.
           </p>
           <div className={styles.ctaGrid}>
-            <Link href="/app/register" className={styles.ctaPrimary}>
-              <span>Mulai Sekarang</span>
-              <small>Untuk sekolah yang ingin langsung mencoba platform.</small>
+            <Link href="/landing/daftarkan-sekolah" className={styles.ctaPrimary}>
+              <span>Daftarkan Sekolah</span>
+              <small>Ajukan sekolah Anda sebagai calon tenant untuk direview tim SchoolPro.</small>
             </Link>
-            <Link href="https://demo.schoolpro.id" target="_blank" className={styles.ctaSecondary}>
+            <Link href={demoUrl} target="_blank" className={styles.ctaSecondary}>
               <span>Lihat Demo</span>
               <small>Lihat gambaran produk dan pengalaman admin SchoolPro.</small>
             </Link>
-            <Link href="/app/register" className={styles.ctaTertiary}>
-              <span>Jadwalkan Demo</span>
-              <small>Diskusikan kebutuhan sekolah Anda bersama tim SchoolPro.</small>
+            <Link href="/landing/daftarkan-sekolah" className={styles.ctaTertiary}>
+              <span>Ajukan Tenant</span>
+              <small>Kirim kebutuhan awal sekolah agar onboarding bisa dipersiapkan lebih tepat.</small>
             </Link>
           </div>
         </div>

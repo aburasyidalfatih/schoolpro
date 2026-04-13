@@ -65,8 +65,51 @@ model Tenant {
   gurus                Guru[]
   blogs                Blog[]
   editorials           Editorial[]
+  approvedApplications TenantApplication[]   @relation("ApprovedTenantApplications")
 
   @@map("tenants")
+}
+
+model TenantApplication {
+  id                 String    @id @default(uuid())
+  applicationCode    String    @unique @map("application_code")
+  namaSekolah        String    @map("nama_sekolah")
+  jenjang            String
+  statusSekolah      String    @map("status_sekolah")
+  npsn               String?
+  emailSekolah       String    @map("email_sekolah")
+  teleponSekolah     String    @map("telepon_sekolah")
+  alamat             String
+  provinsi           String
+  kotaKabupaten      String    @map("kota_kabupaten")
+  websiteSaatIni     String?   @map("website_saat_ini")
+  jumlahSiswaSaatIni Int?      @map("jumlah_siswa_saat_ini")
+  namaPic            String    @map("nama_pic")
+  jabatanPic         String    @map("jabatan_pic")
+  emailPic           String    @map("email_pic")
+  whatsappPic        String    @map("whatsapp_pic")
+  slugRequest        String    @map("slug_request")
+  slugApproved       String?   @map("slug_approved")
+  kebutuhanUtama     String    @map("kebutuhan_utama")
+  catatanTambahan    String?   @map("catatan_tambahan")
+  sumberLead         String?   @map("sumber_lead")
+  status             String    @default("SUBMITTED")
+  submittedAt        DateTime? @map("submitted_at")
+  reviewedAt         DateTime? @map("reviewed_at")
+  reviewedByUserId   String?   @map("reviewed_by_user_id")
+  reviewNotes        String?   @map("review_notes")
+  revisionNotes      String?   @map("revision_notes")
+  rejectedReason     String?   @map("rejected_reason")
+  approvedTenantId   String?   @map("approved_tenant_id")
+  provisionedAt      DateTime? @map("provisioned_at")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+  approvedTenant     Tenant?   @relation("ApprovedTenantApplications", fields: [approvedTenantId], references: [id], onDelete: SetNull)
+
+  @@index([status, createdAt])
+  @@index([emailPic])
+  @@index([slugRequest])
+  @@map("tenant_applications")
 }
 
 model Plan {

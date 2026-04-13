@@ -6,12 +6,15 @@
 |---|---|---|---|---|
 | Production | `/var/www/schoolpro` (branch `main`) | `schoolpro.id` (landing SaaS) | 3000 | `schoolpro` |
 | Production | `/var/www/schoolpro` (branch `main`) | `demo.schoolpro.id` (app sekolah) | 3000 | `schoolpro` |
-| Development | `/var/www/schoolpro-dev` (branch `develop`) | `dev.schoolpro.id` (app sekolah) | 3001 | `schoolpro-dev` |
-| Development | `/var/www/schoolpro-dev` (branch `develop`) | `dev.schoolpro.id/landing` (landing dev) | 3001 | `schoolpro-dev` |
+| Development | `/var/www/schoolpro-dev` (branch `develop`) | `dev.schoolpro.id` (landing SaaS dev) | 3001 | `schoolpro-dev` |
+| Development | `/var/www/schoolpro-dev` (branch `develop`) | `demo-dev.schoolpro.id` (tenant demo dev) | 3001 | `schoolpro-dev` |
+| Development | `/var/www/schoolpro-dev` (branch `develop`) | `ops-dev.schoolpro.id` (super-admin dev) | 3001 | `schoolpro-dev` |
+| Development | `/var/www/schoolpro-dev` (branch `develop`) | `*-dev.schoolpro.id` (tenant dev lain) | 3001 | `schoolpro-dev` |
 
 - **Process Manager**: PM2 dijalankan sebagai user `ubuntu` (bukan root)
 - **Ecosystem config**: `/home/ubuntu/ecosystem.config.js`
 - **Startup**: `pm2-ubuntu.service` (auto-start saat reboot via systemd)
+- **Domain strategy (dev)**: gunakan first-level subdomain `*-dev.schoolpro.id` untuk tenant/super-admin dev agar kompatibel dengan Cloudflare Universal SSL; hindari pola second-level seperti `tenant.dev.schoolpro.id` kecuali nanti edge certificate khusus sudah disiapkan
 
 ## Tech Stack
 - Next.js 15 (App Router, TypeScript)
@@ -55,6 +58,7 @@
 - Subscription & Billing: lihat `docs/05_subscription_billing_plan.md`
 - PPDB stabilization reference: lihat `docs/06_ppdb_stabilization_roadmap.md`
 - Release cutover runbook: lihat `docs/07_release_cutover_runbook.md`
+- Tenant application & onboarding: lihat `docs/08_tenant_application_onboarding_plan.md`
 - Steering khusus: lihat `.kiro/steering/super-admin.md`
 - Workflow Codex: lihat `.kiro/steering/codex.md`
 - Keputusan auth awal: satu login di `/app/login`, role `SUPER_ADMIN` diarahkan ke `/super-admin/dashboard`
@@ -79,6 +83,12 @@
 - Sidebar tenant kini menampilkan indicator kuota pada menu `Pengaturan` dan `Langganan` saat tenant masuk level `WARNING_80`, `WARNING_90`, atau `FULL`
 - Empty state billing tenant dan label teknis utama seperti metode pembayaran serta billing period kini juga sudah dibuat lebih mudah dipahami tenant
 - Handoff kerja berikutnya: jika diperlukan, evaluasi perilaku indicator kuota sidebar pada mode mobile; selain itu billing tenant sudah siap masuk fase stabilisasi/QA
+- Kandidat fitur besar berikutnya: `Tenant Application + Approval + Provisioning` agar tenant baru tidak langsung aktif sebelum diverifikasi super admin
+- Fondasi phase 1 `Tenant Application` kini mulai dipasang di development: form publik `landing/daftarkan-sekolah`, intake API publik, model aplikasi calon tenant sudah dipisahkan dari `Tenant`, dan inbox review super admin sudah tersedia di `/super-admin/tenant-applications`
+- Mapping host development kini sudah dipisah mengikuti boundary produk: `dev.schoolpro.id` untuk marketing, `demo-dev.schoolpro.id` untuk tenant demo, `ops-dev.schoolpro.id` untuk super-admin, dan `*-dev.schoolpro.id` untuk tenant dev lain; pola lama `*.dev.schoolpro.id` tidak lagi dipakai karena tidak kompatibel dengan Cloudflare Universal SSL
+- CTA `Lihat Demo` di landing dev dan label domain tenant pada layar super-admin kini sudah mengikuti host aktif, sehingga surface host utama yang disentuh pada sesi ini tidak lagi menunjuk ke domain production saat dibuka dari environment development
+- Auth platform dev kini sudah membiarkan request `SUPER_ADMIN` ke `/api/auth/*` dan `/api/super-admin/*` di runtime aplikasi, sehingga login dan fetch data super-admin bisa lolos pada app lokal port `3001`
+- Login `SUPER_ADMIN` di host platform kini juga sudah dipatch agar memakai kredensial host-aware dan hanya menerima role `SUPER_ADMIN` pada domain `ops-dev` / `ops`; smoke test dev di host publik kini lolos untuk CSRF, login, dashboard, dan API super-admin
 - Handoff tambahan PPDB: backend hardening awal, workflow turunan, `draft vs final submit` form lengkap wali, filter/statistik workflow di list admin, serta ringkasan workflow pada form, invoice, dan `/app/beranda` wali sudah mulai terpasang; langkah berikutnya adalah memperluas workflow ke kartu ringkasan tenant lain bila diperlukan
 - Auth tenant kini diarahkan ke login berbasis `email + password`; registrasi tenant cukup `nama, email, password`, sementara `username` tetap digenerate internal untuk kompatibilitas data lama
 - Cleanup arsitektur foundation sudah dimulai: provider boundary disatukan ke `src/providers`, script non-runtime dipindah dari `tmp` ke `scripts/*`, dan backup schema diarsipkan ke `docs/archive`
@@ -92,6 +102,14 @@
 - Konvensi implementasi aktif: lihat `.kiro/steering/conventions.md`
 - Rencana refactor struktur folder bertahap: lihat `docs/refactor-folder-structure-plan.md`
 - Roadmap maintenance arsitektur: lihat `docs/architecture-maintenance-roadmap.md`
+
+## Handoff Sesi Berikutnya
+- CTA `Lihat Demo` di landing dev dan label domain tenant pada layar super-admin kini mengikuti host dev/prod aktif; lanjutkan audit sisa link, CTA, atau redirect yang masih hardcoded bila ada surface lain yang belum disentuh
+- Login `SUPER_ADMIN` kini sudah lolos di `https://ops-dev.schoolpro.id` untuk endpoint CSRF, halaman login, dashboard, dan API dashboard super-admin; jika perlu, tindak lanjuti audit kecil pada raw callback auth yang masih mengembalikan redirect `https://localhost:3001` saat dipanggil langsung via curl walau session hasil login tetap valid
+- Login tenant demo di `demo-dev.schoolpro.id` kini sudah lolos lagi setelah data tenant dev disejajarkan dengan mapping host baru; akun `ADMIN` dan `WALI` dev kembali bisa dipakai untuk smoke test tenant
+- QA billing super-admin minimum sudah lolos di dev: halaman `Subscription Orders` dan API inbox order kini merespons `200`, tetapi datanya masih kosong karena belum ada order billing di environment dev
+- Jika hasil login sudah stabil, lanjutkan cleanup kecil host/runtime helper agar boundary marketing, platform, dan tenant lebih mudah dirawat tanpa refactor folder besar
+- Setelah itu baru siapkan checklist push GitHub dan rencana deploy production dengan mapping host production: `schoolpro.id`, `demo.schoolpro.id`, dan `ops.schoolpro.id`
 
 ## Perintah Penting
 ```bash

@@ -1,0 +1,501 @@
+.page {
+  position: relative;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, color-mix(in srgb, var(--primary-500) 18%, transparent), transparent 34%),
+    radial-gradient(circle at top right, color-mix(in srgb, var(--success-500) 14%, transparent), transparent 30%),
+    var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.heroGlow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--primary-500) 6%, transparent), transparent 28%),
+    radial-gradient(circle at 20% 15%, color-mix(in srgb, var(--warning-500) 12%, transparent), transparent 18%);
+}
+
+.hero {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 5rem;
+}
+
+.heroHeader {
+  max-width: 760px;
+  margin-bottom: 2rem;
+}
+
+.highlightGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin-top: 1.5rem;
+}
+
+.highlightCard {
+  display: flex;
+  gap: 0.9rem;
+  padding: 1rem;
+  border-radius: 22px;
+  border: 1px solid color-mix(in srgb, var(--border-color) 88%, transparent);
+  background: color-mix(in srgb, var(--bg-secondary) 88%, transparent);
+  box-shadow: 0 18px 48px rgba(15, 23, 42, 0.08);
+}
+
+.highlightIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--primary-500) 14%, var(--bg-secondary));
+  color: var(--primary-600);
+  flex-shrink: 0;
+}
+
+.highlightCard strong {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.highlightCard p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.backLink:hover {
+  color: var(--text-primary);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--primary-500) 12%, var(--bg-secondary));
+  border: 1px solid color-mix(in srgb, var(--primary-500) 20%, var(--border-color));
+  color: var(--primary-600);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.title {
+  margin: 1rem 0 0.75rem;
+  font-size: clamp(2.2rem, 4vw, 3.8rem);
+  line-height: 1.1;
+}
+
+.description {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.infoCard,
+.formCard {
+  border: 1px solid var(--border-color);
+  background: color-mix(in srgb, var(--card-bg) 92%, transparent);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.12);
+}
+
+.infoCard {
+  border-radius: 28px;
+  padding: 1.6rem;
+  position: sticky;
+  top: 1.5rem;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--primary-500) 7%, transparent), transparent 32%),
+    color-mix(in srgb, var(--card-bg) 96%, transparent);
+}
+
+.infoHeader {
+  display: flex;
+  gap: 0.9rem;
+  align-items: flex-start;
+}
+
+.infoHeader h2 {
+  margin: 0 0 0.35rem;
+  font-size: 1.15rem;
+}
+
+.infoHeader p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.checklist {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.checklist li {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.checklist svg {
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+  color: var(--success-600);
+}
+
+.stepsCard {
+  border-radius: 22px;
+  background: color-mix(in srgb, var(--bg-secondary) 90%, transparent);
+  border: 1px solid var(--border-color);
+  padding: 1.1rem;
+}
+
+.stepsTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.stepsList {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.stepItem {
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+}
+
+.stepNumber {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--primary-500) 14%, var(--bg-secondary));
+  color: var(--primary-600);
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.stepItem strong {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.stepItem p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.formCard {
+  border-radius: 32px;
+  padding: 1.75rem;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--bg-secondary) 96%, transparent), color-mix(in srgb, var(--card-bg) 98%, transparent));
+}
+
+.formHeader h2 {
+  margin: 0;
+  font-size: 1.7rem;
+}
+
+.formHeader p {
+  margin: 0.4rem 0 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.formIntro {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.formIntro div {
+  padding: 0.9rem 1rem;
+  border-radius: 18px;
+  border: 1px solid var(--border-color);
+  background: color-mix(in srgb, var(--bg-secondary) 92%, transparent);
+  display: grid;
+  gap: 0.2rem;
+}
+
+.formIntro strong {
+  color: var(--text-primary);
+}
+
+.formIntro span {
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.form {
+  margin-top: 1.25rem;
+  display: grid;
+  gap: 1.25rem;
+}
+
+.sectionBlock {
+  border-top: 1px solid var(--border-color);
+  padding-top: 1.35rem;
+}
+
+.sectionHeading {
+  margin-bottom: 1rem;
+}
+
+.sectionHeading h3 {
+  margin: 0;
+  font-size: 1.08rem;
+}
+
+.sectionHeading p {
+  margin: 0.35rem 0 0;
+  color: var(--text-secondary);
+}
+
+.fieldGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.55rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.field span {
+  font-size: 0.95rem;
+}
+
+.field small {
+  color: var(--text-tertiary);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  border: 1.5px solid var(--border-color);
+  background: color-mix(in srgb, var(--bg-secondary) 96%, transparent);
+  color: var(--text-primary);
+  border-radius: 18px;
+  padding: 0.95rem 1rem;
+  font: inherit;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--text-tertiary);
+}
+
+.input:focus,
+.textarea:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary-500) 14%, transparent);
+  background: var(--bg-secondary);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+.errorBanner {
+  border-radius: 18px;
+  border: 1px solid color-mix(in srgb, var(--danger-500) 30%, var(--border-color));
+  background: color-mix(in srgb, var(--danger-500) 10%, var(--bg-secondary));
+  color: var(--danger-600);
+  padding: 0.95rem 1rem;
+  line-height: 1.6;
+}
+
+.formActions {
+  display: grid;
+  gap: 1rem;
+  border-top: 1px solid var(--border-color);
+  padding-top: 1.35rem;
+}
+
+.disclaimer {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  padding: 1rem 1.1rem;
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--primary-500) 6%, var(--bg-secondary));
+  border: 1px solid color-mix(in srgb, var(--primary-500) 14%, var(--border-color));
+}
+
+.primaryButton,
+.secondaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 52px;
+  border-radius: 18px;
+  border: 0;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.primaryButton {
+  background: linear-gradient(135deg, var(--primary-600), var(--primary-500));
+  color: white;
+  box-shadow: 0 18px 36px color-mix(in srgb, var(--primary-600) 28%, transparent);
+  min-width: 240px;
+}
+
+.secondaryButton {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1.5px solid var(--border-color);
+}
+
+.primaryButton:hover,
+.secondaryButton:hover {
+  transform: translateY(-1px);
+}
+
+.primaryButton:disabled,
+.secondaryButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.spinner {
+  animation: spin 0.9s linear infinite;
+}
+
+.successState {
+  display: grid;
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+
+.successBadge {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--success-500) 14%, var(--bg-secondary));
+  color: var(--success-700);
+  font-weight: 700;
+}
+
+.successState h2 {
+  margin: 0;
+  font-size: 1.7rem;
+}
+
+.successState p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.successCallout {
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  background: color-mix(in srgb, var(--warning-500) 8%, var(--bg-secondary));
+  padding: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 960px) {
+  .heroGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .infoCard {
+    position: static;
+  }
+
+  .highlightGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero {
+    padding: 2rem 1rem 4rem;
+  }
+
+  .formCard,
+  .infoCard {
+    border-radius: 24px;
+    padding: 1.1rem;
+  }
+
+  .fieldGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .formIntro {
+    grid-template-columns: 1fr;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+}

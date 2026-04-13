@@ -6,7 +6,8 @@ import { headers } from 'next/headers'
 
 async function getTenant() {
   const h = await headers()
-  const slug = h.get('x-tenant-slug') || 'demo'
+  const slug = h.get('x-tenant-slug')
+  if (!slug) return null
   return prisma.tenant.findFirst({ where: { slug, isActive: true } })
 }
 

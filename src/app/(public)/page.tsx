@@ -26,8 +26,12 @@ function getNumberValue(record: Record<string, unknown>, key: string): number {
   return typeof value === 'number' ? value : 0
 }
 
+function isDateLikeObject(value: unknown): value is { toISOString: () => string } {
+  return !!value && typeof value === 'object' && typeof (value as { toISOString?: unknown }).toISOString === 'function'
+}
+
 function toIsoDate(value: unknown): string {
-  if (value instanceof Date) {
+  if (isDateLikeObject(value)) {
     return value.toISOString()
   }
 

@@ -18,7 +18,8 @@ const ALUR = [
 
 export default async function PpdbLandingPage() {
   const headerList = await headers()
-  const tenantSlug = headerList.get('x-tenant-slug') || 'demo'
+  const tenantSlug = headerList.get('x-tenant-slug')
+  if (!tenantSlug) return null
   const tenant = await getTenantBySlug(tenantSlug)
 
   if (!tenant) return null

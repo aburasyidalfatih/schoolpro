@@ -6,6 +6,7 @@ import { CheckCircle2, Search, XCircle } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button, DataTable, Modal, SearchInput } from '@/components/ui'
 import type { Column } from '@/components/ui'
+import { getTenantHost } from '@/lib/runtime/app-context'
 import shared from '@/styles/page.module.css'
 import styles from './page.module.css'
 
@@ -108,6 +109,7 @@ export default function SubscriptionOrdersPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [rejectionReason, setRejectionReason] = useState('')
+  const [currentHostname, setCurrentHostname] = useState('schoolpro.id')
 
   const loadOrders = async () => {
     setLoading(true)
@@ -135,6 +137,14 @@ export default function SubscriptionOrdersPage() {
     const timer = setTimeout(loadOrders, 300)
     return () => clearTimeout(timer)
   }, [searchQuery, statusFilter])
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setCurrentHostname(window.location.hostname)
+    }
+  }, [])
+
+  const formatTenantHost = (slug: string) => getTenantHost(slug, currentHostname)
 
   const openReview = (order: SubscriptionOrderRow) => {
     setSelectedOrder(order)
@@ -181,7 +191,7 @@ export default function SubscriptionOrdersPage() {
       accessor: (row) => (
         <div>
           <div className={shared.cellName}>{row.tenant.nama}</div>
-          <div className={shared.cellSub}>{row.tenant.slug}.schoolpro.id</div>
+          <div className={shared.cellSub}>{formatTenantHost(row.tenant.slug)}</div>
         </div>
       ),
     },
