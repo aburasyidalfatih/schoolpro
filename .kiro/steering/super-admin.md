@@ -129,13 +129,26 @@ Progress tambahan phase 2:
 - selesai: dashboard tenant kini menampilkan warning kuota ringan yang mengarahkan tenant ke halaman `Langganan` dan `Data Siswa`
 - selesai: UX billing tenant dirapikan, termasuk label status order, empty state, dan indikator kuota sidebar
 - selesai: inbox `Subscription Orders` super admin kini juga memakai label status, tipe order, metode bayar, dan periode billing yang lebih mudah dibaca
+- selesai: runtime auth platform dev kini tidak lagi memblokir `/api/auth/*` dan `/api/super-admin/*`, sehingga login `SUPER_ADMIN` dan fetch inbox billing bisa lolos pada app lokal
+- selesai sebagian: flow login host platform kini dipatch agar kredensial `SUPER_ADMIN` tidak lagi dipaksa memakai slug tenant palsu pada domain `ops-dev` / `ops`
+- selesai: smoke test dev pada host publik `ops-dev.schoolpro.id` kini lolos untuk CSRF auth, halaman login, dashboard super admin, dan API dashboard dengan session `SUPER_ADMIN`
 - berikutnya: QA end-to-end billing tenant dan super admin, lalu tentukan backlog phase 3 yang paling dekat
+
+Catatan QA dev terbaru:
+- halaman dan API `Subscription Orders` super admin kini merespons `200` di development setelah perbaikan middleware platform
+- patch auth host-aware untuk login `SUPER_ADMIN` sudah tervalidasi di host publik `https://ops-dev.schoolpro.id`; catatan residual kecil yang masih bisa diaudit adalah raw callback auth yang saat dipanggil langsung via curl masih mengembalikan redirect `https://localhost:3001` walau session login tetap valid
+- smoke test tenant `ADMIN` dan `WALI` di `demo-dev.schoolpro.id` kini sudah lolos lagi setelah data tenant aktif disejajarkan dengan host baru, sehingga QA billing tenant tidak lagi terblokir oleh absennya user demo
 
 ### Phase 3
 - billing automation
 - analytics SaaS lanjutan
 - promo engine
 - domain management lanjutan
+- tenant application intake, approval, dan provisioning flow
+
+Progress awal phase 3:
+- selesai sebagian di development: form publik tenant application, API intake publik, model `TenantApplication` sebagai entitas pre-tenant, serta inbox super admin untuk review approve/reject/request revision
+- belum: provisioning tenant, tracking applicant, dan notifikasi operasional
 
 ## Catatan Arsitektur
 - Gunakan model data yang tetap `shared DB + tenantId`
@@ -145,3 +158,4 @@ Progress tambahan phase 2:
 - Pada fase implementasi saat ini, platform auth masih memakai `User.role = SUPER_ADMIN` dari sistem auth yang ada; model platform user terpisah belum dibuat
 - Untuk billing berbasis slot siswa, source of truth subscription diarahkan ke model langganan khusus tenant dan bukan hanya ke `tenant.planId`
 - `tenant.planId` dan `tenant.paket` tetap dipertahankan sementara untuk kompatibilitas modul existing
+- arah onboarding tenant baru yang disarankan: gunakan entitas pre-tenant seperti `TenantApplication`, lalu buat `Tenant` hanya setelah approve/provisioning

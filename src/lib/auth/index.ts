@@ -3,6 +3,7 @@ import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import bcrypt from 'bcryptjs'
 import { prisma } from '@/lib/db/prisma'
+import { resolveAppContext } from '@/lib/runtime/app-context'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true,
@@ -12,12 +13,61 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       credentials: {
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
+        hostname: { label: 'Hostname', type: 'text' },
         tenantSlug: { label: 'Tenant', type: 'text' },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null
 
-        const tenantSlug = (credentials.tenantSlug as string) || 'demo'
+        const hostname = typeof credentials.hostname === 'string' ? credentials.hostname.trim() : ''
+        const appContext = resolveAppContext(hostname)
+        const tenantSlug = typeof credentials.tenantSlug === 'string' ? credentials.tenantSlug.trim() : ''
+
+        if (appContext.appType === 'platform') {
+          const user = await prisma.user.findFirst({
+            where: {
+              email: credentials.email as string,
+              role: 'SUPER_ADMIN',
+              isActive: true,
+              tenant: {
+                isActive: true,
+              },
+            },
+            include: {
+              tenant: {
+                select: {
+                  id: true,
+                  slug: true,
+                  nama: true,
+                },
+              },
+            },
+          })
+          if (!user) return null
+
+          const isValid = await bcrypt.compare(
+            credentials.password as string,
+            user.passwordHash
+          )
+          if (!isValid) return null
+
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { lastLogin: new Date() },
+          })
+
+          return {
+            id: user.id,
+            name: user.nama,
+            email: user.email,
+            role: user.role,
+            tenantId: user.tenantId,
+            tenantSlug: user.tenant.slug,
+            tenantNama: user.tenant.nama,
+          } as any
+        }
+
+        if (!tenantSlug) return null
 
         const tenant = await prisma.tenant.findUnique({
           where: { slug: tenantSlug, isActive: true },

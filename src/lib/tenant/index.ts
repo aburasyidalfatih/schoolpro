@@ -2,6 +2,7 @@ import { cache } from 'react'
 import { headers } from 'next/headers'
 import { Prisma } from '@prisma/client'
 import { prisma } from '@/lib/db/prisma'
+import { resolveAppContext } from '@/lib/runtime/app-context'
 
 export interface TenantContext {
   id: string
@@ -54,10 +55,8 @@ export async function getTenantById(id: string): Promise<TenantContext | null> {
 }
 
 export function parseSubdomain(hostname: string): string | null {
-  const parts = hostname.split('.')
-  if (parts.length <= 1 || hostname.includes('localhost')) return 'demo'
-  if (parts.length >= 3) return parts[0]
-  return null
+  const context = resolveAppContext(hostname)
+  return context.appType === 'tenant' ? context.tenantSlug : null
 }
 
 /**
@@ -66,7 +65,11 @@ export function parseSubdomain(hostname: string): string | null {
  */
 export const getWebsiteTenant = cache(async (): Promise<TenantContext | null> => {
   const h = await headers()
-  const slug = h.get('x-tenant-slug') || 'demo'
+  const appType = h.get('x-app-type')
+  const slug = h.get('x-tenant-slug')
+  if (appType !== 'tenant' || !slug) {
+    return null
+  }
   const tenant = await prisma.tenant.findUnique({
     where: { slug, isActive: true },
     select: tenantSelect,

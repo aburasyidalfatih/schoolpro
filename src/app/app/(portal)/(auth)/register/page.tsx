@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { User, Mail, Lock, UserPlus, CheckCircle2, Loader2, ArrowLeft } from 'lucide-react'
 import { registerUser } from '@/actions/auth-actions'
+import { resolveTenantSlugForAuth } from '@/lib/runtime/app-context'
 import styles from './page.module.css'
 
 export default function RegisterPage() {
@@ -14,15 +15,9 @@ export default function RegisterPage() {
   const [success, setSuccess] = useState(false)
 
   // Extract tenant slug from hostname
-  let tenantSlug = 'demo'
+  let tenantSlug = ''
   if (typeof window !== 'undefined') {
-    const hostname = window.location.hostname
-    if (!hostname.includes('localhost') && !hostname.match(/^\d/)) {
-      const parts = hostname.split('.')
-      if (parts.length >= 3) {
-        tenantSlug = parts[0]
-      }
-    }
+    tenantSlug = resolveTenantSlugForAuth(window.location.hostname)
   }
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -31,6 +26,12 @@ export default function RegisterPage() {
     setError('')
 
     const formData = new FormData(e.currentTarget)
+
+    if (!tenantSlug) {
+      setError('Pendaftaran akun hanya tersedia dari subdomain sekolah.')
+      setLoading(false)
+      return
+    }
     
     try {
       const result = await registerUser(formData, tenantSlug)

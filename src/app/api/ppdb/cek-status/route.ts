@@ -13,7 +13,8 @@ export async function GET(req: Request) {
     if (!no) return NextResponse.json({ error: 'Nomor pendaftaran wajib diisi' }, { status: 400 })
 
     const headerList = await headers()
-    const tenantSlug = headerList.get('x-tenant-slug') || 'demo'
+    const tenantSlug = headerList.get('x-tenant-slug')
+    if (!tenantSlug) return NextResponse.json({ error: 'Tenant tidak ditemukan' }, { status: 404 })
     const tenant = await getTenantBySlug(tenantSlug)
     if (!tenant) return NextResponse.json({ error: 'Tenant tidak ditemukan' }, { status: 404 })
 

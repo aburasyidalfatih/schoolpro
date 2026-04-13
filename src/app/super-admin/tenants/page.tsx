@@ -6,6 +6,7 @@ import { Building2, Pencil, Users } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button, DataTable, Modal, SearchInput } from '@/components/ui'
 import type { Column } from '@/components/ui'
+import { getTenantHost } from '@/lib/runtime/app-context'
 import shared from '@/styles/page.module.css'
 import styles from './page.module.css'
 
@@ -100,6 +101,7 @@ export default function SuperAdminTenantsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
+  const [currentHostname, setCurrentHostname] = useState('schoolpro.id')
   const [editTarget, setEditTarget] = useState<TenantRow | null>(null)
   const [formData, setFormData] = useState({
     nama: '',
@@ -138,6 +140,14 @@ export default function SuperAdminTenantsPage() {
     const timer = setTimeout(fetchTenants, 300)
     return () => clearTimeout(timer)
   }, [searchQuery])
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setCurrentHostname(window.location.hostname)
+    }
+  }, [])
+
+  const formatTenantHost = (slug: string) => getTenantHost(slug, currentHostname)
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -236,7 +246,7 @@ export default function SuperAdminTenantsPage() {
           </div>
           <div>
             <div className={shared.cellName}>{row.nama}</div>
-            <div className={shared.cellSub}>{row.slug}.schoolpro.id</div>
+            <div className={shared.cellSub}>{formatTenantHost(row.slug)}</div>
           </div>
         </div>
       ),
@@ -504,7 +514,7 @@ export default function SuperAdminTenantsPage() {
           <div className={styles.infoPanel}>
             <div>
               <strong>Slug</strong>
-              <span>{editTarget?.slug}.schoolpro.id</span>
+              <span>{editTarget ? formatTenantHost(editTarget.slug) : '-'}</span>
             </div>
             <div>
               <strong>Owner</strong>

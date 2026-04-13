@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Blocks, Building2, ChevronLeft, ChevronRight, ClipboardList, CreditCard, LayoutDashboard, LockKeyhole, ReceiptText, Settings } from 'lucide-react'
+import { Blocks, Building2, ChevronLeft, ChevronRight, ClipboardList, CreditCard, FileSearch, LayoutDashboard, LockKeyhole, ReceiptText, Settings } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import styles from './AdminSidebar.module.css'
 
@@ -17,6 +17,7 @@ type NavItem = {
 const navItems: NavItem[] = [
   { label: 'Dashboard', href: '/super-admin/dashboard', icon: <LayoutDashboard size={20} /> },
   { label: 'Tenants', href: '/super-admin/tenants', icon: <Building2 size={20} /> },
+  { label: 'Tenant Applications', href: '/super-admin/tenant-applications', icon: <FileSearch size={20} /> },
   { label: 'Plans', href: '/super-admin/plans', icon: <CreditCard size={20} /> },
   { label: 'Subscription Orders', href: '/super-admin/subscription-orders', icon: <ReceiptText size={20} /> },
   { label: 'Feature Access', href: '/super-admin/feature-access', icon: <Blocks size={20} /> },

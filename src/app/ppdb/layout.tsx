@@ -11,7 +11,8 @@ export default async function PpdbLayout({
   children: React.ReactNode
 }) {
   const headerList = await headers()
-  const tenantSlug = headerList.get('x-tenant-slug') || 'demo'
+  const tenantSlug = headerList.get('x-tenant-slug')
+  if (!tenantSlug) redirect('/404')
   const tenant = await getTenantBySlug(tenantSlug)
 
   if (!tenant) redirect('/404')
