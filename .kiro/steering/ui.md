@@ -112,3 +112,4 @@ Pakai `recharts` — BarChart, LineChart, PieChart, dll.
 - Card konten publik seperti pengumuman, blog, atau agenda sebaiknya menampilkan preview yang informatif
 - Untuk section homepage yang memakai tombol prev/next, jaga konsistensi posisi, ukuran, dan treatment visual kontrol
 - Hero website publik perlu padding horizontal yang aman agar heading, subtitle, dan kontrol tidak mepet viewport
+- Halaman publik bertipe form panjang seperti `/daftarkan-sekolah` sebaiknya memakai wrapper layout bersama yang rapi: header ringkas, summary/context card, lalu konten utama dua kolom yang jatuh ke satu kolom di mobile

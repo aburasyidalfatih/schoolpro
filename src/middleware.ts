@@ -36,7 +36,9 @@ export default auth((req) => {
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route))
   const isSuperAdminRoute = superAdminRoutes.some(route => pathname.startsWith(route))
   const isTenantPublicRoute = tenantPublicRoutes.some(route => pathname === route || pathname.startsWith(`${route}/`))
-  const isAuthRoute = pathname.startsWith('/app/login')
+  const isLoginRoute = pathname.startsWith('/app/login')
+  const isRegisterRoute = pathname.startsWith('/app/register')
+  const isAuthRoute = isLoginRoute || isRegisterRoute
   const isAuthApiRoute = pathname.startsWith('/api/auth')
   const isPlatformApiRoute = pathname.startsWith('/api/super-admin')
   const user = req.auth?.user as { role?: string } | undefined

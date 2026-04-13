@@ -96,6 +96,7 @@
 - Kandidat fitur besar berikutnya: `Tenant Application + Approval + Provisioning` agar tenant baru tidak langsung aktif sebelum diverifikasi super admin
 - Fondasi phase 1 `Tenant Application` kini mulai dipasang di development: form publik kanonis di `/daftarkan-sekolah` dengan redirect dari URL lama `/landing/daftarkan-sekolah`, intake API publik, model aplikasi calon tenant sudah dipisahkan dari `Tenant`, dan inbox review super admin sudah tersedia di `/super-admin/tenant-applications`
 - Homepage marketing kanonis kini berada di `/`, memakai implementasi baru berbasis asset bundle `lp-schoolpro`; source HTML referensi disimpan di `src/features/marketing/lp-schoolpro/index.html`, lalu dirender lewat route Next.js agar CTA tetap bisa dipetakan ke host demo dan alur tenant signup SchoolPro. URL `/landing` dipertahankan hanya sebagai redirect kompatibilitas
+- Halaman `/daftarkan-sekolah` di development kini sudah dirapikan ulang mengikuti referensi desain formulir marketing terbaru, tetapi tetap memakai backend `TenantApplication` yang ada; top bar halaman tersebut juga sudah disejajarkan lagi dengan navbar landing `lp-schoolpro`
 - Mapping host development kini sudah dipisah mengikuti boundary produk: `dev.schoolpro.id` untuk marketing, `demo-dev.schoolpro.id` untuk tenant demo, `ops-dev.schoolpro.id` untuk super-admin, dan `*-dev.schoolpro.id` untuk tenant dev lain; pola lama `*.dev.schoolpro.id` tidak lagi dipakai karena tidak kompatibel dengan Cloudflare Universal SSL
 - CTA `Lihat Demo` di landing dev dan label domain tenant pada layar super-admin kini sudah mengikuti host aktif, sehingga surface host utama yang disentuh pada sesi ini tidak lagi menunjuk ke domain production saat dibuka dari environment development
 - Auth platform dev kini sudah membiarkan request `SUPER_ADMIN` ke `/api/auth/*` dan `/api/super-admin/*` di runtime aplikasi, sehingga login dan fetch data super-admin bisa lolos pada app lokal port `3001`
@@ -121,6 +122,7 @@
 - QA billing super-admin minimum sudah lolos di dev: halaman `Subscription Orders` dan API inbox order kini merespons `200`, tetapi datanya masih kosong karena belum ada order billing di environment dev
 - Jika hasil login sudah stabil, lanjutkan cleanup kecil host/runtime helper agar boundary marketing, platform, dan tenant lebih mudah dirawat tanpa refactor folder besar
 - Setelah itu baru siapkan checklist push GitHub dan rencana deploy production dengan mapping host production: `schoolpro.id`, `demo.schoolpro.id`, dan `ops.schoolpro.id`
+- Handoff UI marketing terbaru: jika perlu dilanjutkan, fokus berikutnya ada pada fine-tuning visual `/daftarkan-sekolah` setelah penyelarasan navbar landing, bukan lagi perubahan flow backend aplikasi tenant
 
 ## Perintah Penting
 ```bash
