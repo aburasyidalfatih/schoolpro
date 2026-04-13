@@ -152,7 +152,6 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
 
     const { dataFormulir, dataOrangtua, jalurPendaftaran, jurusanPilihan } = body
     const submitMode: SubmissionMode = body?.submitMode === 'final' ? 'final' : 'draft'
-    const hasChanges = [dataFormulir, dataOrangtua, jalurPendaftaran, jurusanPilihan].some((value) => value !== undefined)
     const nextDataFormulir = dataFormulir ?? pendaftar.dataFormulir
     const nextDataOrangtua = dataOrangtua ?? pendaftar.dataOrangtua
 

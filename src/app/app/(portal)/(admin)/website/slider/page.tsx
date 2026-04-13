@@ -58,7 +58,14 @@ export default function SliderPage() {
   }
 
   const columns: Column<Slider>[] = [
-    { header: 'Gambar', accessor: (r) => <img src={r.gambarUrl} alt={r.judul || ''} style={{ height: 48, width: 80, objectFit: 'cover', borderRadius: 6 }} />, width: '100px' },
+    {
+      header: 'Gambar',
+      accessor: (r) => (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={r.gambarUrl} alt={r.judul || ''} style={{ height: 48, width: 80, objectFit: 'cover', borderRadius: 6 }} />
+      ),
+      width: '100px',
+    },
     { header: 'Judul', accessor: (r) => r.judul || '-' },
     { header: 'Urutan', accessor: 'urutan', align: 'center', width: '80px' },
     { header: 'Status', accessor: (r) => <Badge variant={r.isActive ? 'success' : 'gray'}>{r.isActive ? 'Aktif' : 'Nonaktif'}</Badge>, align: 'center', width: '100px' },

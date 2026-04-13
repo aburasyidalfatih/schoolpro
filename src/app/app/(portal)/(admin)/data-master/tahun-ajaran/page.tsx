@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Plus, Pencil, Trash2, Calendar } from 'lucide-react'
 import { toast } from 'sonner'
 import { DataTable, Column } from '@/components/ui/DataTable'
@@ -10,8 +10,16 @@ import { SearchInput } from '@/components/ui/SearchInput'
 import { formatDate } from '@/lib/utils'
 import shared from '@/styles/page.module.css'
 
+type TahunAjaranRow = {
+  id: string
+  nama: string
+  tanggalMulai: string
+  tanggalSelesai: string
+  isActive: boolean
+}
+
 export default function TahunAjaranPage() {
-  const [data, setData] = useState<any[]>([])
+  const [data, setData] = useState<TahunAjaranRow[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -21,7 +29,7 @@ export default function TahunAjaranPage() {
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; nama: string } | null>(null)
   const [formData, setFormData] = useState({ nama: '', tanggalMulai: '', tanggalSelesai: '', isActive: false })
 
-  const fetchTA = async () => {
+  const fetchTA = useCallback(async () => {
     setLoading(true)
     try {
       const url = searchQuery ? `/api/data-master/tahun-ajaran?search=${encodeURIComponent(searchQuery)}` : '/api/data-master/tahun-ajaran'
@@ -29,12 +37,12 @@ export default function TahunAjaranPage() {
       const json = await res.json()
       if (json.data) setData(json.data)
     } catch { toast.error('Gagal memuat data') } finally { setLoading(false) }
-  }
+  }, [searchQuery])
 
   useEffect(() => {
     const t = setTimeout(fetchTA, 300)
     return () => clearTimeout(t)
-  }, [searchQuery])
+  }, [fetchTA])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target
@@ -45,7 +53,7 @@ export default function TahunAjaranPage() {
     setEditId(null); setFormData({ nama: '', tanggalMulai: '', tanggalSelesai: '', isActive: false }); setErrorMsg(''); setIsModalOpen(true)
   }
 
-  const openEditModal = (row: any) => {
+  const openEditModal = (row: TahunAjaranRow) => {
     setEditId(row.id)
     setFormData({ nama: row.nama, tanggalMulai: row.tanggalMulai.split('T')[0], tanggalSelesai: row.tanggalSelesai.split('T')[0], isActive: row.isActive })
     setErrorMsg(''); setIsModalOpen(true)
@@ -77,7 +85,7 @@ export default function TahunAjaranPage() {
     finally { setIsSubmitting(false) }
   }
 
-  const columns: Column<any>[] = [
+  const columns: Column<TahunAjaranRow>[] = [
     {
       header: 'Tahun Ajaran',
       accessor: (row) => (

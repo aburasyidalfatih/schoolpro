@@ -58,7 +58,14 @@ export default function EkskulPage() {
   }
 
   const columns: Column<Ekskul>[] = [
-    { header: 'Gambar', accessor: (r) => r.gambarUrl ? <img src={r.gambarUrl} alt={r.nama} style={{ height: 40, width: 60, objectFit: 'cover', borderRadius: 6 }} /> : '-', width: '80px' },
+    {
+      header: 'Gambar',
+      accessor: (r) => r.gambarUrl ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={r.gambarUrl} alt={r.nama} style={{ height: 40, width: 60, objectFit: 'cover', borderRadius: 6 }} />
+      ) : '-',
+      width: '80px',
+    },
     { header: 'Nama', accessor: 'nama' },
     { header: 'Jadwal', accessor: (r) => r.jadwal || '-' },
     { header: 'Pembina', accessor: (r) => r.pembina || '-' },

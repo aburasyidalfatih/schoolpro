@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Plus, Pencil, Trash2, LayoutGrid, Building2, Calendar } from 'lucide-react'
 import { toast } from 'sonner'
 import { DataTable, Column } from '@/components/ui/DataTable'
@@ -9,12 +9,35 @@ import { Button } from '@/components/ui/Button'
 import { SearchInput } from '@/components/ui/SearchInput'
 import shared from '@/styles/page.module.css'
 
+type UnitOption = {
+  id: string
+  nama: string
+  kode: string
+}
+
+type TahunAjaranOption = {
+  id: string
+  nama: string
+  isActive?: boolean
+}
+
+type KelasRow = {
+  id: string
+  nama: string
+  unitId: string
+  tahunAjaranId: string
+  tingkat: string | null
+  kapasitas: number
+  unit: UnitOption | null
+  tahunAjaran: { nama: string } | null
+}
+
 export default function KelasPage() {
-  const [data, setData] = useState<any[]>([])
+  const [data, setData] = useState<KelasRow[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const [units, setUnits] = useState<any[]>([])
-  const [tahunAjarans, setTahunAjarans] = useState<any[]>([])
+  const [units, setUnits] = useState<UnitOption[]>([])
+  const [tahunAjarans, setTahunAjarans] = useState<TahunAjaranOption[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
@@ -22,7 +45,7 @@ export default function KelasPage() {
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; nama: string } | null>(null)
   const [formData, setFormData] = useState({ nama: '', unitId: '', tahunAjaranId: '', tingkat: '', kapasitas: 32 })
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true)
     try {
       const url = searchQuery ? `/api/data-master/kelas?search=${encodeURIComponent(searchQuery)}` : '/api/data-master/kelas'
@@ -30,19 +53,19 @@ export default function KelasPage() {
       const json = await res.json()
       if (json.data) setData(json.data)
     } catch { toast.error('Gagal memuat data') } finally { setLoading(false) }
-  }
+  }, [searchQuery])
 
-  const fetchDependencies = async () => {
+  const fetchDependencies = useCallback(async () => {
     try {
       const [resUnits, resTA] = await Promise.all([fetch('/api/data-master/unit'), fetch('/api/data-master/tahun-ajaran')])
       const [jsonUnits, jsonTA] = await Promise.all([resUnits.json(), resTA.json()])
       if (jsonUnits.data) setUnits(jsonUnits.data)
       if (jsonTA.data) setTahunAjarans(jsonTA.data)
     } catch { console.error('Error fetching dependencies') }
-  }
+  }, [])
 
-  useEffect(() => { fetchDependencies() }, [])
-  useEffect(() => { const t = setTimeout(fetchData, 300); return () => clearTimeout(t) }, [searchQuery])
+  useEffect(() => { fetchDependencies() }, [fetchDependencies])
+  useEffect(() => { const t = setTimeout(fetchData, 300); return () => clearTimeout(t) }, [fetchData])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -51,11 +74,11 @@ export default function KelasPage() {
 
   const openAddModal = () => {
     setEditId(null)
-    setFormData({ nama: '', unitId: units[0]?.id || '', tahunAjaranId: tahunAjarans.find(ta => ta.isActive)?.id || tahunAjarans[0]?.id || '', tingkat: '', kapasitas: 32 })
+    setFormData({ nama: '', unitId: units[0]?.id || '', tahunAjaranId: tahunAjarans.find((ta) => ta.isActive)?.id || tahunAjarans[0]?.id || '', tingkat: '', kapasitas: 32 })
     setErrorMsg(''); setIsModalOpen(true)
   }
 
-  const openEditModal = (row: any) => {
+  const openEditModal = (row: KelasRow) => {
     setEditId(row.id)
     setFormData({ nama: row.nama, unitId: row.unitId, tahunAjaranId: row.tahunAjaranId, tingkat: row.tingkat || '', kapasitas: row.kapasitas })
     setErrorMsg(''); setIsModalOpen(true)
@@ -87,7 +110,7 @@ export default function KelasPage() {
     finally { setIsSubmitting(false) }
   }
 
-  const columns: Column<any>[] = [
+  const columns: Column<KelasRow>[] = [
     {
       header: 'Info Kelas',
       accessor: (row) => (
@@ -157,14 +180,14 @@ export default function KelasPage() {
               <label className={shared.formLabel}>Unit / Jenjang <span className="required">*</span></label>
               <select required name="unitId" value={formData.unitId} onChange={handleInputChange} className={shared.formInput} disabled={isSubmitting}>
                 <option value="">Pilih Unit</option>
-                {units.map(u => <option key={u.id} value={u.id}>{u.nama} ({u.kode})</option>)}
+                {units.map((u) => <option key={u.id} value={u.id}>{u.nama} ({u.kode})</option>)}
               </select>
             </div>
             <div className={shared.formGroup}>
               <label className={shared.formLabel}>Tahun Ajaran <span className="required">*</span></label>
               <select required name="tahunAjaranId" value={formData.tahunAjaranId} onChange={handleInputChange} className={shared.formInput} disabled={isSubmitting}>
                 <option value="">Pilih Tahun</option>
-                {tahunAjarans.map(ta => <option key={ta.id} value={ta.id}>{ta.nama}{ta.isActive ? ' (Aktif)' : ''}</option>)}
+                {tahunAjarans.map((ta) => <option key={ta.id} value={ta.id}>{ta.nama}{ta.isActive ? ' (Aktif)' : ''}</option>)}
               </select>
             </div>
           </div>

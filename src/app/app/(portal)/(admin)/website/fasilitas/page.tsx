@@ -58,7 +58,14 @@ export default function FasilitasPage() {
   }
 
   const columns: Column<Fasilitas>[] = [
-    { header: 'Gambar', accessor: (r) => r.gambarUrl ? <img src={r.gambarUrl} alt={r.nama} style={{ height: 40, width: 60, objectFit: 'cover', borderRadius: 6 }} /> : '-', width: '80px' },
+    {
+      header: 'Gambar',
+      accessor: (r) => r.gambarUrl ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={r.gambarUrl} alt={r.nama} style={{ height: 40, width: 60, objectFit: 'cover', borderRadius: 6 }} />
+      ) : '-',
+      width: '80px',
+    },
     { header: 'Nama', accessor: 'nama' },
     { header: 'Deskripsi', accessor: (r) => r.deskripsi ? r.deskripsi.slice(0, 60) + '...' : '-' },
     { header: 'Status', accessor: (r) => <Badge variant={r.isPublished ? 'success' : 'gray'}>{r.isPublished ? 'Publik' : 'Draft'}</Badge>, align: 'center', width: '90px' },

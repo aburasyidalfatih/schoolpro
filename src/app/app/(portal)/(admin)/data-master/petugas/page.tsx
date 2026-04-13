@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Plus, User, Mail, Pencil, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { DataTable, Column } from '@/components/ui/DataTable'
@@ -9,8 +9,17 @@ import { Button } from '@/components/ui/Button'
 import { SearchInput } from '@/components/ui/SearchInput'
 import shared from '@/styles/page.module.css'
 
+type PetugasRow = {
+  id: string
+  nama: string
+  email: string
+  username: string
+  role: string
+  isActive: boolean
+}
+
 export default function PetugasPage() {
-  const [data, setData] = useState<any[]>([])
+  const [data, setData] = useState<PetugasRow[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -26,7 +35,7 @@ export default function PetugasPage() {
     nama: '', email: '', username: '', password: '', role: 'ADMIN', isActive: true,
   })
 
-  const fetchPetugas = async () => {
+  const fetchPetugas = useCallback(async () => {
     setLoading(true)
     try {
       const url = searchQuery
@@ -36,12 +45,12 @@ export default function PetugasPage() {
       const json = await res.json()
       if (json.data) setData(json.data)
     } catch { toast.error('Gagal memuat data') } finally { setLoading(false) }
-  }
+  }, [searchQuery])
 
   useEffect(() => {
     const t = setTimeout(fetchPetugas, 300)
     return () => clearTimeout(t)
-  }, [searchQuery])
+  }, [fetchPetugas])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target
@@ -55,7 +64,7 @@ export default function PetugasPage() {
     setIsModalOpen(true)
   }
 
-  const openEditModal = (row: any) => {
+  const openEditModal = (row: PetugasRow) => {
     setEditId(row.id)
     setFormData({ nama: row.nama, email: row.email, username: row.username, password: '', role: row.role, isActive: row.isActive })
     setErrorMsg('')
@@ -96,7 +105,7 @@ export default function PetugasPage() {
     SUPER_ADMIN: 'Super Admin', ADMIN: 'Administrator', KEUANGAN: 'Keuangan', TU: 'Tata Usaha', STAF: 'Staf',
   }
 
-  const columns: Column<any>[] = [
+  const columns: Column<PetugasRow>[] = [
     {
       header: 'Petugas',
       accessor: (row) => (

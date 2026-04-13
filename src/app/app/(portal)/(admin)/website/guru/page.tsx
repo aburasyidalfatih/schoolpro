@@ -11,6 +11,13 @@ type Guru = {
   id: string; nama: string; jabatanLabel: string; bidang: string | null
   foto: string | null; isActive: boolean; urutan: number
 }
+type GuruEditorRow = Guru & {
+  jabatan?: string
+  nip?: string | null
+  pendidikan?: string | null
+  bio?: string | null
+  quote?: string | null
+}
 const empty = { nama: '', jabatan: 'guru', jabatanLabel: '', nip: '', pendidikan: '', bidang: '', bio: '', quote: '', foto: '', urutan: 0, isActive: true }
 
 export default function GuruPage() {
@@ -33,9 +40,9 @@ export default function GuruPage() {
   useEffect(() => { fetchData() }, [])
 
   const openAdd = () => { setEditing(null); setForm(empty); setModal(true) }
-  const openEdit = (row: any) => {
+  const openEdit = (row: GuruEditorRow) => {
     setEditing(row)
-    setForm({ nama: row.nama, jabatan: row.jabatan, jabatanLabel: row.jabatanLabel, nip: row.nip || '', pendidikan: row.pendidikan || '', bidang: row.bidang || '', bio: row.bio || '', quote: row.quote || '', foto: row.foto || '', urutan: row.urutan, isActive: row.isActive })
+    setForm({ nama: row.nama, jabatan: row.jabatan || 'guru', jabatanLabel: row.jabatanLabel, nip: row.nip || '', pendidikan: row.pendidikan || '', bidang: row.bidang || '', bio: row.bio || '', quote: row.quote || '', foto: row.foto || '', urutan: row.urutan, isActive: row.isActive })
     setModal(true)
   }
 
@@ -64,6 +71,7 @@ export default function GuruPage() {
     {
       header: 'Guru / Staff', accessor: (r) => (
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           {r.foto ? <img src={r.foto} alt={r.nama} style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover' }} /> : <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--primary-100)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: 'var(--primary-600)' }}>{r.nama[0]}</div>}
           <div><div className="font-medium">{r.nama}</div><div style={{ fontSize: '12px', color: 'var(--text-tertiary)' }}>{r.bidang}</div></div>
         </div>

@@ -35,6 +35,7 @@ export function ImageUpload({ value, onChange, label = 'Upload Gambar' }: Props)
       <label style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>{label}</label>
       {value ? (
         <div style={{ position: 'relative', display: 'inline-block', maxWidth: 320 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={value} alt="preview" style={{ width: '100%', maxHeight: 180, objectFit: 'cover', borderRadius: 8, border: '1px solid var(--border-color)' }} />
           <button type="button" onClick={() => onChange('')}
             style={{ position: 'absolute', top: 6, right: 6, background: '#ef4444', color: '#fff', border: 'none', borderRadius: 6, padding: '4px 6px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { Pencil } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button, DataTable, Modal, SearchInput } from '@/components/ui'
@@ -39,7 +39,7 @@ export default function SuperAdminFeatureAccessPage() {
   const [errorMsg, setErrorMsg] = useState('')
   const [currentHostname, setCurrentHostname] = useState('schoolpro.id')
 
-  const loadFeatureAccess = async () => {
+  const loadFeatureAccess = useCallback(async () => {
     setLoading(true)
     try {
       const url = searchQuery
@@ -57,12 +57,12 @@ export default function SuperAdminFeatureAccessPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [searchQuery])
 
   useEffect(() => {
     const timer = setTimeout(loadFeatureAccess, 300)
     return () => clearTimeout(timer)
-  }, [searchQuery])
+  }, [loadFeatureAccess])
 
   useEffect(() => {
     if (typeof window !== 'undefined') {

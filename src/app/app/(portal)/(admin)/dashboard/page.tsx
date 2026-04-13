@@ -12,8 +12,14 @@ type StudentQuota = {
   warningLevel: 'NONE' | 'NORMAL' | 'WARNING_80' | 'WARNING_90' | 'FULL'
 } | null
 
+type DashboardStat = {
+  label: string
+  value: string
+  variant: string
+}
+
 type DashboardData = {
-  stats?: Array<{ label: string; value: string; variant: string }>
+  stats?: DashboardStat[]
   recentPayments?: Array<{
     siswa: string
     kelas: string
@@ -131,7 +137,7 @@ export default function DashboardPage() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-4" style={{ marginBottom: 'var(--space-6)' }}>
-        {stats.map((stat: any, i: number) => (
+        {stats.map((stat: DashboardStat, i: number) => (
           <div
             key={stat.label}
             className={`stat-card ${stat.variant} animate-fade-in stagger-${i + 1}`}
@@ -276,7 +282,7 @@ export default function DashboardPage() {
                    </td>
                 </tr>
               ) : (
-                recentPayments.map((p: any, i: number) => (
+                recentPayments.map((p, i: number) => (
                   <tr key={i}>
                     <td style={{ fontWeight: 600 }}>{p.siswa}</td>
                     <td><span className="badge badge-gray">{p.kelas}</span></td>

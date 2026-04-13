@@ -127,6 +127,7 @@ Refactor harus ditunda jika:
 ## Quality Gates
 
 - bugfix lokal: verifikasi paling sempit yang cukup
+- sebelum push atau deploy, repo development harus lolos `npm run lint` dan `npm run build`
 - perubahan route/auth/prisma/integration: `npm run build`
 - perubahan runtime-sensitive: cek `pm2` atau hit route dev seperlunya
 - perubahan dokumentasi arsitektur: sinkronkan steering dan roadmap jika keputusan arah berubah

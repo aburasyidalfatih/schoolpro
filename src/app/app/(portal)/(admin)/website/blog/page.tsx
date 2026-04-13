@@ -8,6 +8,13 @@ import type { Column } from '@/components/ui/DataTable'
 import shared from '@/styles/page.module.css'
 
 type Blog = { id: string; judul: string; penulis: string | null; kategori: string | null; isPublished: boolean; tanggal: string; gambarUrl: string | null }
+type BlogEditorRow = Blog & {
+  konten?: string | null
+  ringkasan?: string | null
+  fotoPenulis?: string | null
+  bioPenulis?: string | null
+  tags?: string | null
+}
 const empty = { judul: '', konten: '', ringkasan: '', penulis: '', fotoPenulis: '', bioPenulis: '', kategori: '', tags: '', gambarUrl: '', isPublished: true, tanggal: new Date().toISOString().slice(0, 10) }
 
 export default function BlogPage() {
@@ -30,7 +37,7 @@ export default function BlogPage() {
   useEffect(() => { fetchData() }, [])
 
   const openAdd = () => { setEditing(null); setForm(empty); setModal(true) }
-  const openEdit = (row: any) => {
+  const openEdit = (row: BlogEditorRow) => {
     setEditing(row)
     setForm({ judul: row.judul, konten: row.konten || '', ringkasan: row.ringkasan || '', penulis: row.penulis || '', fotoPenulis: row.fotoPenulis || '', bioPenulis: row.bioPenulis || '', kategori: row.kategori || '', tags: row.tags || '', gambarUrl: row.gambarUrl || '', isPublished: row.isPublished, tanggal: row.tanggal ? new Date(row.tanggal).toISOString().slice(0, 10) : empty.tanggal })
     setModal(true)

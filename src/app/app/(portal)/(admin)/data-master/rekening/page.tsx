@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Plus, Pencil, Trash2, CreditCard, Globe, Building2, Save, Info } from 'lucide-react'
 import { toast } from 'sonner'
 import { DataTable, Column } from '@/components/ui/DataTable'
@@ -11,8 +11,16 @@ import shared from '@/styles/page.module.css'
 
 type TabType = 'manual' | 'tripay'
 
+type RekeningManualRow = {
+  id: string
+  namaBank: string
+  noRekening: string
+  atasNama: string
+  isActive: boolean
+}
+
 export default function RekeningPage() {
-  const [data, setData] = useState<any[]>([])
+  const [data, setData] = useState<RekeningManualRow[]>([])
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<TabType>('manual')
   const [tripayData, setTripayData] = useState({ merchantCode: '', apiKey: '', privateKey: '', isSandbox: true })
@@ -23,7 +31,7 @@ export default function RekeningPage() {
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; nama: string } | null>(null)
   const [formData, setFormData] = useState({ namaBank: '', noRekening: '', atasNama: '', isActive: true })
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true)
     try {
       const res = await fetch('/api/data-master/rekening')
@@ -31,9 +39,9 @@ export default function RekeningPage() {
       if (json.data) setData(json.data)
       if (json.tripay) setTripayData(json.tripay)
     } catch { toast.error('Gagal memuat data') } finally { setLoading(false) }
-  }
+  }, [])
 
-  useEffect(() => { fetchData() }, [])
+  useEffect(() => { fetchData() }, [fetchData])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target
@@ -49,7 +57,7 @@ export default function RekeningPage() {
     setEditId(null); setFormData({ namaBank: '', noRekening: '', atasNama: '', isActive: true }); setErrorMsg(''); setIsModalOpen(true)
   }
 
-  const openEditModal = (row: any) => {
+  const openEditModal = (row: RekeningManualRow) => {
     setEditId(row.id); setFormData({ namaBank: row.namaBank, noRekening: row.noRekening, atasNama: row.atasNama, isActive: row.isActive }); setErrorMsg(''); setIsModalOpen(true)
   }
 
@@ -92,7 +100,7 @@ export default function RekeningPage() {
     finally { setIsSubmitting(false) }
   }
 
-  const columns: Column<any>[] = [
+  const columns: Column<RekeningManualRow>[] = [
     {
       header: 'Info Rekening',
       accessor: (row) => (

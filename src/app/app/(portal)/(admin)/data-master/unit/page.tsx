@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Plus, Pencil, Trash2, Building2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { DataTable, Column } from '@/components/ui/DataTable'
@@ -9,8 +9,15 @@ import { Button } from '@/components/ui/Button'
 import { SearchInput } from '@/components/ui/SearchInput'
 import shared from '@/styles/page.module.css'
 
+type UnitRow = {
+  id: string
+  nama: string
+  kode: string
+  isActive: boolean
+}
+
 export default function UnitPage() {
-  const [data, setData] = useState<any[]>([])
+  const [data, setData] = useState<UnitRow[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -20,7 +27,7 @@ export default function UnitPage() {
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; nama: string } | null>(null)
   const [formData, setFormData] = useState({ nama: '', kode: '', isActive: true })
 
-  const fetchUnits = async () => {
+  const fetchUnits = useCallback(async () => {
     setLoading(true)
     try {
       const url = searchQuery ? `/api/data-master/unit?search=${encodeURIComponent(searchQuery)}` : '/api/data-master/unit'
@@ -28,12 +35,12 @@ export default function UnitPage() {
       const json = await res.json()
       if (json.data) setData(json.data)
     } catch { toast.error('Gagal memuat data') } finally { setLoading(false) }
-  }
+  }, [searchQuery])
 
   useEffect(() => {
     const t = setTimeout(fetchUnits, 300)
     return () => clearTimeout(t)
-  }, [searchQuery])
+  }, [fetchUnits])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target
@@ -44,7 +51,7 @@ export default function UnitPage() {
     setEditId(null); setFormData({ nama: '', kode: '', isActive: true }); setErrorMsg(''); setIsModalOpen(true)
   }
 
-  const openEditModal = (row: any) => {
+  const openEditModal = (row: UnitRow) => {
     setEditId(row.id); setFormData({ nama: row.nama, kode: row.kode, isActive: row.isActive }); setErrorMsg(''); setIsModalOpen(true)
   }
 
@@ -74,7 +81,7 @@ export default function UnitPage() {
     finally { setIsSubmitting(false) }
   }
 
-  const columns: Column<any>[] = [
+  const columns: Column<UnitRow>[] = [
     {
       header: 'Unit / Jenjang',
       accessor: (row) => (

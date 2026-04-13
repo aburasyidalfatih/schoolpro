@@ -8,6 +8,11 @@ import type { Column } from '@/components/ui/DataTable'
 import shared from '@/styles/page.module.css'
 
 type Editorial = { id: string; judul: string; penulis: string | null; judulPenulis: string | null; isPublished: boolean; tanggal: string; gambarUrl: string | null }
+type EditorialEditorRow = Editorial & {
+  konten?: string | null
+  ringkasan?: string | null
+  fotoPenulis?: string | null
+}
 const empty = { judul: '', konten: '', ringkasan: '', penulis: '', fotoPenulis: '', judulPenulis: '', gambarUrl: '', isPublished: true, tanggal: new Date().toISOString().slice(0, 10) }
 
 export default function EditorialPage() {
@@ -30,7 +35,7 @@ export default function EditorialPage() {
   useEffect(() => { fetchData() }, [])
 
   const openAdd = () => { setEditing(null); setForm(empty); setModal(true) }
-  const openEdit = (row: any) => {
+  const openEdit = (row: EditorialEditorRow) => {
     setEditing(row)
     setForm({ judul: row.judul, konten: row.konten || '', ringkasan: row.ringkasan || '', penulis: row.penulis || '', fotoPenulis: row.fotoPenulis || '', judulPenulis: row.judulPenulis || '', gambarUrl: row.gambarUrl || '', isPublished: row.isPublished, tanggal: row.tanggal ? new Date(row.tanggal).toISOString().slice(0, 10) : empty.tanggal })
     setModal(true)
