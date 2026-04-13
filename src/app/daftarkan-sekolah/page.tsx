@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowLeft, CheckCircle2, ClipboardList, Clock3, MessagesSquare, ShieldCheck, Sparkles } from 'lucide-react'
+import { Clock3, FileText } from 'lucide-react'
 import styles from '../landing/daftarkan-sekolah/page.module.css'
 import { TenantApplicationForm } from '../landing/daftarkan-sekolah/tenant-application-form'
 
@@ -9,113 +9,100 @@ export const metadata = {
     'Ajukan sekolah Anda ke SchoolPro melalui formulir aplikasi tenant. Tim kami akan meninjau data sekolah sebelum tenant diprovision.',
 }
 
-const checklist = [
-  'Isi satu formulir singkat untuk memperkenalkan sekolah dan kebutuhan utama Anda.',
-  'Tim kami akan menghubungi PIC sekolah jika ada hal yang perlu dikonfirmasi atau disesuaikan.',
-  'Setelah disetujui, sekolah Anda akan dibantu masuk ke tahap setup dan onboarding awal.',
-]
-
-const steps = [
-  {
-    title: 'Isi data sekolah',
-    description: 'Lengkapi informasi sekolah, PIC, dan kebutuhan awal agar kami memahami konteks sekolah Anda.',
-  },
-  {
-    title: 'Kami review dan hubungi Anda',
-    description: 'Tim SchoolPro akan meninjau kebutuhan sekolah dan menghubungi PIC bila diperlukan.',
-  },
-  {
-    title: 'Lanjut ke tahap onboarding',
-    description: 'Jika sudah sesuai, kami bantu menyiapkan akses awal dan langkah onboarding berikutnya.',
-  },
-]
-
-const highlights = [
-  {
-    icon: <Clock3 size={18} />,
-    label: 'Form ringkas',
-    description: 'Dirancang supaya mudah diisi oleh kepala sekolah, TU, operator, atau tim administrasi.',
-  },
-  {
-    icon: <MessagesSquare size={18} />,
-    label: 'Pendampingan awal',
-    description: 'Setelah masuk, tim kami akan menyesuaikan pembahasan sesuai kebutuhan sekolah Anda.',
-  },
-  {
-    icon: <ShieldCheck size={18} />,
-    label: 'Proses rapi',
-    description: 'Data sekolah diperiksa terlebih dahulu agar tahap setup berjalan lebih aman dan jelas.',
-  },
-]
-
 export default function TenantApplicationPage() {
   return (
     <main className={styles.page}>
-      <div className={styles.heroGlow} />
-      <section className={styles.hero}>
-        <div className={styles.heroHeader}>
-          <Link href="/" className={styles.backLink}>
-            <ArrowLeft size={16} />
-            Kembali ke Landing
+      <div className={styles.bgGrid} aria-hidden="true" />
+      <div className={`${styles.bgGlow} ${styles.bgGlowOne}`} aria-hidden="true" />
+      <div className={`${styles.bgGlow} ${styles.bgGlowTwo}`} aria-hidden="true" />
+      <div className="mobile-overlay" id="mobile-overlay" />
+
+      <header className="navbar" id="navbar">
+        <div className="container">
+          <Link href="/" className="navbar-brand" aria-label="SchoolPro Home">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+              <defs>
+                <linearGradient id="brand-grad-form" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#6366f1" />
+                  <stop offset="100%" stopColor="#06b6d4" />
+                </linearGradient>
+              </defs>
+              <rect width="32" height="32" rx="8" fill="url(#brand-grad-form)" />
+              <text x="16" y="22" textAnchor="middle" fontFamily="Inter,sans-serif" fontWeight="800" fontSize="18" fill="#fff">
+                S
+              </text>
+            </svg>
+            School<span>Pro</span>
           </Link>
-          <span className={styles.eyebrow}>
-            <Sparkles size={14} />
-            Pendaftaran Sekolah Baru
-          </span>
-          <h1 className={styles.title}>Mulai percakapan awal untuk digitalisasi sekolah Anda</h1>
-          <p className={styles.description}>
-            Halaman ini dibuat untuk sekolah yang ingin mulai menggunakan SchoolPro. Isi formulir berikut agar tim kami
-            bisa memahami profil sekolah, kebutuhan yang paling mendesak, dan menyiapkan langkah awal yang tepat.
-          </p>
-          <div className={styles.highlightGrid}>
-            {highlights.map((item) => (
-              <article key={item.label} className={styles.highlightCard}>
-                <div className={styles.highlightIcon}>{item.icon}</div>
-                <div>
-                  <strong>{item.label}</strong>
-                  <p>{item.description}</p>
-                </div>
-              </article>
-            ))}
+
+          <nav className="navbar-links" id="navbar-links" aria-label="Main Navigation">
+            <a href="/#fitur">Fitur</a>
+            <a href="/#website-sekolah">Website</a>
+            <a href="/#ppdb">PPDB</a>
+            <a href="/#harga">Harga</a>
+            <a href="/#roadmap">Roadmap</a>
+          </nav>
+
+          <div className="navbar-cta">
+            <button className="theme-toggle" id="theme-toggle" aria-label="Toggle Theme">
+              <svg className="icon-sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'none' }}>
+                <circle cx="12" cy="12" r="4" />
+                <path d="M12 2v2" />
+                <path d="M12 20v2" />
+                <path d="m4.93 4.93 1.41 1.41" />
+                <path d="m17.66 17.66 1.41 1.41" />
+                <path d="M2 12h2" />
+                <path d="M20 12h2" />
+                <path d="m6.34 17.66-1.41 1.41" />
+                <path d="m19.07 4.93-1.41 1.41" />
+              </svg>
+              <svg className="icon-moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+              </svg>
+            </button>
+            <Link href="/daftarkan-sekolah" className="btn btn-primary btn-sm">
+              Mulai Gratis
+            </Link>
+            <button className="navbar-toggle" id="navbar-toggle" aria-label="Toggle Menu" aria-expanded="false">
+              <span />
+              <span />
+              <span />
+            </button>
           </div>
         </div>
+      </header>
 
-        <div className={styles.heroGrid}>
-          <div className={styles.infoCard}>
-            <div className={styles.infoHeader}>
-              <ShieldCheck size={20} />
-              <div>
-                <h2>Apa yang akan terjadi setelah Anda mengisi formulir?</h2>
-                <p>SchoolPro akan meninjau kebutuhan sekolah Anda terlebih dahulu agar proses lanjutan lebih terarah.</p>
+      <section className={styles.formMain}>
+        <div className={styles.container}>
+          <section className={styles.formIntro}>
+            <div className={styles.introBadge}>
+              <span className={styles.badgeDot} aria-hidden="true" />
+              Formulir Pendaftaran Sekolah
+            </div>
+            <h1 className={styles.heroTitle}>
+              Daftarkan Sekolah Anda <br />
+              <span className={styles.gradientText}>ke SchoolPro</span>
+            </h1>
+            <p className={styles.introDescription}>
+              Isi informasi berikut dengan data yang paling mudah dihubungi dan dipahami oleh tim sekolah Anda.
+            </p>
+            <div className={styles.introMeta}>
+              <div className={styles.metaItem}>
+                <Clock3 size={18} />
+                <div>
+                  <span className={styles.metaLabel}>Waktu pengisian</span>
+                  <span className={styles.metaValue}>Sekitar 3-5 menit</span>
+                </div>
+              </div>
+              <div className={styles.metaItem}>
+                <FileText size={18} />
+                <div>
+                  <span className={styles.metaLabel}>Siapkan</span>
+                  <span className={styles.metaValue}>Kontak sekolah dan PIC</span>
+                </div>
               </div>
             </div>
-            <ul className={styles.checklist}>
-              {checklist.map((item) => (
-                <li key={item}>
-                  <CheckCircle2 size={16} />
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-
-            <div className={styles.stepsCard}>
-              <div className={styles.stepsTitle}>
-                <ClipboardList size={18} />
-                Langkah selanjutnya
-              </div>
-              <div className={styles.stepsList}>
-                {steps.map((step, index) => (
-                  <div key={step.title} className={styles.stepItem}>
-                    <span className={styles.stepNumber}>{index + 1}</span>
-                    <div>
-                      <strong>{step.title}</strong>
-                      <p>{step.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          </section>
 
           <TenantApplicationForm />
         </div>
