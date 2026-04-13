@@ -173,7 +173,7 @@ pm2 restart schoolpro
 6. jika ada route publik atau CTA baru, cek satu surface publik yang benar-benar mewakili perubahan
 
 ## Runtime Audit Gaps Yang Masih Terbuka
-- konfigurasi Nginx aktif yang terdeteksi belum menampilkan vhost `ops.schoolpro.id` secara eksplisit, walau host publiknya berjalan; sumber route ini perlu didokumentasikan atau distandarkan
+- `ops.schoolpro.id` masih berjalan tanpa server block Nginx eksplisit di `sites-enabled`; saat ini host tersebut efektif hidup melalui `Host` header yang diteruskan ke app dan logic routing host-aware di aplikasi. Ini perlu distandarkan bila ingin kontrak edge lebih jelas
 - akses Git server sekarang sudah memakai `credential.helper=store` dan remote `origin` bersih tanpa token di URL, tetapi token masih tersimpan plaintext di `~/.git-credentials`; mekanisme ini sebaiknya diganti ke SSH atau credential manager yang lebih aman, lalu token lama dirotasi
 
 ## Smoke Test Production Minimum
