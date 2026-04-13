@@ -144,6 +144,9 @@ pm2 restart schoolpro
 ### Development
 - marketing host:
   - `curl -I https://dev.schoolpro.id`
+  - `curl -I https://dev.schoolpro.id/landing`
+  - `curl -I https://dev.schoolpro.id/daftarkan-sekolah`
+  - pastikan `/landing` hanya menjadi redirect kompatibilitas ke `/`
   - pastikan host marketing tidak mengarah ke tenant/platform yang salah
 - platform host:
   - `curl -I https://ops-dev.schoolpro.id/app/login`
@@ -157,6 +160,9 @@ pm2 restart schoolpro
 ### Production
 - marketing host:
   - `curl -I https://schoolpro.id`
+  - `curl -I https://schoolpro.id/landing`
+  - `curl -I https://schoolpro.id/daftarkan-sekolah`
+  - pastikan `/landing` hanya menjadi redirect kompatibilitas ke `/`
   - `curl -I https://schoolpro.id/app/login`
   - pastikan login marketing mengikuti rule aktif: diarahkan ke host platform jika marketing bukan entry login
 - platform host:

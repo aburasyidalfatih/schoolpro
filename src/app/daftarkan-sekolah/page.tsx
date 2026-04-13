@@ -54,7 +54,7 @@ export default function TenantApplicationPage() {
       <div className={styles.heroGlow} />
       <section className={styles.hero}>
         <div className={styles.heroHeader}>
-          <Link href="/landing" className={styles.backLink}>
+          <Link href="/" className={styles.backLink}>
             <ArrowLeft size={16} />
             Kembali ke Landing
           </Link>
