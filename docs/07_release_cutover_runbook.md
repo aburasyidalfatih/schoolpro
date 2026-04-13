@@ -173,9 +173,8 @@ pm2 restart schoolpro
 6. jika ada route publik atau CTA baru, cek satu surface publik yang benar-benar mewakili perubahan
 
 ## Runtime Audit Gaps Yang Masih Terbuka
-- `demo.schoolpro.id` pada konfigurasi Nginx aktif masih belum memuat seluruh proxy header forwarded seperti host `schoolpro.id` dan `dev.schoolpro.id`
 - konfigurasi Nginx aktif yang terdeteksi belum menampilkan vhost `ops.schoolpro.id` secara eksplisit, walau host publiknya berjalan; sumber route ini perlu didokumentasikan atau distandarkan
-- identitas git server masih default `Ubuntu <ubuntu@localhost.localdomain>` dan perlu dirapikan sebelum workflow release dianggap benar-benar matang
+- remote `origin` pada server masih menyimpan token GitHub langsung di URL; ini perlu dipindahkan ke mekanisme yang lebih aman dan token lama sebaiknya dirotasi
 
 ## Smoke Test Production Minimum
 - `SUPER_ADMIN` bisa login dan masuk ke `/super-admin/dashboard`
