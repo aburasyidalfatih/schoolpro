@@ -24,6 +24,10 @@
 
 ## Runtime Contract
 - PM2 authoritative config: `/home/ubuntu/ecosystem.config.js`
+- Git remote contract:
+  - repo dev dan production harus memakai remote SSH `git@github.com:aburasyidalfatih/schoolpro.git`
+  - server Git memakai key `~/.ssh/id_ed25519`
+  - jangan simpan token GitHub di URL remote repo
 - Production app:
   - repo: `/var/www/schoolpro`
   - PM2 name: `schoolpro`
@@ -174,7 +178,6 @@ pm2 restart schoolpro
 
 ## Runtime Audit Gaps Yang Masih Terbuka
 - `ops.schoolpro.id` masih berjalan tanpa server block Nginx eksplisit di `sites-enabled`; saat ini host tersebut efektif hidup melalui `Host` header yang diteruskan ke app dan logic routing host-aware di aplikasi. Ini perlu distandarkan bila ingin kontrak edge lebih jelas
-- akses Git server sekarang sudah memakai `credential.helper=store` dan remote `origin` bersih tanpa token di URL, tetapi token masih tersimpan plaintext di `~/.git-credentials`; mekanisme ini sebaiknya diganti ke SSH atau credential manager yang lebih aman, lalu token lama dirotasi
 
 ## Smoke Test Production Minimum
 - `SUPER_ADMIN` bisa login dan masuk ke `/super-admin/dashboard`
