@@ -20,7 +20,7 @@ async function getLandingMarkup(host: string) {
   let markup = bodyMatch?.[1] || ''
   const demoUrl = `https://${getDemoHost(host)}`
 
-  markup = replaceAll(markup, 'href="#" class="navbar-brand"', 'href="/landing" class="navbar-brand"')
+  markup = replaceAll(markup, 'href="#" class="navbar-brand"', 'href="/" class="navbar-brand"')
   markup = replaceAll(markup, 'href="#harga" class="btn btn-primary btn-sm">Mulai Gratis</a>', 'href="/daftarkan-sekolah" class="btn btn-primary btn-sm">Daftarkan Sekolah</a>')
   markup = replaceAll(markup, 'href="#harga" class="btn btn-primary btn-lg btn-shimmer" id="cta-hero-primary"', 'href="/daftarkan-sekolah" class="btn btn-primary btn-lg btn-shimmer" id="cta-hero-primary"')
   markup = replaceAll(markup, 'href="#fitur" class="btn btn-outline btn-lg" id="cta-hero-demo"', `href="${demoUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-lg" id="cta-hero-demo"`)

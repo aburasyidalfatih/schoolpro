@@ -49,6 +49,10 @@ export default auth((req) => {
       return NextResponse.rewrite(new URL('/landing', req.nextUrl))
     }
 
+    if (pathname === '/landing') {
+      return NextResponse.redirect(new URL('/', req.nextUrl))
+    }
+
     if (isAuthRoute) {
       return NextResponse.redirect(buildExternalUrl(req, getPlatformHost(hostname), '/app/login'))
     }
@@ -58,7 +62,7 @@ export default auth((req) => {
     }
 
     if (isTenantPublicRoute) {
-      return NextResponse.redirect(new URL('/landing', req.nextUrl))
+      return NextResponse.redirect(new URL('/', req.nextUrl))
     }
   }
 
