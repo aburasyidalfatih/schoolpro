@@ -24,7 +24,6 @@ function normalizeAuthCallbackCookie(response: Response, req: NextRequest) {
 
   nextResponse.cookies.delete('__Secure-authjs.callback-url')
   nextResponse.cookies.delete('authjs.callback-url')
-
   nextResponse.cookies.set(isSecure ? '__Secure-authjs.callback-url' : 'authjs.callback-url', origin, {
     path: '/',
     httpOnly: true,
