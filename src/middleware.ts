@@ -49,6 +49,10 @@ export default auth((req) => {
       return NextResponse.rewrite(new URL('/landing', req.nextUrl))
     }
 
+    if (isAuthRoute) {
+      return NextResponse.redirect(buildExternalUrl(req, getPlatformHost(hostname), '/app/login'))
+    }
+
     if (isSuperAdminRoute) {
       return NextResponse.redirect(buildExternalUrl(req, getPlatformHost(hostname), isLoggedIn ? '/super-admin/dashboard' : '/app/login'))
     }
