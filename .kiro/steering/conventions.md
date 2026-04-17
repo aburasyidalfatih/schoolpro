@@ -62,6 +62,7 @@ src/
 ## Pola Fetch Data
 
 - Pertahankan pola yang sudah ada pada modul yang disentuh: client `fetch` ke API route atau server action yang sudah eksis.
+- Untuk dashboard atau halaman read-heavy yang utamanya hanya menampilkan ringkasan awal, prioritaskan render server-side terlebih dahulu; sisakan komponen client hanya untuk interaksi ringan seperti refresh, filter lokal, atau modal.
 - Jangan memaksa migrasi penuh ke pattern baru tanpa alasan kuat.
 - Response API tetap kompatibel dengan pola saat ini:
   - sukses: `{ data: ... }`

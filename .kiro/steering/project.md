@@ -117,7 +117,7 @@
 
 ## Handoff Sesi Berikutnya
 - CTA `Lihat Demo` di landing dev dan label domain tenant pada layar super-admin kini mengikuti host dev/prod aktif; lanjutkan audit sisa link, CTA, atau redirect yang masih hardcoded bila ada surface lain yang belum disentuh
-- Login `SUPER_ADMIN` kini sudah lolos di `https://ops-dev.schoolpro.id` untuk endpoint CSRF, halaman login, dashboard, dan API dashboard super-admin; jika perlu, tindak lanjuti audit kecil pada raw callback auth yang masih mengembalikan redirect `https://localhost:3001` saat dipanggil langsung via curl walau session hasil login tetap valid
+- Login `SUPER_ADMIN` kini sudah lolos di `https://ops-dev.schoolpro.id` untuk endpoint CSRF, halaman login, dashboard, dan API dashboard super-admin; residual redirect raw auth callback ke `https://localhost:3001` saat dipanggil langsung via curl juga sudah dinormalisasi ke host publik aktif
 - Login tenant demo di `demo-dev.schoolpro.id` kini sudah lolos lagi setelah data tenant dev disejajarkan dengan mapping host baru; akun `ADMIN` dan `WALI` dev kembali bisa dipakai untuk smoke test tenant
 - QA billing super-admin minimum sudah lolos di dev: halaman `Subscription Orders` dan API inbox order kini merespons `200`, tetapi datanya masih kosong karena belum ada order billing di environment dev
 - Jika hasil login sudah stabil, lanjutkan cleanup kecil host/runtime helper agar boundary marketing, platform, dan tenant lebih mudah dirawat tanpa refactor folder besar

@@ -36,11 +36,11 @@ export default function TenantApplicationPage() {
           </Link>
 
           <nav className="navbar-links" id="navbar-links" aria-label="Main Navigation">
-            <a href="/#fitur">Fitur</a>
-            <a href="/#website-sekolah">Website</a>
-            <a href="/#ppdb">PPDB</a>
-            <a href="/#harga">Harga</a>
-            <a href="/#roadmap">Roadmap</a>
+            <Link href="/#fitur">Fitur</Link>
+            <Link href="/#website-sekolah">Website</Link>
+            <Link href="/#ppdb">PPDB</Link>
+            <Link href="/#harga">Harga</Link>
+            <Link href="/#roadmap">Roadmap</Link>
           </nav>
 
           <div className="navbar-cta">

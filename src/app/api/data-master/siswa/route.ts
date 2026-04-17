@@ -17,6 +17,10 @@ export async function GET(req: Request) {
     const kelasId = searchParams.get('kelasId')
     const unitId = searchParams.get('unitId')
     const status = searchParams.get('status')
+    const hasPaginationParams = searchParams.has('page') || searchParams.has('pageSize')
+    const pageParam = Number.parseInt(searchParams.get('page') || '1', 10)
+    const pageSizeParam = Number.parseInt(searchParams.get('pageSize') || '20', 10)
+    const pageSize = Number.isFinite(pageSizeParam) ? Math.min(Math.max(pageSizeParam, 1), 100) : 20
 
     const userSession = getSessionUser(session)
     if (!userSession?.tenantId) {
@@ -37,6 +41,10 @@ export async function GET(req: Request) {
     if (unitId) whereClause.unitId = unitId
     if (status) whereClause.status = status
 
+    const total = await prisma.siswa.count({ where: whereClause })
+    const totalPages = Math.max(1, Math.ceil(total / pageSize))
+    const page = Math.min(Math.max(pageParam || 1, 1), totalPages)
+
     const [siswas, quota] = await Promise.all([
       prisma.siswa.findMany({
         where: whereClause,
@@ -49,6 +57,12 @@ export async function GET(req: Request) {
           },
         },
         orderBy: { namaLengkap: 'asc' },
+        ...(hasPaginationParams
+          ? {
+              skip: (page - 1) * pageSize,
+              take: pageSize,
+            }
+          : {}),
       }),
       getTenantStudentQuotaSnapshot(prisma, userSession.tenantId),
     ])
@@ -56,6 +70,16 @@ export async function GET(req: Request) {
     return NextResponse.json({
       data: siswas,
       meta: {
+        ...(hasPaginationParams
+          ? {
+              pagination: {
+                page,
+                pageSize,
+                totalItems: total,
+                totalPages,
+              },
+            }
+          : {}),
         studentQuota: quota.studentCapacity > 0
           ? {
               activeStudents: quota.activeStudents,

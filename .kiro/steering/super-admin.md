@@ -136,7 +136,7 @@ Progress tambahan phase 2:
 
 Catatan QA dev terbaru:
 - halaman dan API `Subscription Orders` super admin kini merespons `200` di development setelah perbaikan middleware platform
-- patch auth host-aware untuk login `SUPER_ADMIN` sudah tervalidasi di host publik `https://ops-dev.schoolpro.id`; catatan residual kecil yang masih bisa diaudit adalah raw callback auth yang saat dipanggil langsung via curl masih mengembalikan redirect `https://localhost:3001` walau session login tetap valid
+- patch auth host-aware untuk login `SUPER_ADMIN` sudah tervalidasi di host publik `https://ops-dev.schoolpro.id`; raw callback auth yang sebelumnya masih mengembalikan redirect `https://localhost:3001` saat dipanggil langsung via curl kini juga sudah dinormalisasi ke host publik aktif
 - smoke test tenant `ADMIN` dan `WALI` di `demo-dev.schoolpro.id` kini sudah lolos lagi setelah data tenant aktif disejajarkan dengan host baru, sehingga QA billing tenant tidak lagi terblokir oleh absennya user demo
 
 ### Phase 3

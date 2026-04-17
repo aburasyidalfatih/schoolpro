@@ -96,6 +96,7 @@ Pakai `recharts` — BarChart, LineChart, PieChart, dll.
 - Prefer `DataTable`, `Modal`, `Badge`, `Button`, dan `@/styles/page.module.css` bila halaman mengikuti pola CRUD/tabel yang sudah ada
 - Pastikan loading, submit, error, success, dan empty state tertangani jika relevan
 - Utamakan layout yang rapih, padat, dan mudah dipindai daripada dekorasi baru
+- Untuk list admin atau super-admin yang berpotensi tumbuh besar seperti tenant, siswa, order, atau audit log, gunakan pagination server-side dan tampilkan komponen `Pagination` shared agar payload awal tetap ramping
 - Untuk area `super-admin`, selaraskan shell visual dengan area `/app` bila memungkinkan, tetapi tetap gunakan navigasi platform yang terpisah dari menu tenant
 - Halaman tenant billing/langganan mengikuti pola admin card + table yang ringkas: summary subscription, grid plan, lalu riwayat order
 - Untuk area tenant yang terpengaruh kuota siswa, tampilkan warning ringkas dan kontekstual di atas fold sebelum user mencoba aksi yang berpotensi ditolak

@@ -1,9 +1,9 @@
-'use client'
-
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
 import { ArrowRight, BadgeDollarSign, Building2, CreditCard, ShieldCheck, Sparkles, TimerReset, UsersRound } from 'lucide-react'
-import { toast } from 'sonner'
+import { auth } from '@/lib/auth'
+import { ensureDefaultPlans, isSuperAdmin } from '@/lib/super-admin'
+import { getSuperAdminDashboardData } from '@/features/super-admin/lib/dashboard'
 import shared from '@/styles/page.module.css'
 import styles from './page.module.css'
 
@@ -13,56 +13,6 @@ const roadmap = [
   'Subscription lifecycle, quota guard, dan billing manual',
   'Audit log platform dan support tooling internal',
 ]
-
-type DashboardResponse = {
-  stats: {
-    totalTenants: number
-    activeTenants: number
-    trialTenants: number
-    suspendedTenants: number
-    expiredTenants: number
-    newLast7Days: number
-    newLast30Days: number
-    plansCount: number
-    featureOverrides: number
-    tenantsWithSubscription: number
-    totalStudentCapacity: number
-    expiringSoon: number
-  }
-  recentAuditLogs: Array<{
-    id: string
-    action: string
-    summary: string
-    createdAt: string
-    actorName: string | null
-  }>
-  expiringSubscriptions: Array<{
-    id: string
-    nama: string
-    slug: string
-    status: string
-    planName: string
-    planCode: string
-    studentCapacity: number
-    endsAt: string | null
-  }>
-  pendingOrders: Array<{
-    id: string
-    status: string
-    amount: number
-    submittedAt: string
-    studentCapacity: number
-    tenant: {
-      id: string
-      nama: string
-      slug: string
-    }
-    targetPlan: {
-      code: string
-      name: string
-    }
-  }>
-}
 
 const quickActions = [
   { label: 'Review Subscription Orders', href: '/super-admin/subscription-orders', desc: 'Verifikasi pembayaran tenant yang masuk.' },
@@ -74,9 +24,9 @@ function formatCurrency(value: number) {
   return `Rp${new Intl.NumberFormat('id-ID').format(value)}`
 }
 
-function formatDate(value: string | null) {
+function formatDate(value: Date | null) {
   if (!value) return '-'
-  return new Date(value).toLocaleDateString('id-ID')
+  return value.toLocaleDateString('id-ID')
 }
 
 function getStatusLabel(status: string) {
@@ -94,50 +44,45 @@ function getStatusClass(status: string) {
   return shared.statusActive
 }
 
-export default function SuperAdminDashboardPage() {
-  const [data, setData] = useState<DashboardResponse | null>(null)
-
-  useEffect(() => {
-    const loadDashboard = async () => {
-      try {
-        const res = await fetch('/api/super-admin/dashboard')
-        const json = await res.json()
-        if (!res.ok) {
-          toast.error(json.error || 'Gagal memuat dashboard super admin')
-          return
-        }
-        setData(json.data)
-      } catch {
-        toast.error('Gagal memuat dashboard super admin')
-      }
+export default async function SuperAdminDashboardPage() {
+  const session = await auth()
+  const role = typeof session?.user === 'object' && session?.user && 'role' in session.user ? session.user.role : undefined
+  if (!isSuperAdmin(session)) {
+    if (role === 'WALI' || role === 'SISWA' || role === 'USER') {
+      redirect('/app/beranda')
     }
+    if (role) {
+      redirect('/app/dashboard')
+    }
+    redirect('/app/login')
+  }
 
-    loadDashboard()
-  }, [])
+  await ensureDefaultPlans()
+  const data = await getSuperAdminDashboardData()
 
   const stats = [
     {
       label: 'Total Tenant',
-      value: data?.stats.totalTenants ?? 0,
-      desc: `${data?.stats.newLast30Days ?? 0} tenant baru dalam 30 hari terakhir.`,
+      value: data.stats.totalTenants,
+      desc: `${data.stats.newLast30Days} tenant baru dalam 30 hari terakhir.`,
       icon: Building2,
     },
     {
       label: 'Tenant Berlangganan',
-      value: data?.stats.tenantsWithSubscription ?? 0,
-      desc: `${data?.stats.activeTenants ?? 0} tenant aktif dan ${data?.stats.trialTenants ?? 0} tenant trial.`,
+      value: data.stats.tenantsWithSubscription,
+      desc: `${data.stats.activeTenants} tenant aktif dan ${data.stats.trialTenants} tenant trial.`,
       icon: CreditCard,
     },
     {
       label: 'Kapasitas Siswa',
-      value: new Intl.NumberFormat('id-ID').format(data?.stats.totalStudentCapacity ?? 0),
+      value: new Intl.NumberFormat('id-ID').format(data.stats.totalStudentCapacity),
       desc: 'Total slot siswa aktif dari seluruh subscription tenant yang sudah tersinkron.',
       icon: UsersRound,
     },
     {
       label: 'Tenant Perlu Atensi',
-      value: (data?.stats.suspendedTenants ?? 0) + (data?.stats.expiredTenants ?? 0),
-      desc: `${data?.stats.suspendedTenants ?? 0} suspend dan ${data?.stats.expiredTenants ?? 0} expired.`,
+      value: data.stats.suspendedTenants + data.stats.expiredTenants,
+      desc: `${data.stats.suspendedTenants} suspend dan ${data.stats.expiredTenants} expired.`,
       icon: TimerReset,
     },
   ]
@@ -168,15 +113,15 @@ export default function SuperAdminDashboardPage() {
         <div className={styles.heroMetrics}>
           <div className={styles.heroMetric}>
             <span>Jatuh tempo 14 hari</span>
-            <strong>{data?.stats.expiringSoon ?? 0}</strong>
+            <strong>{data.stats.expiringSoon}</strong>
           </div>
           <div className={styles.heroMetric}>
             <span>Plan aktif</span>
-            <strong>{data?.stats.plansCount ?? 0}</strong>
+            <strong>{data.stats.plansCount}</strong>
           </div>
           <div className={styles.heroMetric}>
             <span>Feature override</span>
-            <strong>{data?.stats.featureOverrides ?? 0}</strong>
+            <strong>{data.stats.featureOverrides}</strong>
           </div>
         </div>
       </section>
@@ -227,7 +172,7 @@ export default function SuperAdminDashboardPage() {
           <div className={styles.decisionList}>
             <div>
               <strong className={styles.decisionTitle}>Plan publik berbasis slot siswa</strong>
-              <span>{data?.stats.plansCount ?? 0} plan aktif tersedia untuk kontrol super admin.</span>
+              <span>{data.stats.plansCount} plan aktif tersedia untuk kontrol super admin.</span>
             </div>
             <div>
               <strong className={styles.decisionTitle}>Billing tenant self-service</strong>
@@ -235,7 +180,7 @@ export default function SuperAdminDashboardPage() {
             </div>
             <div>
               <strong className={styles.decisionTitle}>Quota siswa aktif</strong>
-              <span>Total kapasitas seluruh tenant saat ini {new Intl.NumberFormat('id-ID').format(data?.stats.totalStudentCapacity ?? 0)} slot siswa.</span>
+              <span>Total kapasitas seluruh tenant saat ini {new Intl.NumberFormat('id-ID').format(data.stats.totalStudentCapacity)} slot siswa.</span>
             </div>
           </div>
         </article>
@@ -261,13 +206,13 @@ export default function SuperAdminDashboardPage() {
         <article className={styles.panelCard}>
           <h3 className={styles.panelTitle}>Aktivitas Terkini</h3>
           <div className={styles.activityList}>
-            {(data?.recentAuditLogs || []).length === 0 ? (
+            {data.recentAuditLogs.length === 0 ? (
               <div className={styles.emptyActivity}>Belum ada audit log platform.</div>
             ) : (
-              data?.recentAuditLogs.map((item) => (
+              data.recentAuditLogs.map((item) => (
                 <div key={item.id} className={styles.activityItem}>
                   <strong>{item.summary}</strong>
-                  <span>{item.actorName || 'System'} · {new Date(item.createdAt).toLocaleString('id-ID')}</span>
+                  <span>{item.actorName || 'System'} · {item.createdAt.toLocaleString('id-ID')}</span>
                 </div>
               ))
             )}
@@ -277,10 +222,10 @@ export default function SuperAdminDashboardPage() {
         <article className={styles.panelCard}>
           <h3 className={styles.panelTitle}>Subscription Perlu Atensi</h3>
           <div className={styles.activityList}>
-            {(data?.expiringSubscriptions || []).length === 0 ? (
+            {data.expiringSubscriptions.length === 0 ? (
               <div className={styles.emptyActivity}>Belum ada subscription yang jatuh tempo dalam 14 hari ke depan.</div>
             ) : (
-              data?.expiringSubscriptions.map((item) => (
+              data.expiringSubscriptions.map((item) => (
                 <Link
                   key={item.id}
                   href={`/super-admin/tenants?search=${encodeURIComponent(item.slug)}`}
@@ -302,10 +247,10 @@ export default function SuperAdminDashboardPage() {
         <article className={styles.panelCard}>
           <h3 className={styles.panelTitle}>Order Billing Menunggu Verifikasi</h3>
           <div className={styles.activityList}>
-            {(data?.pendingOrders || []).length === 0 ? (
+            {data.pendingOrders.length === 0 ? (
               <div className={styles.emptyActivity}>Belum ada order billing yang menunggu verifikasi.</div>
             ) : (
-              data?.pendingOrders.map((item) => (
+              data.pendingOrders.map((item) => (
                 <Link
                   key={item.id}
                   href={`/super-admin/subscription-orders?status=${encodeURIComponent(item.status)}&search=${encodeURIComponent(item.tenant.slug)}`}
@@ -332,7 +277,7 @@ export default function SuperAdminDashboardPage() {
                 <BadgeDollarSign size={16} />
               </div>
               <div>
-                <strong>{data?.stats.expiringSoon ?? 0} subscription mendekati jatuh tempo</strong>
+                <strong>{data.stats.expiringSoon} subscription mendekati jatuh tempo</strong>
                 <span>Siapkan follow-up renewal atau verifikasi upgrade bila tenant perlu tambah slot siswa.</span>
               </div>
             </div>
@@ -341,7 +286,7 @@ export default function SuperAdminDashboardPage() {
                 <ShieldCheck size={16} />
               </div>
               <div>
-                <strong>{data?.stats.featureOverrides ?? 0} feature override aktif</strong>
+                <strong>{data.stats.featureOverrides} feature override aktif</strong>
                 <span>Pertahankan override hanya untuk kebutuhan support, beta feature, atau pengecualian bisnis.</span>
               </div>
             </div>
@@ -350,7 +295,7 @@ export default function SuperAdminDashboardPage() {
                 <CreditCard size={16} />
               </div>
               <div>
-                <strong>{data?.stats.tenantsWithSubscription ?? 0} tenant sudah tersinkron ke subscription</strong>
+                <strong>{data.stats.tenantsWithSubscription} tenant sudah tersinkron ke subscription</strong>
                 <span>Sinkronisasi ini menjadi dasar quota enforcement, billing inbox, dan monitoring subscription lintas sekolah.</span>
               </div>
             </div>
