@@ -132,12 +132,15 @@ Progress tambahan phase 2:
 - selesai: runtime auth platform dev kini tidak lagi memblokir `/api/auth/*` dan `/api/super-admin/*`, sehingga login `SUPER_ADMIN` dan fetch inbox billing bisa lolos pada app lokal
 - selesai sebagian: flow login host platform kini dipatch agar kredensial `SUPER_ADMIN` tidak lagi dipaksa memakai slug tenant palsu pada domain `ops-dev` / `ops`
 - selesai: smoke test dev pada host publik `ops-dev.schoolpro.id` kini lolos untuk CSRF auth, halaman login, dashboard super admin, dan API dashboard dengan session `SUPER_ADMIN`
+- selesai: halaman `Dashboard`, `Subscription Orders`, dan `Tenants` super admin kini mengambil data awal di server, dengan komponen client yang lebih fokus pada filter, pagination, modal review, dan edit cepat
+- selesai: helper query super admin kini diextract ke feature layer agar page server dan API route memakai source of truth data yang sama
 - berikutnya: QA end-to-end billing tenant dan super admin, lalu tentukan backlog phase 3 yang paling dekat
 
 Catatan QA dev terbaru:
 - halaman dan API `Subscription Orders` super admin kini merespons `200` di development setelah perbaikan middleware platform
 - patch auth host-aware untuk login `SUPER_ADMIN` sudah tervalidasi di host publik `https://ops-dev.schoolpro.id`; raw callback auth yang sebelumnya masih mengembalikan redirect `https://localhost:3001` saat dipanggil langsung via curl kini juga sudah dinormalisasi ke host publik aktif
 - smoke test tenant `ADMIN` dan `WALI` di `demo-dev.schoolpro.id` kini sudah lolos lagi setelah data tenant aktif disejajarkan dengan host baru, sehingga QA billing tenant tidak lagi terblokir oleh absennya user demo
+- promote ke production untuk batch refactor server-first dan auth redirect sudah dilakukan pada `2026-04-17`; smoke check minimum untuk `schoolpro.id`, `demo.schoolpro.id/app/login`, dan `ops.schoolpro.id/app/login` merespons `200`
 
 ### Phase 3
 - billing automation

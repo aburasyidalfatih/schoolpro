@@ -109,6 +109,11 @@
 - Boundary website publik kini memakai naming `public`: route group `src/app/(public)` dan komponen `src/components/public/*`
 - Feature layer mulai diperkenalkan secara bertahap dari domain `website`, dengan helper domain-specific pindah ke `src/features/website/lib`
 - Extraction feature layer kini juga mulai menyentuh `ppdb` secara terbatas, dimulai dari server actions ke `src/features/ppdb/actions`
+- Batch refactor server-first untuk admin dan super admin kini juga sudah masuk di development: dashboard tenant, dashboard super admin, inbox `Subscription Orders`, halaman tenant `Langganan`, daftar tenant super admin, dan detail PPDB tertentu kini mengambil data awal di server, lalu menyerahkan interaksi lanjutan ke komponen client yang lebih sempit
+- Extraction feature layer kini diperluas ke domain `billing`, `keuangan`, `super-admin`, dan `data-master`, termasuk helper query bersama serta komponen modal/client khusus domain agar page dan API route lebih tipis
+- Route auth `src/app/api/auth/[...nextauth]` kini juga menormalkan callback cookie dan `location` redirect ke host publik aktif, sehingga callback auth tidak lagi memantul ke host `localhost` saat runtime multi-host dipakai
+- API `siswa` tenant kini mendukung pagination server-side untuk halaman list besar, tetapi tetap menjaga kompatibilitas consumer lama yang masih memanggil endpoint tanpa parameter pagination
+- Batch ini sudah lolos `npm run lint` dan `npm run build` di development, lalu sudah dipromosikan ke production pada `2026-04-17` melalui merge `origin/develop` ke `main`, build production, restart PM2, dan smoke check `schoolpro.id`, `demo.schoolpro.id/app/login`, serta `ops.schoolpro.id/app/login`
 - Blueprint arsitektur folder: lihat `.kiro/steering/architecture.md`
 - Guardrail engineering harian: lihat `.kiro/steering/engineering.md`
 - Konvensi implementasi aktif: lihat `.kiro/steering/conventions.md`
@@ -120,8 +125,8 @@
 - Login `SUPER_ADMIN` kini sudah lolos di `https://ops-dev.schoolpro.id` untuk endpoint CSRF, halaman login, dashboard, dan API dashboard super-admin; residual redirect raw auth callback ke `https://localhost:3001` saat dipanggil langsung via curl juga sudah dinormalisasi ke host publik aktif
 - Login tenant demo di `demo-dev.schoolpro.id` kini sudah lolos lagi setelah data tenant dev disejajarkan dengan mapping host baru; akun `ADMIN` dan `WALI` dev kembali bisa dipakai untuk smoke test tenant
 - QA billing super-admin minimum sudah lolos di dev: halaman `Subscription Orders` dan API inbox order kini merespons `200`, tetapi datanya masih kosong karena belum ada order billing di environment dev
-- Jika hasil login sudah stabil, lanjutkan cleanup kecil host/runtime helper agar boundary marketing, platform, dan tenant lebih mudah dirawat tanpa refactor folder besar
-- Setelah itu baru siapkan checklist push GitHub dan rencana deploy production dengan mapping host production: `schoolpro.id`, `demo.schoolpro.id`, dan `ops.schoolpro.id`
+- Batch refactor server-first admin/super-admin dan normalisasi auth redirect sudah masuk ke production pada `2026-04-17`; jika perlu tindak lanjut, fokuskan ke QA perilaku nyata di host production, bukan lagi checklist deploy dasar
+- Pantau residual log `Failed to find Server Action` setelah deploy production; jika masih berulang setelah client lama tersapu cache/refresh, audit action caller yang masih memegang action ID build lama
 - Handoff UI marketing terbaru: jika perlu dilanjutkan, fokus berikutnya ada pada fine-tuning visual `/daftarkan-sekolah` setelah penyelarasan navbar landing, bukan lagi perubahan flow backend aplikasi tenant
 
 ## Perintah Penting
