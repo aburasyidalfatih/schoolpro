@@ -15,7 +15,35 @@ function getExternalOrigin(req: NextRequest) {
   return `${normalizedProto}://${normalizedHost}`
 }
 
-function normalizeAuthCallbackCookie(response: Response, req: NextRequest) {
+function isLocalHostname(hostname: string) {
+  return hostname === 'localhost' || hostname === '127.0.0.1'
+}
+
+function normalizeRedirectLocation(response: NextResponse, req: NextRequest) {
+  const origin = getExternalOrigin(req)
+  const location = response.headers.get('location')
+  if (!origin || !location) return
+
+  try {
+    const targetUrl = new URL(location, origin)
+
+    const externalUrl = new URL(origin)
+    const shouldNormalizeOrigin =
+      isLocalHostname(targetUrl.hostname) ||
+      targetUrl.origin !== externalUrl.origin
+
+    if (!shouldNormalizeOrigin) return
+
+    targetUrl.protocol = externalUrl.protocol
+    targetUrl.hostname = externalUrl.hostname
+    targetUrl.port = externalUrl.port
+    response.headers.set('location', targetUrl.toString())
+  } catch {
+    // Ignore malformed redirect targets and preserve the original response.
+  }
+}
+
+function normalizeAuthResponse(response: Response, req: NextRequest) {
   const origin = getExternalOrigin(req)
   if (!origin) return response
 
@@ -31,15 +59,17 @@ function normalizeAuthCallbackCookie(response: Response, req: NextRequest) {
     secure: isSecure,
   })
 
+  normalizeRedirectLocation(nextResponse, req)
+
   return nextResponse
 }
 
 export async function GET(req: NextRequest) {
   const response = await handlers.GET(req)
-  return normalizeAuthCallbackCookie(response, req)
+  return normalizeAuthResponse(response, req)
 }
 
 export async function POST(req: NextRequest) {
   const response = await handlers.POST(req)
-  return normalizeAuthCallbackCookie(response, req)
+  return normalizeAuthResponse(response, req)
 }

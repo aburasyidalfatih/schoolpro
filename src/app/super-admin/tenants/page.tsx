@@ -2,69 +2,30 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { Building2, Pencil, Users } from 'lucide-react'
+import { Building2, Pencil } from 'lucide-react'
 import { toast } from 'sonner'
-import { Button, DataTable, Modal, SearchInput } from '@/components/ui'
+import { DataTable, Pagination, SearchInput } from '@/components/ui'
 import type { Column } from '@/components/ui'
+import { TenantEditModal } from '@/features/super-admin/components/TenantEditModal'
+import type { PlanOption, TenantFormData, TenantPaginationState, TenantRow, TenantSummary } from '@/features/super-admin/types/tenants'
 import { getTenantHost } from '@/lib/runtime/app-context'
 import shared from '@/styles/page.module.css'
 import styles from './page.module.css'
 
-type TenantRow = {
-  id: string
-  nama: string
-  slug: string
-  email: string | null
-  telepon: string | null
-  paket: string
-  planId: string | null
-  planName: string
-  isActive: boolean
-  tenantStatus: 'ACTIVE' | 'TRIAL' | 'SUSPENDED' | 'ARCHIVED'
-  berlanggananSampai: string | null
-  trialEndsAt: string | null
-  status: 'ACTIVE' | 'TRIAL' | 'FREE' | 'SUSPENDED' | 'EXPIRED' | 'ARCHIVED'
-  subscriptionStatus: string | null
-  studentCapacity: number
-  subscriptionStartsAt: string | null
-  subscriptionEndsAt: string | null
-  owner: {
-    id: string
-    nama: string
-    email: string
-    username: string
-  } | null
-  stats: {
-    users: number
-    siswas: number
-    tagihans: number
-  }
-  overridesCount: number
-}
-
-type Summary = {
-  total: number
-  active: number
-  free: number
-  trial: number
-  suspended: number
-  expiringSoon: number
-}
-
-type PlanOption = {
-  id: string
-  code: string
-  name: string
-  studentCapacity: number
-}
-
-const initialSummary: Summary = {
+const initialSummary: TenantSummary = {
   total: 0,
   active: 0,
   free: 0,
   trial: 0,
   suspended: 0,
   expiringSoon: 0,
+}
+
+const initialPagination: TenantPaginationState = {
+  page: 1,
+  pageSize: 10,
+  totalItems: 0,
+  totalPages: 1,
 }
 
 function formatDateInput(value: string | null) {
@@ -95,15 +56,17 @@ export default function SuperAdminTenantsPage() {
   const searchParams = useSearchParams()
   const [data, setData] = useState<TenantRow[]>([])
   const [plans, setPlans] = useState<PlanOption[]>([])
-  const [summary, setSummary] = useState<Summary>(initialSummary)
+  const [summary, setSummary] = useState<TenantSummary>(initialSummary)
+  const [pagination, setPagination] = useState<TenantPaginationState>(initialPagination)
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '')
+  const [page, setPage] = useState(Number.parseInt(searchParams.get('page') || '1', 10) || 1)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errorMsg, setErrorMsg] = useState('')
   const [currentHostname, setCurrentHostname] = useState('schoolpro.id')
   const [editTarget, setEditTarget] = useState<TenantRow | null>(null)
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<TenantFormData>({
     nama: '',
     email: '',
     telepon: '',
@@ -119,8 +82,8 @@ export default function SuperAdminTenantsPage() {
     setLoading(true)
     try {
       const url = searchQuery
-        ? `/api/super-admin/tenants?search=${encodeURIComponent(searchQuery)}`
-        : '/api/super-admin/tenants'
+        ? `/api/super-admin/tenants?search=${encodeURIComponent(searchQuery)}&page=${page}&pageSize=${pagination.pageSize}`
+        : `/api/super-admin/tenants?page=${page}&pageSize=${pagination.pageSize}`
       const res = await fetch(url)
       const json = await res.json()
       if (!res.ok) {
@@ -129,12 +92,16 @@ export default function SuperAdminTenantsPage() {
       }
       setData(json.data || [])
       setSummary(json.summary || initialSummary)
+      setPagination(json.pagination || initialPagination)
+      if (json.pagination?.page && json.pagination.page !== page) {
+        setPage(json.pagination.page)
+      }
     } catch {
       toast.error('Gagal memuat tenant')
     } finally {
       setLoading(false)
     }
-  }, [searchQuery])
+  }, [page, pagination.pageSize, searchQuery])
 
   useEffect(() => {
     const timer = setTimeout(fetchTenants, 300)
@@ -358,7 +325,10 @@ export default function SuperAdminTenantsPage() {
         <SearchInput
           placeholder="Cari nama tenant, slug, atau email..."
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={(e) => {
+            setSearchQuery(e.target.value)
+            setPage(1)
+          }}
         />
       </div>
 
@@ -369,188 +339,26 @@ export default function SuperAdminTenantsPage() {
         emptyMessage="Belum ada tenant yang dapat ditampilkan"
       />
 
-      <Modal
+      <Pagination
+        page={pagination.page}
+        totalPages={pagination.totalPages}
+        totalItems={pagination.totalItems}
+        pageSize={pagination.pageSize}
+        onPageChange={setPage}
+      />
+
+      <TenantEditModal
+        editTarget={editTarget}
+        formData={formData}
+        plans={plans}
         isOpen={isModalOpen}
-        onClose={() => !isSubmitting && setIsModalOpen(false)}
-        title="Kelola Tenant"
-        maxWidth="680px"
-      >
-        <form className={shared.form} onSubmit={handleSubmit}>
-          {errorMsg && <div className={shared.errorAlert}>{errorMsg}</div>}
-
-          <div className={shared.formRow}>
-            <div className={shared.formGroup}>
-              <label className={shared.formLabel}>Nama Tenant</label>
-              <input
-                name="nama"
-                value={formData.nama}
-                onChange={handleInputChange}
-                className={shared.formInput}
-                disabled={isSubmitting}
-                required
-              />
-            </div>
-            <div className={shared.formGroup}>
-              <label className={shared.formLabel}>Plan</label>
-              <select
-                name="planId"
-                value={formData.planId}
-                onChange={handleInputChange}
-                className={shared.formInput}
-                disabled={isSubmitting}
-              >
-                <option value="">Pilih plan</option>
-                {plans.map((plan) => (
-                  <option key={plan.id} value={plan.id}>
-                    {plan.name} ({plan.code}){plan.studentCapacity > 0 ? ` · ${plan.studentCapacity} siswa` : ' · Free'}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div className={shared.formRow}>
-            <div className={shared.formGroup}>
-              <label className={shared.formLabel}>Email Tenant</label>
-              <input
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                className={shared.formInput}
-                disabled={isSubmitting}
-                placeholder="email@sekolah.sch.id"
-              />
-            </div>
-            <div className={shared.formGroup}>
-              <label className={shared.formLabel}>Telepon</label>
-              <input
-                name="telepon"
-                value={formData.telepon}
-                onChange={handleInputChange}
-                className={shared.formInput}
-                disabled={isSubmitting}
-                placeholder="08xxxxxxxxxx"
-              />
-            </div>
-          </div>
-
-          <div className={shared.formRow}>
-            <div className={shared.formGroup}>
-              <label className={shared.formLabel}>Berlangganan Sampai</label>
-              <input
-                name="berlanggananSampai"
-                type="date"
-                value={formData.berlanggananSampai}
-                onChange={handleInputChange}
-                className={shared.formInput}
-                disabled={isSubmitting}
-              />
-            </div>
-            <div className={shared.formGroup}>
-              <label className={shared.formLabel}>Trial Sampai</label>
-              <input
-                name="trialEndsAt"
-                type="date"
-                value={formData.trialEndsAt}
-                onChange={handleInputChange}
-                className={shared.formInput}
-                disabled={isSubmitting}
-              />
-            </div>
-          </div>
-
-          <div className={shared.formRow}>
-            <div className={shared.formGroup}>
-              <label className={shared.formLabel}>Tenant Status</label>
-              <select
-                name="tenantStatus"
-                value={formData.tenantStatus}
-                onChange={handleInputChange}
-                className={shared.formInput}
-                disabled={isSubmitting}
-              >
-                <option value="TRIAL">TRIAL</option>
-                <option value="ACTIVE">ACTIVE</option>
-                <option value="SUSPENDED">SUSPENDED</option>
-                <option value="ARCHIVED">ARCHIVED</option>
-              </select>
-            </div>
-            <div className={shared.formGroup}>
-              <label className={shared.formLabel}>Fallback Package</label>
-              <select
-                name="paket"
-                value={formData.paket}
-                onChange={handleInputChange}
-                className={shared.formInput}
-                disabled={isSubmitting}
-              >
-                {plans.map((option) => (
-                  <option key={option.code} value={option.code}>
-                    {option.name} ({option.code})
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div className={shared.formRow}>
-            <div className={styles.toggleWrap}>
-              <label className="toggle-switch">
-                <input
-                  type="checkbox"
-                  name="isActive"
-                  checked={formData.isActive}
-                  onChange={handleInputChange}
-                  className="toggle-input"
-                  disabled={isSubmitting}
-                />
-                <div className="toggle-slider" />
-                <span className="toggle-label">Tenant Aktif</span>
-              </label>
-            </div>
-          </div>
-
-          <div className={styles.infoPanel}>
-            <div>
-              <strong>Slug</strong>
-              <span>{editTarget ? formatTenantHost(editTarget.slug) : '-'}</span>
-            </div>
-            <div>
-              <strong>Owner</strong>
-              <span>{editTarget?.owner?.nama || 'Belum ada owner tenant'}</span>
-            </div>
-            <div>
-              <strong>Subscription</strong>
-              <span>
-                {editTarget?.subscriptionStatus || 'Belum tersinkronisasi'}
-                {editTarget?.studentCapacity ? ` · ${editTarget.studentCapacity} siswa` : ' · tanpa kuota'}
-              </span>
-            </div>
-            <div>
-              <strong>Statistik</strong>
-              <span>
-                <Users size={14} />
-                {editTarget?.stats.users || 0} user aktif terdaftar
-              </span>
-            </div>
-          </div>
-
-          <div className={shared.modalFooter}>
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => setIsModalOpen(false)}
-              disabled={isSubmitting}
-            >
-              Batal
-            </Button>
-            <Button type="submit" isLoading={isSubmitting}>
-              Simpan Tenant
-            </Button>
-          </div>
-        </form>
-      </Modal>
+        isSubmitting={isSubmitting}
+        errorMsg={errorMsg}
+        formatTenantHost={formatTenantHost}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleSubmit}
+        onInputChange={handleInputChange}
+      />
     </div>
   )
 }

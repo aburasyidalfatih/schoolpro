@@ -15,6 +15,9 @@ export async function GET(req: Request) {
 
     const { searchParams } = new URL(req.url)
     const search = searchParams.get('search')?.trim()
+    const pageParam = Number.parseInt(searchParams.get('page') || '1', 10)
+    const pageSizeParam = Number.parseInt(searchParams.get('pageSize') || '10', 10)
+    const pageSize = Number.isFinite(pageSizeParam) ? Math.min(Math.max(pageSizeParam, 1), 100) : 10
 
     const where: Prisma.TenantWhereInput = {}
     if (search) {
@@ -25,52 +28,75 @@ export async function GET(req: Request) {
       ]
     }
 
-    const tenants = await prisma.tenant.findMany({
-      where,
-      orderBy: { createdAt: 'desc' },
-      include: {
-        plan: {
-          select: {
-            id: true,
-            code: true,
-            name: true,
-            studentCapacity: true,
+    const total = await prisma.tenant.count({ where })
+    const totalPages = Math.max(1, Math.ceil(total / pageSize))
+    const page = Math.min(Math.max(pageParam || 1, 1), totalPages)
+
+    const [tenants, summaryCandidates] = await Promise.all([
+      prisma.tenant.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        include: {
+          plan: {
+            select: {
+              id: true,
+              code: true,
+              name: true,
+              studentCapacity: true,
+            },
           },
-        },
-        activeSubscription: {
-          include: {
-            plan: {
-              select: {
-                id: true,
-                code: true,
-                name: true,
-                studentCapacity: true,
+          activeSubscription: {
+            include: {
+              plan: {
+                select: {
+                  id: true,
+                  code: true,
+                  name: true,
+                  studentCapacity: true,
+                },
               },
             },
           },
-        },
-        featureOverrides: {
-          select: {
-            id: true,
+          featureOverrides: {
+            select: {
+              id: true,
+            },
+          },
+          users: {
+            where: {
+              role: { in: ['ADMIN', 'SUPER_ADMIN'] },
+              isActive: true,
+            },
+            orderBy: { createdAt: 'asc' },
+            take: 1,
+          },
+          _count: {
+            select: {
+              users: true,
+              siswas: true,
+              tagihans: true,
+            },
           },
         },
-        users: {
-          where: {
-            role: { in: ['ADMIN', 'SUPER_ADMIN'] },
-            isActive: true,
+      }),
+      prisma.tenant.findMany({
+        where,
+        select: {
+          paket: true,
+          isActive: true,
+          tenantStatus: true,
+          berlanggananSampai: true,
+          trialEndsAt: true,
+          activeSubscription: {
+            select: {
+              endsAt: true,
+            },
           },
-          orderBy: { createdAt: 'asc' },
-          take: 1,
         },
-        _count: {
-          select: {
-            users: true,
-            siswas: true,
-            tagihans: true,
-          },
-        },
-      },
-    })
+      }),
+    ])
 
     const data = tenants.map((tenant) => ({
       id: tenant.id,
@@ -105,20 +131,34 @@ export async function GET(req: Request) {
     }))
 
     const now = new Date()
+    const summaryDecorated = summaryCandidates.map((tenant) => ({
+      ...tenant,
+      status: resolveTenantStatus(tenant),
+      subscriptionEndsAt: tenant.activeSubscription?.endsAt || tenant.berlanggananSampai || tenant.trialEndsAt || null,
+    }))
     const summary = {
-      total: data.length,
-      active: data.filter((tenant) => tenant.status === 'ACTIVE').length,
-      free: data.filter((tenant) => tenant.status === 'FREE').length,
-      trial: data.filter((tenant) => tenant.status === 'TRIAL').length,
-      suspended: data.filter((tenant) => tenant.status === 'SUSPENDED').length,
-      expiringSoon: data.filter((tenant) => {
+      total,
+      active: summaryDecorated.filter((tenant) => tenant.status === 'ACTIVE').length,
+      free: summaryDecorated.filter((tenant) => tenant.status === 'FREE').length,
+      trial: summaryDecorated.filter((tenant) => tenant.status === 'TRIAL').length,
+      suspended: summaryDecorated.filter((tenant) => tenant.status === 'SUSPENDED').length,
+      expiringSoon: summaryDecorated.filter((tenant) => {
         if (!tenant.subscriptionEndsAt || !['ACTIVE', 'TRIAL'].includes(tenant.status)) return false
         const diff = tenant.subscriptionEndsAt.getTime() - now.getTime()
         return diff <= 1000 * 60 * 60 * 24 * 14
       }).length,
     }
 
-    return NextResponse.json({ data, summary })
+    return NextResponse.json({
+      data,
+      summary,
+      pagination: {
+        page,
+        pageSize,
+        totalItems: total,
+        totalPages,
+      },
+    })
   } catch (error) {
     console.error('[SUPER_ADMIN_TENANTS_GET]', error)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })

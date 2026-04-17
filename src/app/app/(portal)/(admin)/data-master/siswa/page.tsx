@@ -1,54 +1,23 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Plus, Pencil, Trash2, User, Users, Home, GraduationCap, Building2 } from 'lucide-react'
+import { Plus, Pencil, Trash2, User, GraduationCap, Building2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { DataTable, Column } from '@/components/ui/DataTable'
-import { Modal } from '@/components/ui/Modal'
 import { Button } from '@/components/ui/Button'
+import { Pagination } from '@/components/ui/Pagination'
 import { SearchInput } from '@/components/ui/SearchInput'
-import { cn } from '@/lib/utils'
+import { SiswaDeleteModal } from '@/features/data-master/components/SiswaDeleteModal'
+import { SiswaFormModal } from '@/features/data-master/components/SiswaFormModal'
+import type { KelasOption, PaginationState, SiswaFormData, SiswaRow, StudentQuota, TabType, UnitOption } from '@/features/data-master/types/siswa'
 import shared from '@/styles/page.module.css'
 import styles from './page.module.css'
 
-type TabType = 'profil' | 'kontak' | 'orangtua' | 'akademik'
-type StudentQuota = {
-  activeStudents: number
-  studentCapacity: number
-  remainingSlots: number
-  usagePercent: number
-  warningLevel: 'NONE' | 'NORMAL' | 'WARNING_80' | 'WARNING_90' | 'FULL'
-} | null
-
-type UnitOption = {
-  id: string
-  nama: string
-}
-
-type KelasOption = {
-  id: string
-  nama: string
-}
-
-type SiswaRow = {
-  id: string
-  nis: string
-  nisn?: string | null
-  namaLengkap: string
-  jenisKelamin?: string | null
-  tempatLahir?: string | null
-  tanggalLahir?: string | null
-  alamat?: string | null
-  telepon?: string | null
-  fotoUrl?: string | null
-  namaWali?: string | null
-  teleponWali?: string | null
-  emailWali?: string | null
-  kelasId?: string | null
-  unitId?: string | null
-  status: string
-  kelas?: { nama?: string | null } | null
-  unit?: { nama?: string | null } | null
+const initialPagination: PaginationState = {
+  page: 1,
+  pageSize: 20,
+  totalItems: 0,
+  totalPages: 1,
 }
 
 function getQuotaMessage(quota: StudentQuota) {
@@ -80,8 +49,10 @@ function getQuotaMessage(quota: StudentQuota) {
 export default function SiswaPage() {
   const [data, setData] = useState<SiswaRow[]>([])
   const [studentQuota, setStudentQuota] = useState<StudentQuota>(null)
+  const [pagination, setPagination] = useState<PaginationState>(initialPagination)
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
+  const [page, setPage] = useState(1)
   const [units, setUnits] = useState<UnitOption[]>([])
   const [kelases, setKelases] = useState<KelasOption[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -91,7 +62,7 @@ export default function SiswaPage() {
   const [activeTab, setActiveTab] = useState<TabType>('profil')
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; nama: string } | null>(null)
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<SiswaFormData>({
     nis: '', nisn: '', namaLengkap: '', jenisKelamin: 'LAKI_LAKI',
     tempatLahir: '', tanggalLahir: '', alamat: '', telepon: '',
     fotoUrl: '', namaWali: '', teleponWali: '', emailWali: '',
@@ -101,13 +72,22 @@ export default function SiswaPage() {
   const fetchData = useCallback(async () => {
     setLoading(true)
     try {
-      const url = searchQuery ? `/api/data-master/siswa?search=${encodeURIComponent(searchQuery)}` : '/api/data-master/siswa'
+      const params = new URLSearchParams({
+        page: String(page),
+        pageSize: String(pagination.pageSize),
+      })
+      if (searchQuery) params.set('search', searchQuery)
+      const url = `/api/data-master/siswa?${params.toString()}`
       const res = await fetch(url)
       const json = await res.json()
       if (json.data) setData(json.data)
       setStudentQuota(json.meta?.studentQuota || null)
+      setPagination(json.meta?.pagination || initialPagination)
+      if (json.meta?.pagination?.page && json.meta.pagination.page !== page) {
+        setPage(json.meta.pagination.page)
+      }
     } catch { toast.error('Gagal memuat data') } finally { setLoading(false) }
-  }, [searchQuery])
+  }, [page, pagination.pageSize, searchQuery])
 
   const fetchDependencies = useCallback(async () => {
     try {
@@ -126,7 +106,7 @@ export default function SiswaPage() {
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
-  const emptyForm = { nis: '', nisn: '', namaLengkap: '', jenisKelamin: 'LAKI_LAKI', tempatLahir: '', tanggalLahir: '', alamat: '', telepon: '', fotoUrl: '', namaWali: '', teleponWali: '', emailWali: '', kelasId: '', unitId: '', status: 'AKTIF' }
+  const emptyForm: SiswaFormData = { nis: '', nisn: '', namaLengkap: '', jenisKelamin: 'LAKI_LAKI', tempatLahir: '', tanggalLahir: '', alamat: '', telepon: '', fotoUrl: '', namaWali: '', teleponWali: '', emailWali: '', kelasId: '', unitId: '', status: 'AKTIF' }
 
   const openAddModal = () => {
     setEditId(null); setFormData(emptyForm); setActiveTab('profil'); setErrorMsg(''); setIsModalOpen(true)
@@ -214,12 +194,6 @@ export default function SiswaPage() {
     },
   ]
 
-  const tabs: { key: TabType; label: string; icon: React.ReactNode }[] = [
-    { key: 'profil', label: 'Profil', icon: <User size={15} /> },
-    { key: 'kontak', label: 'Kontak', icon: <Home size={15} /> },
-    { key: 'orangtua', label: 'Wali', icon: <Users size={15} /> },
-    { key: 'akademik', label: 'Akademik', icon: <GraduationCap size={15} /> },
-  ]
   const quotaNotice = getQuotaMessage(studentQuota)
   const shouldBlockNewActive = !editId && formData.status === 'AKTIF' && studentQuota?.warningLevel === 'FULL'
 
@@ -245,141 +219,46 @@ export default function SiswaPage() {
         </section>
       ) : null}
       <div className={shared.toolbar}>
-        <SearchInput placeholder="Cari NIS atau nama..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+        <SearchInput
+          placeholder="Cari NIS atau nama..."
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value)
+            setPage(1)
+          }}
+        />
       </div>
       <DataTable columns={columns} data={data} isLoading={loading} emptyMessage="Data siswa belum tersedia" />
+      <Pagination
+        page={pagination.page}
+        totalPages={pagination.totalPages}
+        totalItems={pagination.totalItems}
+        pageSize={pagination.pageSize}
+        onPageChange={setPage}
+      />
 
-      <Modal isOpen={isModalOpen} onClose={() => !isSubmitting && setIsModalOpen(false)} title={editId ? 'Edit Profil Siswa' : 'Tambah Siswa Baru'} maxWidth="580px">
-        {/* Tabs */}
-        <div className={shared.modalTabs}>
-          {tabs.map(tab => (
-            <button key={tab.key} className={cn(shared.tabBtn, activeTab === tab.key && shared.tabActive)} onClick={() => setActiveTab(tab.key)}>
-              {tab.icon} {tab.label}
-            </button>
-          ))}
-        </div>
-        <form className={shared.form} onSubmit={handleSubmit}>
-          {errorMsg && <div className={shared.errorAlert}>{errorMsg}</div>}
-          {!editId && formData.status === 'AKTIF' && quotaNotice ? (
-            <div className={shared.errorAlert}>
-              {quotaNotice.title}. {quotaNotice.description}
-            </div>
-          ) : null}
+      <SiswaFormModal
+        editId={editId}
+        formData={formData}
+        units={units}
+        kelases={kelases}
+        activeTab={activeTab}
+        errorMsg={errorMsg}
+        quotaWarning={!editId && formData.status === 'AKTIF' && quotaNotice ? `${quotaNotice.title}. ${quotaNotice.description}` : null}
+        isOpen={isModalOpen}
+        isSubmitting={isSubmitting}
+        shouldBlockNewActive={shouldBlockNewActive}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleSubmit}
+        onTabChange={setActiveTab}
+        onInputChange={handleInputChange}
+      />
 
-          {activeTab === 'profil' && (
-            <div className={shared.tabContent}>
-              <div className={shared.formRow}>
-                <div className={shared.formGroup}>
-                  <label className={shared.formLabel}>NIS <span className="required">*</span></label>
-                  <input required name="nis" value={formData.nis} onChange={handleInputChange} className={shared.formInput} placeholder="Nomor Induk Siswa" />
-                </div>
-                <div className={shared.formGroup}>
-                  <label className={shared.formLabel}>NISN</label>
-                  <input name="nisn" value={formData.nisn} onChange={handleInputChange} className={shared.formInput} placeholder="Nomor Induk Nasional" />
-                </div>
-              </div>
-              <div className={shared.formGroup}>
-                <label className={shared.formLabel}>Nama Lengkap <span className="required">*</span></label>
-                <input required name="namaLengkap" value={formData.namaLengkap} onChange={handleInputChange} className={shared.formInput} placeholder="Nama sesuai identitas" />
-              </div>
-              <div className={shared.formRow}>
-                <div className={shared.formGroup}>
-                  <label className={shared.formLabel}>Jenis Kelamin</label>
-                  <select name="jenisKelamin" value={formData.jenisKelamin} onChange={handleInputChange} className={shared.formInput}>
-                    <option value="LAKI_LAKI">Laki-laki</option>
-                    <option value="PEREMPUAN">Perempuan</option>
-                  </select>
-                </div>
-                <div className={shared.formGroup}>
-                  <label className={shared.formLabel}>Tempat Lahir</label>
-                  <input name="tempatLahir" value={formData.tempatLahir} onChange={handleInputChange} className={shared.formInput} placeholder="Nama Kota" />
-                </div>
-              </div>
-              <div className={shared.formGroup}>
-                <label className={shared.formLabel}>Tanggal Lahir</label>
-                <input name="tanggalLahir" value={formData.tanggalLahir} onChange={handleInputChange} type="date" className={shared.formInput} />
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'kontak' && (
-            <div className={shared.tabContent}>
-              <div className={shared.formGroup}>
-                <label className={shared.formLabel}>Alamat Lengkap</label>
-                <textarea name="alamat" value={formData.alamat} onChange={handleInputChange} className={shared.formInput} rows={4} placeholder="Alamat tinggal saat ini" style={{ resize: 'vertical' }} />
-              </div>
-              <div className={shared.formGroup}>
-                <label className={shared.formLabel}>Nomor Telepon</label>
-                <input name="telepon" value={formData.telepon} onChange={handleInputChange} className={shared.formInput} placeholder="08xxxx" />
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'orangtua' && (
-            <div className={shared.tabContent}>
-              <div className={shared.formGroup}>
-                <label className={shared.formLabel}>Nama Wali / Orang Tua</label>
-                <input name="namaWali" value={formData.namaWali} onChange={handleInputChange} className={shared.formInput} placeholder="Nama Lengkap" />
-              </div>
-              <div className={shared.formRow}>
-                <div className={shared.formGroup}>
-                  <label className={shared.formLabel}>Telepon Wali</label>
-                  <input name="teleponWali" value={formData.teleponWali} onChange={handleInputChange} className={shared.formInput} placeholder="08xxxx" />
-                </div>
-                <div className={shared.formGroup}>
-                  <label className={shared.formLabel}>Email Wali</label>
-                  <input name="emailWali" value={formData.emailWali} onChange={handleInputChange} type="email" className={shared.formInput} placeholder="email@example.com" />
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'akademik' && (
-            <div className={shared.tabContent}>
-              <div className={shared.formRow}>
-                <div className={shared.formGroup}>
-                  <label className={shared.formLabel}>Unit / Jenjang</label>
-                  <select name="unitId" value={formData.unitId} onChange={handleInputChange} className={shared.formInput}>
-                    <option value="">Pilih Unit</option>
-                    {units.map(u => <option key={u.id} value={u.id}>{u.nama}</option>)}
-                  </select>
-                </div>
-                <div className={shared.formGroup}>
-                  <label className={shared.formLabel}>Kelas</label>
-                  <select name="kelasId" value={formData.kelasId} onChange={handleInputChange} className={shared.formInput}>
-                    <option value="">Pilih Kelas</option>
-                    {kelases.map(k => <option key={k.id} value={k.id}>{k.nama}</option>)}
-                  </select>
-                </div>
-              </div>
-              <div className={shared.formGroup}>
-                <label className={shared.formLabel}>Status Siswa</label>
-                <select name="status" value={formData.status} onChange={handleInputChange} className={shared.formInput}>
-                  <option value="AKTIF">Aktif</option>
-                  <option value="TIDAK_AKTIF">Tidak Aktif</option>
-                  <option value="LULUS">Lulus</option>
-                  <option value="PINDAH">Pindah</option>
-                </select>
-              </div>
-            </div>
-          )}
-
-          <div className={shared.modalFooter}>
-            <Button variant="secondary" type="button" onClick={() => setIsModalOpen(false)} disabled={isSubmitting}>Batal</Button>
-            <Button type="submit" isLoading={isSubmitting} disabled={shouldBlockNewActive}>Simpan Data Siswa</Button>
-          </div>
-        </form>
-      </Modal>
-
-      <Modal isOpen={!!deleteTarget} onClose={() => setDeleteTarget(null)} title="Konfirmasi Hapus">
-        <p style={{ color: 'var(--text-secondary)', marginBottom: 'var(--space-6)' }}>
-          Hapus siswa <strong style={{ color: 'var(--text-primary)' }}>{deleteTarget?.nama}</strong>? Semua tagihan terkait juga akan terhapus.
-        </p>
-        <div className={shared.modalFooter}>
-          <Button variant="secondary" onClick={() => setDeleteTarget(null)}>Batal</Button>
-          <Button variant="danger" onClick={handleDelete}>Ya, Hapus</Button>
-        </div>
-      </Modal>
+      <SiswaDeleteModal
+        target={deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={handleDelete}
+      />
     </div>
   )
 }

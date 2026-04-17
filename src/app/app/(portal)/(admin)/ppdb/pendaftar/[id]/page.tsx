@@ -3,7 +3,7 @@
 import { useState, useEffect, use, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import {
-  ArrowLeft, User, Users, FileText, CheckCircle2, XCircle,
+  ArrowLeft, CheckCircle2, XCircle,
   AlertCircle, RefreshCw, Loader2, ExternalLink, Megaphone,
   Receipt, Calendar, Send, CreditCard
 } from 'lucide-react'
@@ -11,6 +11,7 @@ import Link from 'next/link'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/Button'
 import { Modal } from '@/components/ui/Modal'
+import { PendaftarDetailInfoSections } from '@/features/ppdb/components/PendaftarDetailInfoSections'
 import shared from '@/styles/page.module.css'
 
 type WorkflowInfo = {
@@ -342,102 +343,24 @@ export default function DetailPendaftarPage({ params }: { params: Promise<{ id: 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: 'var(--space-6)', alignItems: 'start' }}>
         {/* Left: Data */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
-
-          {/* Data Siswa */}
-          <div className="card">
-            <div className="card-header">
-              <h3 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}><User size={16} /> Data Calon Siswa</h3>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)' }}>
-              {[
-                { label: 'Nama Lengkap', value: data.namaLengkap },
-                { label: 'NISN', value: formulir.nisn || '—' },
-                { label: 'Jenis Kelamin', value: formulir.jenisKelamin === 'LAKI_LAKI' ? 'Laki-laki' : formulir.jenisKelamin === 'PEREMPUAN' ? 'Perempuan' : '—' },
-                { label: 'Tempat Lahir', value: formulir.tempatLahir || '—' },
-                { label: 'Tanggal Lahir', value: formulir.tanggalLahir ? new Date(formulir.tanggalLahir).toLocaleDateString('id-ID') : '—' },
-                { label: 'Telepon', value: formulir.telepon || '—' },
-              ].map(f => (
-                <div key={f.label}>
-                  <div style={{ fontSize: 'var(--sp-text-xs)', color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>{f.label}</div>
-                  <div style={{ fontWeight: 600, fontSize: 'var(--sp-text-sm)' }}>{f.value}</div>
-                </div>
-              ))}
-              {formulir.alamat && (
-                <div style={{ gridColumn: '1 / -1' }}>
-                  <div style={{ fontSize: 'var(--sp-text-xs)', color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>Alamat</div>
-                  <div style={{ fontWeight: 600, fontSize: 'var(--sp-text-sm)' }}>{formulir.alamat}</div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Data Orang Tua */}
-          {Object.keys(orangtua).length > 0 && (
-            <div className="card">
-              <div className="card-header">
-                <h3 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}><Users size={16} /> Data Orang Tua</h3>
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)' }}>
-                {[
-                  { label: 'Nama Ayah', value: orangtua.namaAyah || '—' },
-                  { label: 'Pekerjaan Ayah', value: orangtua.pekerjaanAyah || '—' },
-                  { label: 'Nama Ibu', value: orangtua.namaIbu || '—' },
-                  { label: 'Pekerjaan Ibu', value: orangtua.pekerjaanIbu || '—' },
-                  { label: 'Email', value: orangtua.email || '—' },
-                  { label: 'Penghasilan', value: orangtua.penghasilan || '—' },
-                ].map(f => (
-                  <div key={f.label}>
-                    <div style={{ fontSize: 'var(--sp-text-xs)', color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>{f.label}</div>
-                    <div style={{ fontWeight: 600, fontSize: 'var(--sp-text-sm)' }}>{f.value}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Berkas */}
-          {(data.berkas?.length ?? 0) > 0 && (
-            <div className="card">
-              <div className="card-header">
-                <h3 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: 8 }}><FileText size={16} /> Berkas Persyaratan</h3>
-              </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
-                {(data.berkas ?? []).map((b) => (
-                  <div key={b.id} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)', padding: 'var(--space-4)', background: 'var(--bg-tertiary)', borderRadius: 'var(--sp-radius-lg)' }}>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: 600, fontSize: 'var(--sp-text-sm)' }}>{b.persyaratan.nama}</div>
-                      {b.fileUrl && (
-                        <a href={b.fileUrl} target="_blank" rel="noopener noreferrer" style={{ fontSize: 'var(--sp-text-xs)', color: 'var(--primary-600)', display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 2 }}>
-                          Lihat File <ExternalLink size={11} />
-                        </a>
-                      )}
-                    </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', minWidth: 200 }}>
-                      <select
-                        className="form-input"
-                        style={{ fontSize: 'var(--sp-text-xs)', padding: '0.375rem 0.75rem' }}
-                        value={berkasUpdates[b.id]?.status || b.status}
-                        onChange={e => setBerkasUpdates(prev => ({ ...prev, [b.id]: { ...prev[b.id], status: e.target.value } }))}
-                      >
-                        <option value="MENUNGGU">Menunggu</option>
-                        <option value="DITERIMA">Diterima</option>
-                        <option value="DITOLAK">Ditolak</option>
-                      </select>
-                      {berkasUpdates[b.id]?.status === 'DITOLAK' && (
-                        <input
-                          className="form-input"
-                          style={{ fontSize: 'var(--sp-text-xs)', padding: '0.375rem 0.75rem' }}
-                          placeholder="Alasan penolakan..."
-                          value={berkasUpdates[b.id]?.catatan || ''}
-                          onChange={e => setBerkasUpdates(prev => ({ ...prev, [b.id]: { ...prev[b.id], catatan: e.target.value } }))}
-                        />
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+          <PendaftarDetailInfoSections
+            namaLengkap={data.namaLengkap}
+            formulir={formulir}
+            orangtua={orangtua}
+            berkas={data.berkas ?? []}
+            berkasUpdates={berkasUpdates}
+            onBerkasUpdate={(berkasId, patch) => {
+              setBerkasUpdates((prev) => ({
+                ...prev,
+                [berkasId]: {
+                  ...prev[berkasId],
+                  status: prev[berkasId]?.status || 'MENUNGGU',
+                  catatan: prev[berkasId]?.catatan || '',
+                  ...patch,
+                },
+              }))
+            }}
+          />
         </div>
 
         {/* Right: Aksi Verifikasi */}
