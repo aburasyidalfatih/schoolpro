@@ -99,6 +99,7 @@
 - Halaman `/daftarkan-sekolah` di development kini sudah dirapikan ulang mengikuti referensi desain formulir marketing terbaru, tetapi tetap memakai backend `TenantApplication` yang ada; top bar halaman tersebut juga sudah disejajarkan lagi dengan navbar landing `lp-schoolpro`
 - Mapping host development kini sudah dipisah mengikuti boundary produk: `dev.schoolpro.id` untuk marketing, `demo-dev.schoolpro.id` untuk tenant demo, `ops-dev.schoolpro.id` untuk super-admin, dan `*-dev.schoolpro.id` untuk tenant dev lain; pola lama `*.dev.schoolpro.id` tidak lagi dipakai karena tidak kompatibel dengan Cloudflare Universal SSL
 - CTA `Lihat Demo` di landing dev dan label domain tenant pada layar super-admin kini sudah mengikuti host aktif, sehingga surface host utama yang disentuh pada sesi ini tidak lagi menunjuk ke domain production saat dibuka dari environment development
+- Landing marketing dev kini juga sudah dirapikan lagi untuk viewport mobile, terutama pada drawer navbar, spacing section, hero CTA, mockup dashboard, card grid, marquee, FAQ, dan footer agar komposisinya lebih presisi di layar HP
 - Auth platform dev kini sudah membiarkan request `SUPER_ADMIN` ke `/api/auth/*` dan `/api/super-admin/*` di runtime aplikasi, sehingga login dan fetch data super-admin bisa lolos pada app lokal port `3001`
 - Login `SUPER_ADMIN` di host platform kini juga sudah dipatch agar memakai kredensial host-aware dan hanya menerima role `SUPER_ADMIN` pada domain `ops-dev` / `ops`; smoke test dev di host publik kini lolos untuk CSRF, login, dashboard, dan API super-admin
 - Handoff tambahan PPDB: backend hardening awal, workflow turunan, `draft vs final submit` form lengkap wali, filter/statistik workflow di list admin, serta ringkasan workflow pada form, invoice, dan `/app/beranda` wali sudah mulai terpasang; langkah berikutnya adalah memperluas workflow ke kartu ringkasan tenant lain bila diperlukan
@@ -128,6 +129,7 @@
 - Batch refactor server-first admin/super-admin dan normalisasi auth redirect sudah masuk ke production pada `2026-04-17`; jika perlu tindak lanjut, fokuskan ke QA perilaku nyata di host production, bukan lagi checklist deploy dasar
 - Pantau residual log `Failed to find Server Action` setelah deploy production; jika masih berulang setelah client lama tersapu cache/refresh, audit action caller yang masih memegang action ID build lama
 - Handoff UI marketing terbaru: jika perlu dilanjutkan, fokus berikutnya ada pada fine-tuning visual `/daftarkan-sekolah` setelah penyelarasan navbar landing, bukan lagi perubahan flow backend aplikasi tenant
+- Refinement responsive landing marketing untuk mobile sudah masuk di development; jika masih ada gap berikutnya, fokuskan QA ke perangkat nyata pada navbar drawer, hero actions, mockup hero, dan section grid/card yang paling sensitif terhadap lebar kecil
 
 ## Perintah Penting
 ```bash
