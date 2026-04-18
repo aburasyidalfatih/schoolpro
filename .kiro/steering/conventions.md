@@ -64,9 +64,11 @@ src/
 - Pertahankan pola yang sudah ada pada modul yang disentuh: client `fetch` ke API route atau server action yang sudah eksis.
 - Untuk dashboard atau halaman read-heavy yang utamanya hanya menampilkan ringkasan awal, prioritaskan render server-side terlebih dahulu; sisakan komponen client hanya untuk interaksi ringan seperti refresh, filter lokal, atau modal.
 - Jangan memaksa migrasi penuh ke pattern baru tanpa alasan kuat.
+- Jika page dipindah ke server-first tetapi masih mendukung filter atau pagination via query string, baca `searchParams` di server pada render awal agar URL, SSR payload, dan state client tetap sinkron.
 - Response API tetap kompatibel dengan pola saat ini:
   - sukses: `{ data: ... }`
   - gagal: `{ error: '...' }`
+- Saat endpoint lama mulai diberi pagination server-side, jaga kompatibilitas consumer lama yang belum mengirim `page/pageSize` jika surface lain di repo masih membutuhkan seluruh dataset.
 
 Contoh:
 

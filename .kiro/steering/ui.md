@@ -103,6 +103,7 @@ Pakai `recharts` — BarChart, LineChart, PieChart, dll.
 - Halaman tenant `Langganan` perlu mendukung retry/resubmit bukti pembayaran dari riwayat order tanpa memaksa tenant membuat order baru
 - Untuk flow verifikasi billing super admin, utamakan tabel order + modal review daripada wizard multi-langkah
 - Dashboard super admin dapat memakai hero ringkas + metric cards + panel operasional untuk menampilkan progres subscription tanpa mengubah shell platform
+- Untuk halaman admin/super-admin yang dipindah ke server-first, pertahankan wrapper client hanya untuk pencarian, pagination, refresh, dan modal aksi; jangan kembalikan query awal ke `useEffect` penuh bila data awal sudah bisa dirender di server
 
 ## Aturan Website Publik
 - Jaga konsistensi visual dengan section sekitarnya; gunakan token skin-aware untuk surface website publik bila tersedia
