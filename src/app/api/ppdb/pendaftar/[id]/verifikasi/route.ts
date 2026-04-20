@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/db/prisma'
+import { derivePpdbWorkflow } from '@/features/ppdb/lib/ppdb-workflow'
 
 const ADMIN_ROLES = ['SUPER_ADMIN', 'ADMIN', 'PPDB']
 const VALID_PENDAFTAR_STATUSES = ['MENUNGGU', 'TERVERIFIKASI', 'DITERIMA', 'DITOLAK']
@@ -138,9 +139,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
       }
     }
 
-    const pembayaranFormulirLunas = pendaftar.tagihanPpdbs.some(
-      (tagihan) => tagihan.jenis === 'PENDAFTARAN' && tagihan.status === 'LUNAS'
-    )
+    const workflow = derivePpdbWorkflow(pendaftar)
     const persyaratanWajibIds = new Set(
       pendaftar.periode.persyaratanBerkas
         .filter((persyaratan) => persyaratan.isWajib)
@@ -151,11 +150,10 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
       .map((berkas) => berkas.status)
 
     if (status === 'TERVERIFIKASI' || status === 'DITERIMA') {
-      if (!pendaftar.dataFormulir || !pendaftar.dataOrangtua) {
-        return NextResponse.json({ error: 'Formulir pendaftar belum lengkap' }, { status: 409 })
-      }
-      if (!pembayaranFormulirLunas) {
-        return NextResponse.json({ error: 'Tagihan formulir belum lunas' }, { status: 409 })
+      if (!workflow.flags.isEligibleForVerification) {
+        return NextResponse.json({
+          error: 'Pendaftar belum siap diverifikasi. Pastikan biaya formulir lunas, form lengkap sudah submit final, dan tidak ada berkas wajib yang ditolak.',
+        }, { status: 409 })
       }
     }
 
@@ -168,6 +166,12 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     }
 
     if (status === 'DITERIMA') {
+      if (!workflow.flags.isEligibleForAcceptance) {
+        return NextResponse.json({
+          error: 'Pendaftar belum siap diterima. Verifikasi admin harus selesai terlebih dahulu dan semua berkas wajib harus sudah diterima.',
+        }, { status: 409 })
+      }
+
       const semuaBerkasWajibDiterima =
         statusBerkasWajib.length === persyaratanWajibIds.size &&
         statusBerkasWajib.every((berkasStatus) => berkasStatus === 'DITERIMA')

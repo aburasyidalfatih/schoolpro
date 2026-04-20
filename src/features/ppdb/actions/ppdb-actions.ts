@@ -4,10 +4,14 @@ import { Prisma } from '@prisma/client'
 import { prisma } from '@/lib/db/prisma'
 import { auth } from '@/lib/auth'
 import { revalidatePath } from 'next/cache'
+import {
+  generateNextPpdbRegistrationNumber,
+  isRetryablePpdbError,
+  runWithPpdbRetry,
+} from '@/features/ppdb/lib/ppdb-identifiers'
 
 const ACTIVE_PENDAFTAR_STATUSES = ['MENUNGGU', 'TERVERIFIKASI', 'DITERIMA'] as const
 const DEFAULT_BIAYA_PENDAFTARAN = 150000
-const MAX_PPDB_RETRIES = 3
 
 type SessionUser = {
   id?: string
@@ -43,32 +47,6 @@ function toPositiveNumber(value: unknown) {
       : NaN
 
   return Number.isFinite(parsed) && parsed > 0 ? parsed : null
-}
-
-function isRetryablePpdbError(error: unknown) {
-  if (!error || typeof error !== 'object') return false
-
-  const code = 'code' in error ? (error as { code?: string }).code : undefined
-  return code === 'P2002' || code === 'P2034'
-}
-
-async function runWithPpdbRetry<T>(operation: () => Promise<T>) {
-  let lastError: unknown
-
-  for (let attempt = 0; attempt < MAX_PPDB_RETRIES; attempt += 1) {
-    try {
-      return await operation()
-    } catch (error) {
-      lastError = error
-      if (!isRetryablePpdbError(error) || attempt === MAX_PPDB_RETRIES - 1) {
-        throw error
-      }
-
-      await new Promise((resolve) => setTimeout(resolve, 25 * (attempt + 1)))
-    }
-  }
-
-  throw lastError
 }
 
 export async function submitFormSingkat(formData: FormData) {
@@ -148,18 +126,7 @@ export async function submitFormSingkat(formData: FormData) {
             }
           }
 
-          // Generate nomor pendaftaran per tenant dan tahun agar tetap konsisten
-          // tanpa perlu perubahan schema.
-          const yearPrefix = `PPDB-${new Date().getFullYear()}-`
-          const totalThisYear = await tx.pendaftarPpdb.count({
-            where: {
-              tenantId,
-              noPendaftaran: {
-                startsWith: yearPrefix
-              }
-            }
-          })
-          const noPendaftaran = `${yearPrefix}${String(totalThisYear + 1).padStart(4, '0')}`
+          const noPendaftaran = await generateNextPpdbRegistrationNumber(tx, tenantId)
 
           const pendaftar = await tx.pendaftarPpdb.create({
             data: {

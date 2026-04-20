@@ -2,6 +2,11 @@ import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/db/prisma'
 import { buildStudentQuotaErrorMessage, hasAvailableStudentSlot } from '@/lib/student-quota'
+import {
+  generateNextStudentNis,
+  isRetryablePpdbError,
+  runWithPpdbRetry,
+} from '@/features/ppdb/lib/ppdb-identifiers'
 
 const ADMIN_ROLES = ['SUPER_ADMIN', 'ADMIN', 'PPDB']
 type SessionUser = {
@@ -88,58 +93,55 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     const formulir = (pendaftar.dataFormulir as PpdbFormulir | null) || {}
     const orangtua = (pendaftar.dataOrangtua as PpdbOrangtua | null) || {}
 
-    // Generate NIS unik dengan timestamp untuk menghindari race condition
-    const count = await prisma.siswa.count({ where: { tenantId } })
-    const nis = `${new Date().getFullYear()}${(count + 1).toString().padStart(4, '0')}`
+    const siswa = await runWithPpdbRetry(() =>
+      prisma.$transaction(async (tx) => {
+        const alreadySynced = await tx.siswa.findFirst({
+          where: {
+            tenantId,
+            dataTambahan: {
+              path: ['sumberPpdb'],
+              equals: pendaftar.noPendaftaran,
+            },
+          },
+          select: { id: true },
+        })
+        if (alreadySynced) {
+          throw new Error('Pendaftar ini sudah pernah disinkronkan')
+        }
 
-    // Cek apakah pendaftar ini sudah pernah disinkron
-    const alreadySynced = await prisma.siswa.findFirst({
-      where: { tenantId, dataTambahan: { path: ['sumberPpdb'], equals: pendaftar.noPendaftaran } }
-    })
-    if (alreadySynced) return NextResponse.json({ error: 'Pendaftar ini sudah pernah disinkronkan' }, { status: 409 })
+        const quotaCheck = await hasAvailableStudentSlot(tx, tenantId)
+        if (!quotaCheck.allowed) {
+          throw new Error(buildStudentQuotaErrorMessage(quotaCheck.snapshot))
+        }
 
-    const siswa = await prisma.$transaction(async (tx) => {
-      const quotaCheck = await hasAvailableStudentSlot(tx, tenantId)
-      if (!quotaCheck.allowed) {
-        throw new Error(buildStudentQuotaErrorMessage(quotaCheck.snapshot))
-      }
+        const nis = await generateNextStudentNis(tx, tenantId)
 
-      return tx.siswa.create({
-        data: {
-          tenantId,
-          userId: pendaftar.userId,
-          kelasId: kelasId || null,
-          unitId: kelas?.unitId || unitId || pendaftar.periode.unitId || null,
-          nis,
-          nisn: formulir.nisn || null,
-          namaLengkap: pendaftar.namaLengkap,
-          jenisKelamin: formulir.jenisKelamin || null,
-          tempatLahir: formulir.tempatLahir || null,
-          tanggalLahir: formulir.tanggalLahir ? new Date(formulir.tanggalLahir) : null,
-          alamat: formulir.alamat || null,
-          telepon: formulir.telepon || null,
-          namaWali: orangtua.namaAyah || orangtua.namaIbu || null,
-          teleponWali: orangtua.teleponAyah || orangtua.teleponIbu || null,
-          emailWali: orangtua.email || null,
-          status: 'AKTIF',
-          dataTambahan: { sumberPpdb: pendaftar.noPendaftaran },
-        },
+        return tx.siswa.create({
+          data: {
+            tenantId,
+            userId: null,
+            kelasId: kelasId || null,
+            unitId: kelas?.unitId || unitId || pendaftar.periode.unitId || null,
+            nis,
+            nisn: formulir.nisn || null,
+            namaLengkap: pendaftar.namaLengkap,
+            jenisKelamin: formulir.jenisKelamin || null,
+            tempatLahir: formulir.tempatLahir || null,
+            tanggalLahir: formulir.tanggalLahir ? new Date(formulir.tanggalLahir) : null,
+            alamat: formulir.alamat || null,
+            telepon: formulir.telepon || null,
+            namaWali: orangtua.namaAyah || orangtua.namaIbu || null,
+            teleponWali: orangtua.teleponAyah || orangtua.teleponIbu || null,
+            emailWali: orangtua.email || null,
+            status: 'AKTIF',
+            dataTambahan: {
+              sumberPpdb: pendaftar.noPendaftaran,
+              syncedAt: new Date().toISOString(),
+            },
+          },
+        })
       })
-    })
-
-    // Update status pendaftar + update role user jika ada
-    await prisma.pendaftarPpdb.update({
-      where: { id },
-      data: { status: 'DITERIMA' },
-    })
-
-    // Update role user menjadi SISWA agar bisa akses fitur siswa
-    if (pendaftar.userId) {
-      await prisma.user.update({
-        where: { id: pendaftar.userId },
-        data: { role: 'SISWA' },
-      })
-    }
+    )
 
     await prisma.logAktivitas.create({
       data: {
@@ -147,19 +149,25 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
         userId: session.user.id,
         aksi: 'SINKRON_PPDB',
         modul: 'PPDB',
-        detail: `Sinkronisasi ${pendaftar.noPendaftaran} → Siswa NIS: ${nis}`,
+        detail: `Sinkronisasi ${pendaftar.noPendaftaran} → Siswa NIS: ${siswa.nis}`,
       },
     })
 
     return NextResponse.json({
-      message: `Pendaftar berhasil disinkronkan sebagai siswa dengan NIS ${nis}`,
+      message: `Pendaftar berhasil disinkronkan sebagai siswa dengan NIS ${siswa.nis}`,
       siswaId: siswa.id,
-      nis,
+      nis: siswa.nis,
     })
   } catch (error) {
     console.error('[PPDB_SINKRON]', error)
-    if (error instanceof Error && error.message.includes('kuota siswa aktif')) {
+    if (error instanceof Error && (
+      error.message.includes('kuota siswa aktif') ||
+      error.message === 'Pendaftar ini sudah pernah disinkronkan'
+    )) {
       return NextResponse.json({ error: error.message }, { status: 409 })
+    }
+    if (isRetryablePpdbError(error)) {
+      return NextResponse.json({ error: 'Sinkronisasi sedang diproses. Silakan coba lagi.' }, { status: 409 })
     }
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
