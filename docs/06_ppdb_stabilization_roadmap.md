@@ -26,28 +26,35 @@ Progress yang sudah selesai sampai sesi kerja ini:
 - route invoice, pembayaran, verifikasi, berkas, dan pendaftar sudah diperketat pada tenant scope dan relation safety
 - rule backend minimum untuk beberapa transisi status sudah mulai ditegakkan
 - helper derived workflow PPDB sudah dibuat di `src/features/ppdb/lib/ppdb-workflow.ts`
+- helper identifier PPDB kini juga sudah dipisah ke `src/features/ppdb/lib/ppdb-identifiers.ts` untuk retry dan generasi nomor yang lebih aman tanpa perubahan schema
 - API detail pendaftar dan API cek status publik sudah mengembalikan snapshot workflow
 - halaman `cek status` publik sudah mulai memakai label workflow, deskripsi, dan next action
 - halaman detail pendaftar admin sudah mulai menampilkan panel workflow, readiness summary, dan blocker utama
 - backend `draft` vs `final submit` pada form lengkap wali sudah aktif di endpoint detail pendaftar
 - UI form lengkap wali kini sudah mendukung simpan draft vs kirim final
 - list pendaftar admin kini mulai memakai snapshot workflow untuk filter tahap dan statistik operasional
+- list pendaftar admin kini juga memakai pagination shared dan API list tidak lagi mengirim payload detail berat untuk seluruh hasil pada setiap halaman
+- halaman admin `Tagihan PPDB` kini sudah diganti dari placeholder menjadi meja kerja daftar ulang yang memakai API khusus untuk statistik, filter tahap pasca-diterima, status tagihan daftar ulang, dan kesiapan sinkronisasi siswa
 - stepper dan copy utama pada form lengkap wali kini mulai mengikuti lifecycle draft/final dan review admin
 - halaman invoice wali kini juga menampilkan workflow, next action, dan CTA yang sinkron dengan status draft/final formulir
 - dashboard `/app/beranda` wali kini mulai memakai workflow PPDB yang sama untuk status, progress, dan CTA utama pendaftar
+- route verifikasi admin kini menolak `TERVERIFIKASI` atau `DITERIMA` jika formulir belum benar-benar `final submit` atau readiness workflow belum terpenuhi
+- sinkronisasi PPDB ke `Siswa` kini tidak lagi mengubah role akun wali menjadi `SISWA`; relasi akun pendaftar tetap aman dan sinkronisasi disimpan sebagai metadata pada record siswa
+- generator nomor pendaftaran dan NIS tidak lagi bergantung pada pola `count + 1`, tetapi memakai generator prefix-aware + retry pada constraint conflict
 
 Yang belum selesai dan masih menjadi pekerjaan lanjutan:
 - penyelarasan lanjutan copy dan indikator workflow PPDB di kartu ringkasan tenant atau layar wali lain yang belum disentuh
 - kemungkinan helper workflow dipakai juga di dashboard atau kartu ringkasan PPDB tenant
+- keputusan produk apakah layar admin `Tagihan PPDB` perlu menambah aksi inline untuk generate/verifikasi atau tetap memakai pola triase ke halaman detail pendaftar
 
 ## Handoff Terdekat
 
 Jika pekerjaan PPDB dilanjutkan pada sesi berikutnya, urutan yang direkomendasikan:
 
-1. Implementasikan `draft` vs `final submit` pada form lengkap wali.
-2. Tambahkan readiness validation final submit berdasarkan helper workflow.
-3. Pakai workflow helper di halaman list pendaftar admin untuk filter dan stats operasional.
-4. Rapikan copy, badge, dan stepper UI agar mengikuti lifecycle yang sudah didefinisikan.
+1. Audit ulang surface wali atau tenant lain yang masih belum memakai copy workflow PPDB yang baru.
+2. Evaluasi apakah milestone pasca-diterima perlu dipersist sebagai field eksplisit jika reporting operasional makin kompleks.
+3. Pertimbangkan counter/sequence khusus bila tenant besar nantinya membutuhkan nomor PPDB atau NIS yang lebih terstruktur dari prefix tahunan saat ini.
+4. Tambahkan QA browser end-to-end pada flow admin review sampai sinkronisasi siswa untuk memastikan behavior runtime sesuai guard backend baru.
 
 Catatan penting:
 - untuk saat ini lifecycle baru masih berupa derived state, belum enum database baru
@@ -129,10 +136,9 @@ Risiko:
 - potensi nomor ganda pada beban nyata
 - sulit diaudit bila terjadi bentrok
 
-Arahan:
-- gunakan generator nomor yang atomic
-- pastikan ada retry strategy terhadap constraint unik
-- jika perlu, sediakan counter per tenant dan per tahun ajaran
+Status terbaru:
+- sudah ditangani pada batch ini dengan helper generator prefix-aware + retry terhadap conflict unik
+- masih ada ruang penguatan ke counter eksplisit bila tenant besar nanti butuh sequence yang lebih formal
 
 ### 3. Tenant safety dan ownership checks masih perlu diperketat
 
@@ -173,12 +179,10 @@ Risiko:
 - status `TERVERIFIKASI` dipakai walau berkas wajib belum lengkap
 - penerimaan tidak didukung readiness checks yang konsisten
 
-Arahan:
-- backend harus menjadi source of truth untuk status transition
-- contoh rule minimum:
-  - tidak bisa `DITERIMA` bila tagihan formulir belum lunas
-  - tidak bisa `DITERIMA` bila berkas wajib masih kurang atau ditolak
-  - tidak bisa `TERVERIFIKASI` bila form lengkap belum final
+Status terbaru:
+- backend kini menolak `TERVERIFIKASI` dan `DITERIMA` bila workflow belum siap
+- `DITERIMA` juga kini menuntut status review sebelumnya benar-benar sudah lolos `TERVERIFIKASI`
+- rule minimum `form lengkap harus final` kini sudah ditegakkan di route verifikasi admin, bukan hanya di UI/form wali
 
 ### 6. Review admin belum cukup decision-assisted
 
@@ -246,6 +250,10 @@ Yang masih perlu dirapikan:
 Arahan:
 - buat operational milestones pasca-diterima
 - gunakan milestone ini untuk filter admin dan notifikasi berikutnya
+
+Catatan tambahan terbaru:
+- sinkronisasi ke `Siswa` kini menyimpan metadata `sumberPpdb` dan `syncedAt` pada record siswa hasil sinkron
+- akun wali/pendaftar tidak lagi diubah rolenya saat proses sinkronisasi berjalan
 
 ## Prinsip Penyempurnaan
 

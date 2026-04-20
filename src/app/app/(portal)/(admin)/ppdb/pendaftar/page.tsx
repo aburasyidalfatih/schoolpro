@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { Eye, Users, Clock, CheckCircle2, XCircle, CreditCard, FilePenLine, ClipboardCheck, GraduationCap, RefreshCw } from 'lucide-react'
 import Link from 'next/link'
 import { DataTable, Column } from '@/components/ui/DataTable'
+import { Pagination } from '@/components/ui/Pagination'
 import { SearchInput } from '@/components/ui/SearchInput'
 import shared from '@/styles/page.module.css'
 
@@ -84,6 +85,7 @@ const WORKFLOW_BADGE: Record<string, string> = {
 }
 
 export default function PendaftarPpdbPage() {
+  const PAGE_SIZE = 20
   const [data, setData] = useState<PpdbPendaftarRow[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
@@ -91,6 +93,8 @@ export default function PendaftarPpdbPage() {
   const [workflow, setWorkflow] = useState('')
   const [periodes, setPeriodes] = useState<PpdbPeriodeOption[]>([])
   const [periodeId, setPeriodeId] = useState('')
+  const [page, setPage] = useState(1)
+  const [total, setTotal] = useState(0)
   const [stats, setStats] = useState({
     total: 0,
     payment: 0,
@@ -110,12 +114,14 @@ export default function PendaftarPpdbPage() {
       if (status) params.set('status', status)
       if (workflow) params.set('workflow', workflow)
       if (periodeId) params.set('periodeId', periodeId)
-      params.set('limit', '50')
+      params.set('page', String(page))
+      params.set('limit', String(PAGE_SIZE))
 
       const res = await fetch(`/api/ppdb/pendaftar?${params}`)
       const json = await res.json()
       if (json.data) {
         setData(json.data)
+        setTotal(json.total || 0)
         setStats(json.stats || {
           total: json.total || json.data.length,
           payment: 0,
@@ -129,7 +135,7 @@ export default function PendaftarPpdbPage() {
       }
     } catch { console.error('Gagal memuat data') }
     finally { setLoading(false) }
-  }, [search, status, workflow, periodeId])
+  }, [PAGE_SIZE, page, search, status, workflow, periodeId])
 
   useEffect(() => {
     fetch('/api/ppdb/periode').then(r => r.json()).then(j => setPeriodes(j.data || []))
@@ -139,6 +145,10 @@ export default function PendaftarPpdbPage() {
     const t = setTimeout(fetchData, 300)
     return () => clearTimeout(t)
   }, [fetchData])
+
+  useEffect(() => {
+    setPage(1)
+  }, [search, status, workflow, periodeId])
 
   const columns: Column<PpdbPendaftarRow>[] = [
     {
@@ -283,6 +293,13 @@ export default function PendaftarPpdbPage() {
       </div>
 
       <DataTable columns={columns} data={data} isLoading={loading} emptyMessage="Belum ada pendaftar" />
+      <Pagination
+        page={page}
+        totalPages={Math.max(1, Math.ceil(total / PAGE_SIZE))}
+        totalItems={total}
+        pageSize={PAGE_SIZE}
+        onPageChange={setPage}
+      />
     </div>
   )
 }

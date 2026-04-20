@@ -103,6 +103,8 @@
 - Auth platform dev kini sudah membiarkan request `SUPER_ADMIN` ke `/api/auth/*` dan `/api/super-admin/*` di runtime aplikasi, sehingga login dan fetch data super-admin bisa lolos pada app lokal port `3001`
 - Login `SUPER_ADMIN` di host platform kini juga sudah dipatch agar memakai kredensial host-aware dan hanya menerima role `SUPER_ADMIN` pada domain `ops-dev` / `ops`; smoke test dev di host publik kini lolos untuk CSRF, login, dashboard, dan API super-admin
 - Handoff tambahan PPDB: backend hardening awal, workflow turunan, `draft vs final submit` form lengkap wali, filter/statistik workflow di list admin, serta ringkasan workflow pada form, invoice, dan `/app/beranda` wali sudah mulai terpasang; langkah berikutnya adalah memperluas workflow ke kartu ringkasan tenant lain bila diperlukan
+- Hardening lanjutan PPDB kini juga sudah masuk di development: route verifikasi admin hanya menerima pendaftar yang benar-benar siap menurut workflow `final submit`, sinkronisasi ke `Siswa` tidak lagi mengubah role akun wali, generator nomor pendaftaran dan NIS tidak lagi memakai pola `count + 1`, dan meja pendaftar admin kini memakai pagination shared dengan payload list yang lebih ringan
+- Halaman admin `/app/ppdb/tagihan` kini tidak lagi placeholder; layar ini sudah menampilkan meja kerja daftar ulang dengan statistik, filter gelombang/tahap, status tagihan daftar ulang, dan CTA cepat ke detail pendaftar untuk generate tagihan, review pembayaran, atau sinkronisasi siswa
 - Auth tenant kini diarahkan ke login berbasis `email + password`; registrasi tenant cukup `nama, email, password`, sementara `username` tetap digenerate internal untuk kompatibilitas data lama
 - Cleanup arsitektur foundation sudah dimulai: provider boundary disatukan ke `src/providers`, script non-runtime dipindah dari `tmp` ke `scripts/*`, dan backup schema diarsipkan ke `docs/archive`
 - Route tree tenant kini memakai boundary internal `src/app/app/(portal)` tanpa mengubah surface URL `/app/*`
@@ -130,6 +132,8 @@
 - Pantau residual log `Failed to find Server Action` setelah deploy production; jika masih berulang setelah client lama tersapu cache/refresh, audit action caller yang masih memegang action ID build lama
 - Handoff UI marketing terbaru: jika perlu dilanjutkan, fokus berikutnya ada pada fine-tuning visual `/daftarkan-sekolah` setelah penyelarasan navbar landing, bukan lagi perubahan flow backend aplikasi tenant
 - Refinement responsive landing marketing untuk mobile sudah masuk di development; jika masih ada gap berikutnya, fokuskan QA ke perangkat nyata pada navbar drawer, hero actions, mockup hero, dan section grid/card yang paling sensitif terhadap lebar kecil
+- Handoff PPDB berikutnya: fokuskan QA browser nyata ke flow admin review sampai sinkronisasi siswa, terutama memastikan guard `final submit`, nomor hasil sinkron, dan role akun wali tetap benar pada tenant demo dev
+- Handoff PPDB tambahan: evaluasi apakah halaman admin `Tagihan PPDB` perlu aksi inline generasi tagihan atau verifikasi pembayaran, atau cukup dipertahankan sebagai meja triase yang mengarahkan admin ke halaman detail pendaftar
 
 ## Perintah Penting
 ```bash

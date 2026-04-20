@@ -64,13 +64,17 @@ export async function GET(req: Request) {
       ]
     }
 
-    const rows = await prisma.pendaftarPpdb.findMany({
+    const workflowRows = await prisma.pendaftarPpdb.findMany({
       where,
-      include: {
+      select: {
+        id: true,
+        noPendaftaran: true,
+        status: true,
+        dataFormulir: true,
+        dataOrangtua: true,
+        tanggalDaftar: true,
         periode: {
-          include: {
-            unit: true,
-            tahunAjaran: true,
+          select: {
             persyaratanBerkas: {
               select: {
                 id: true,
@@ -80,7 +84,9 @@ export async function GET(req: Request) {
           },
         },
         tagihanPpdbs: {
-          include: {
+          select: {
+            jenis: true,
+            status: true,
             pembayarans: {
               select: {
                 status: true,
@@ -89,12 +95,9 @@ export async function GET(req: Request) {
           },
         },
         berkas: {
-          include: {
-            persyaratan: {
-              select: {
-                isWajib: true,
-              },
-            },
+          select: {
+            persyaratanId: true,
+            status: true,
           },
         },
       },
@@ -102,11 +105,11 @@ export async function GET(req: Request) {
     })
 
     const syncedNoPendaftaranSet = new Set<string>()
-    if (rows.length > 0) {
+    if (workflowRows.length > 0) {
       const syncedStudents = await prisma.siswa.findMany({
         where: {
           tenantId,
-          OR: rows.map((row) => ({
+          OR: workflowRows.map((row) => ({
             dataTambahan: {
               path: ['sumberPpdb'],
               equals: row.noPendaftaran,
@@ -133,7 +136,7 @@ export async function GET(req: Request) {
       })
     }
 
-    const rowsWithWorkflow = rows.map((row) => ({
+    const rowsWithWorkflow = workflowRows.map((row) => ({
       ...row,
       workflow: derivePpdbWorkflow(row, {
         isSyncedToStudent: syncedNoPendaftaranSet.has(row.noPendaftaran),
@@ -170,7 +173,52 @@ export async function GET(req: Request) {
     )
 
     const total = filteredRows.length
-    const data = filteredRows.slice((page - 1) * limit, page * limit)
+    const pagedRows = filteredRows.slice((page - 1) * limit, page * limit)
+    const pagedIds = pagedRows.map((row) => row.id)
+
+    const detailedRows = pagedIds.length > 0
+      ? await prisma.pendaftarPpdb.findMany({
+          where: {
+            tenantId,
+            id: {
+              in: pagedIds,
+            },
+          },
+          include: {
+            periode: {
+              include: {
+                unit: true,
+                tahunAjaran: true,
+              },
+            },
+            tagihanPpdbs: {
+              select: {
+                jenis: true,
+                status: true,
+              },
+            },
+            berkas: {
+              select: {
+                status: true,
+              },
+            },
+          },
+        })
+      : []
+
+    const workflowById = new Map(
+      pagedRows.map((row) => [row.id, row.workflow]),
+    )
+    const rowPosition = new Map(
+      pagedIds.map((id, index) => [id, index]),
+    )
+
+    const data = detailedRows
+      .sort((a, b) => (rowPosition.get(a.id) ?? 0) - (rowPosition.get(b.id) ?? 0))
+      .map((row) => ({
+        ...row,
+        workflow: workflowById.get(row.id),
+      }))
 
     return NextResponse.json({ data, total, page, limit, stats })
   } catch (error) {
