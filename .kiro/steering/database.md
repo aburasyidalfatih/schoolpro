@@ -70,12 +70,14 @@
 | SubscriptionOrder | subscription_orders | Order checkout tenant untuk new subscription, upgrade, renewal, bukti pembayaran, verifikasi, dan aktivasi |
 | TenantFeatureOverride | tenant_feature_overrides | Override fitur per tenant, unique `[tenantId, featureKey]` |
 | PlatformAuditLog | platform_audit_logs | Audit log aksi sensitif super admin lintas tenant |
+| PlatformSetting | platform_settings | Key-value JSON untuk konfigurasi global platform seperti default provisioning, billing, dan notifikasi internal |
 
 ### Tambahan Field Tenant
 - `Tenant.planId` — relasi ke `Plan`
 - `Tenant.tenantStatus` — status platform tenant (`TRIAL`, `ACTIVE`, `SUSPENDED`, `ARCHIVED`)
 - `Tenant.trialEndsAt` — akhir masa trial tenant
 - `Tenant.paket` tetap dipertahankan sebagai fallback/compatibility dan disinkronkan dengan `Plan.code`
+- `Tenant.pengaturan` juga dipakai untuk konfigurasi tenant JSON tertentu seperti `tripay`, `emailGateway`, dan `whatsappGateway`
 
 ### Aturan Billing Berbasis Slot Siswa
 - `Free` hanya membuka CMS website publik

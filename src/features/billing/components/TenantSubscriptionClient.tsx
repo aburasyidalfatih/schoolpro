@@ -106,6 +106,11 @@ function getQuotaMessage(usage: TenantBillingSubscriptionData['usage'] | undefin
   return null
 }
 
+function getRenewalReminderMessage(days: number) {
+  if (days <= 1) return 'Reminder perpanjangan dikirim H-1 sebelum jatuh tempo.'
+  return `Reminder perpanjangan operasional disiapkan H-${days} sebelum jatuh tempo.`
+}
+
 export function TenantSubscriptionClient({ data }: { data: TenantBillingSubscriptionData }) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
@@ -366,6 +371,33 @@ export function TenantSubscriptionClient({ data }: { data: TenantBillingSubscrip
       </section>
 
       <section className={styles.ordersSection}>
+        <div className={styles.instructionsCard}>
+          <div className={styles.instructionsHeader}>
+            <strong>Instruksi Pembayaran Platform</strong>
+            <span>Default dari pengaturan platform SchoolPro</span>
+          </div>
+          <div className={styles.instructionsGrid}>
+            <div>
+              <strong>Bank</strong>
+              <span>{data.billingDefaults.paymentBankName}</span>
+            </div>
+            <div>
+              <strong>Atas Nama</strong>
+              <span>{data.billingDefaults.paymentAccountName}</span>
+            </div>
+            <div>
+              <strong>Nomor Rekening</strong>
+              <span>{data.billingDefaults.paymentAccountNumber}</span>
+            </div>
+            <div>
+              <strong>Expiry Order</strong>
+              <span>{data.billingDefaults.orderExpiryDays} hari setelah submit pembayaran</span>
+            </div>
+          </div>
+          <p className={styles.instructionsText}>{data.billingDefaults.paymentInstructions}</p>
+          <p className={styles.instructionsHint}>{getRenewalReminderMessage(data.billingDefaults.renewalReminderDays)}</p>
+        </div>
+
         <h3 className={styles.sectionTitle}>Riwayat Order</h3>
         {data.recentOrders.length > 0 ? (
           <DataTable
@@ -419,6 +451,32 @@ export function TenantSubscriptionClient({ data }: { data: TenantBillingSubscrip
               <strong>Metode pembayaran</strong>
               <span>{getPaymentMethodLabel(checkout.paymentMethod)}</span>
             </div>
+            <div>
+              <strong>Order kedaluwarsa</strong>
+              <span>{data.billingDefaults.orderExpiryDays} hari setelah bukti pembayaran dikirim</span>
+            </div>
+          </div>
+
+          <div className={styles.instructionsCard}>
+            <div className={styles.instructionsHeader}>
+              <strong>Transfer ke rekening platform</strong>
+              <span>Gunakan rekening default berikut saat mengirim pembayaran</span>
+            </div>
+            <div className={styles.instructionsGrid}>
+              <div>
+                <strong>Bank</strong>
+                <span>{data.billingDefaults.paymentBankName}</span>
+              </div>
+              <div>
+                <strong>Atas Nama</strong>
+                <span>{data.billingDefaults.paymentAccountName}</span>
+              </div>
+              <div>
+                <strong>Nomor Rekening</strong>
+                <span>{data.billingDefaults.paymentAccountNumber}</span>
+              </div>
+            </div>
+            <p className={styles.instructionsText}>{data.billingDefaults.paymentInstructions}</p>
           </div>
 
           {selectedOrder?.rejectionReason ? (

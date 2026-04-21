@@ -44,6 +44,12 @@ const columns: Column<T>[] = [
 <DataTable columns={columns} data={data} isLoading emptyMessage="..." />
 ```
 
+## Navigasi Admin
+
+- Di menu `Data Master`, akun `Petugas` dan `Wali/Orangtua` harus dipisah sebagai submenu yang berbeda agar boundary user internal sekolah dan akun keluarga tetap jelas.
+- Halaman `Petugas` hanya untuk role staf internal seperti `ADMIN`, `KEUANGAN`, `TU`, dan `STAF`.
+- Halaman `Wali/Orangtua` hanya untuk akun role `WALI`; jangan campurkan lagi ke pengelolaan petugas.
+
 ### Input
 ```tsx
 <Input label="Nama" error="pesan error" hint="petunjuk" icon={<Icon/>} required />
@@ -103,6 +109,10 @@ Pakai `recharts` — BarChart, LineChart, PieChart, dll.
 - Halaman tenant `Langganan` perlu mendukung retry/resubmit bukti pembayaran dari riwayat order tanpa memaksa tenant membuat order baru
 - Untuk flow verifikasi billing super admin, utamakan tabel order + modal review daripada wizard multi-langkah
 - Dashboard super admin dapat memakai hero ringkas + metric cards + panel operasional untuk menampilkan progres subscription tanpa mengubah shell platform
+- Halaman `Platform Settings` super admin sebaiknya dibatasi ke konfigurasi global lintas tenant seperti default provisioning, billing manual, dan notifikasi operasional; jangan campurkan pengaturan tenant sekolah ke layar ini
+- Halaman `Tenant Applications` super admin kini boleh menampilkan aksi `Provision Tenant` setelah status `APPROVED`, lengkap dengan input slug final dan hasil kredensial admin sementara dari provisioning
+- Halaman tenant `Langganan` kini menampilkan instruksi pembayaran default level platform agar tenant tidak perlu menebak rekening tujuan dan expiry order billing
+- Halaman tenant `Pengaturan Notifikasi` kini dipakai untuk konfigurasi gateway tenant seperti SMTP Marketing dan StarSender; tetap tenant-scoped dan jangan dicampur dengan pengaturan platform/super-admin
 - Untuk halaman admin/super-admin yang dipindah ke server-first, pertahankan wrapper client hanya untuk pencarian, pagination, refresh, dan modal aksi; jangan kembalikan query awal ke `useEffect` penuh bila data awal sudah bisa dirender di server
 
 ## Aturan Website Publik

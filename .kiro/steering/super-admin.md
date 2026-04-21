@@ -67,6 +67,12 @@ Panel ini **bukan** area admin sekolah. Semua fitur di sini dipakai oleh tim int
 - histori perubahan tenant/plan/fitur
 - catatan support internal
 
+### 7. Platform Settings
+- default provisioning tenant baru
+- parameter billing manual tingkat platform
+- target notifikasi operasional internal
+- tidak dipakai untuk pengaturan tenant sekolah
+
 ## Yang Bukan Scope Awal
 - billing otomatis penuh
 - white-label kompleks
@@ -97,6 +103,8 @@ Progress saat ini:
 - selesai: plan management kini mendukung hapus plan yang belum dipakai tenant, subscription, atau order billing
 - selesai: feature access override per tenant
 - selesai: audit log dasar
+- selesai: halaman `Platform Settings` untuk default provisioning, billing manual, dan notifikasi operasional internal
+- selesai: `Platform Settings` kini sudah terhubung ke flow nyata tenant billing untuk expiry order + instruksi pembayaran default, serta ke provisioning tenant application approved
 - selesai: shell super admin disejajarkan dengan layout `/app` agar lebih konsisten tanpa mencampur menu tenant
 - belum: platform user management terpisah
 

@@ -4,6 +4,7 @@ import { auth } from '@/lib/auth'
 import { getSessionUser, hasAnyRole } from '@/lib/auth/session'
 import { prisma } from '@/lib/db/prisma'
 import { logPlatformAudit } from '@/lib/super-admin'
+import { buildOrderExpiryDate, getPlatformSettings } from '@/features/super-admin/lib/settings'
 
 const TENANT_BILLING_ROLES = ['ADMIN', 'KEUANGAN', 'TU']
 const OPEN_ORDER_STATUSES = ['PENDING_PAYMENT', 'WAITING_VERIFICATION', 'VERIFIED']
@@ -36,7 +37,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Bukti pembayaran wajib diunggah' }, { status: 400 })
     }
 
-    const [tenant, targetPlan, existingOpenOrder] = await Promise.all([
+    const [tenant, targetPlan, existingOpenOrder, platformSettings] = await Promise.all([
       prisma.tenant.findUnique({
         where: { id: tenantId },
         include: {
@@ -64,6 +65,7 @@ export async function POST(req: Request) {
         },
         orderBy: { submittedAt: 'desc' },
       }),
+      getPlatformSettings(),
     ])
 
     if (!tenant) {
@@ -105,7 +107,7 @@ export async function POST(req: Request) {
         paymentProofUrl: String(paymentProofUrl).trim(),
         submittedAt: new Date(),
         paidAt: new Date(),
-        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+        expiresAt: buildOrderExpiryDate(platformSettings.billing.orderExpiryDays),
         notes: notes ? String(notes).trim() : null,
         createdByUserId: typeof userSession.id === 'string' ? userSession.id : null,
       },
@@ -142,6 +144,7 @@ export async function POST(req: Request) {
         targetPlanCode: targetPlan.code,
         amount: Number(targetPlan.price),
         studentCapacity: targetPlan.studentCapacity,
+        orderExpiryDays: platformSettings.billing.orderExpiryDays,
       },
     })
 

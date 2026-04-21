@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth'
 import { getSessionUser, hasAnyRole } from '@/lib/auth/session'
 import { prisma } from '@/lib/db/prisma'
 import { logPlatformAudit } from '@/lib/super-admin'
+import { buildOrderExpiryDate, getPlatformSettings } from '@/features/super-admin/lib/settings'
 
 const TENANT_BILLING_ROLES = ['ADMIN', 'KEUANGAN', 'TU']
 const RESUBMITTABLE_ORDER_STATUSES = ['REJECTED', 'PENDING_PAYMENT', 'EXPIRED']
@@ -37,28 +38,31 @@ export async function PUT(
       return NextResponse.json({ error: 'Bukti pembayaran wajib diunggah' }, { status: 400 })
     }
 
-    const order = await prisma.subscriptionOrder.findFirst({
-      where: {
-        id,
-        tenantId,
-      },
-      include: {
-        tenant: {
-          select: {
-            id: true,
-            nama: true,
+    const [order, platformSettings] = await Promise.all([
+      prisma.subscriptionOrder.findFirst({
+        where: {
+          id,
+          tenantId,
+        },
+        include: {
+          tenant: {
+            select: {
+              id: true,
+              nama: true,
+            },
+          },
+          targetPlan: {
+            select: {
+              id: true,
+              code: true,
+              name: true,
+              studentCapacity: true,
+            },
           },
         },
-        targetPlan: {
-          select: {
-            id: true,
-            code: true,
-            name: true,
-            studentCapacity: true,
-          },
-        },
-      },
-    })
+      }),
+      getPlatformSettings(),
+    ])
 
     if (!order) {
       return NextResponse.json({ error: 'Order billing tidak ditemukan' }, { status: 404 })
@@ -95,7 +99,7 @@ export async function PUT(
         submittedAt: resubmittedAt,
         verifiedAt: null,
         activatedAt: null,
-        expiresAt: new Date(resubmittedAt.getTime() + 1000 * 60 * 60 * 24 * 7),
+        expiresAt: buildOrderExpiryDate(platformSettings.billing.orderExpiryDays, resubmittedAt),
         notes: notes || null,
         rejectionReason: null,
         verifiedByUserId: null,
@@ -125,6 +129,7 @@ export async function PUT(
         targetPlanCode: order.targetPlan.code,
         studentCapacity: order.targetPlan.studentCapacity,
         previousStatus: order.status,
+        orderExpiryDays: platformSettings.billing.orderExpiryDays,
       },
     })
 
