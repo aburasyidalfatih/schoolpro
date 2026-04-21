@@ -102,6 +102,59 @@
   padding: 1.1rem 1.2rem;
 }
 
+.instructionsCard {
+  display: grid;
+  gap: 0.85rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--sp-radius-xl);
+  background: var(--bg-primary);
+}
+
+.instructionsHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+}
+
+.instructionsHeader strong {
+  color: var(--text-primary);
+}
+
+.instructionsHeader span,
+.instructionsText,
+.instructionsHint {
+  color: var(--text-secondary);
+}
+
+.instructionsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.instructionsGrid div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.instructionsGrid strong {
+  color: var(--text-primary);
+}
+
+.instructionsGrid span {
+  color: var(--text-secondary);
+  word-break: break-word;
+}
+
+.instructionsText,
+.instructionsHint {
+  margin: 0;
+  line-height: 1.6;
+}
+
 .emptyOrders {
   margin-top: 0.9rem;
   padding: 1rem 1.1rem;
@@ -275,7 +328,8 @@
 
 @media (max-width: 1100px) {
   .summaryGrid,
-  .planGrid {
+  .planGrid,
+  .instructionsGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -283,7 +337,8 @@
 @media (max-width: 720px) {
   .summaryGrid,
   .planGrid,
-  .checkoutCard {
+  .checkoutCard,
+  .instructionsGrid {
     grid-template-columns: 1fr;
   }
 
@@ -296,7 +351,8 @@
   }
 
   .usageHeader,
-  .planCardTop {
+  .planCardTop,
+  .instructionsHeader {
     flex-direction: column;
   }
 }

@@ -1,0 +1,117 @@
+.formLayout {
+  display: grid;
+  gap: 1rem;
+}
+
+.loadingCard,
+.heroCard,
+.sectionCard {
+  border: 1px solid var(--border-color);
+  border-radius: var(--sp-radius-xl);
+  background: var(--bg-secondary);
+}
+
+.loadingCard {
+  padding: 1rem 1.1rem;
+  color: var(--text-secondary);
+}
+
+.heroCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.1rem 1.15rem;
+}
+
+.heroBadge {
+  display: inline-flex;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background: var(--primary-50);
+  color: var(--primary-700);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.heroTitle,
+.sectionTitle {
+  color: var(--text-primary);
+}
+
+.heroTitle {
+  margin-top: 0.55rem;
+  font-size: 1.1rem;
+}
+
+.heroDesc,
+.sectionDesc {
+  margin-top: 0.35rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.sectionCard {
+  display: grid;
+  gap: 1rem;
+  padding: 1.1rem 1.15rem;
+}
+
+.sectionHeader {
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+}
+
+.sectionIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.85rem;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.toggleRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--sp-radius-lg);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.toggleRow input {
+  margin-top: 0.18rem;
+}
+
+.fieldGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.field span {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .heroCard,
+  .fieldGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .heroCard {
+    flex-direction: column;
+  }
+}

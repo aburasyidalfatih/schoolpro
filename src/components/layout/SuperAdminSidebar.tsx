@@ -22,7 +22,7 @@ const navItems: NavItem[] = [
   { label: 'Subscription Orders', href: '/super-admin/subscription-orders', icon: <ReceiptText size={20} /> },
   { label: 'Feature Access', href: '/super-admin/feature-access', icon: <Blocks size={20} /> },
   { label: 'Audit Logs', href: '/super-admin/audit-logs', icon: <ClipboardList size={20} /> },
-  { label: 'Settings', href: '/super-admin/settings', icon: <Settings size={20} />, badge: 'soon' },
+  { label: 'Settings', href: '/super-admin/settings', icon: <Settings size={20} /> },
 ]
 
 export default function SuperAdminSidebar() {

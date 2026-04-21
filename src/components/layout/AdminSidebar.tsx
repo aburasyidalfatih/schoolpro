@@ -116,6 +116,7 @@ const navSections: NavSection[] = [
         label: 'Data Master', href: '/app/data-master', icon: <Database size={20} />,
         children: [
           { label: 'Petugas', href: '/app/data-master/petugas' },
+          { label: 'Wali/Orangtua', href: '/app/data-master/wali' },
           { label: 'Unit/Jenjang', href: '/app/data-master/unit' },
           { label: 'Tahun Ajaran', href: '/app/data-master/tahun-ajaran' },
           { label: 'Kelas', href: '/app/data-master/kelas' },

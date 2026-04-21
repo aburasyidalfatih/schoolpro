@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { CheckCircle2, FileSearch, RotateCcw, XCircle } from 'lucide-react'
+import { CheckCircle2, FileSearch, RotateCcw, ShieldCheck, XCircle } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button, DataTable, Modal, SearchInput } from '@/components/ui'
 import type { Column } from '@/components/ui'
@@ -95,9 +95,17 @@ export default function TenantApplicationsPage() {
   const [selectedApplication, setSelectedApplication] = useState<TenantApplicationRow | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isProvisioning, setIsProvisioning] = useState(false)
   const [reviewNotes, setReviewNotes] = useState('')
   const [revisionNotes, setRevisionNotes] = useState('')
   const [rejectedReason, setRejectedReason] = useState('')
+  const [slugApproved, setSlugApproved] = useState('')
+  const [provisionResult, setProvisionResult] = useState<null | {
+    tenantSlug: string
+    adminEmail: string
+    tempPassword: string
+    isActive: boolean
+  }>(null)
 
   const loadApplications = useCallback(async () => {
     setLoading(true)
@@ -131,6 +139,8 @@ export default function TenantApplicationsPage() {
     setReviewNotes(application.reviewNotes || '')
     setRevisionNotes(application.revisionNotes || '')
     setRejectedReason(application.rejectedReason || '')
+    setSlugApproved(application.slugApproved || application.slugRequest)
+    setProvisionResult(null)
     setIsModalOpen(true)
   }
 
@@ -170,6 +180,45 @@ export default function TenantApplicationsPage() {
       toast.error('Gagal memproses aplikasi tenant')
     } finally {
       setIsSubmitting(false)
+    }
+  }
+
+  const handleProvision = async () => {
+    if (!selectedApplication) return
+    if (selectedApplication.status !== 'APPROVED') {
+      toast.error('Aplikasi harus approved sebelum diprovision')
+      return
+    }
+    if (!slugApproved.trim()) {
+      toast.error('Slug tenant final wajib diisi')
+      return
+    }
+
+    setIsProvisioning(true)
+    try {
+      const res = await fetch(`/api/super-admin/tenant-applications/${selectedApplication.id}/provision`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ slugApproved }),
+      })
+      const json = await res.json()
+      if (!res.ok) {
+        toast.error(json.error || 'Gagal memprovision tenant')
+        return
+      }
+
+      setProvisionResult({
+        tenantSlug: json.data.tenantSlug,
+        adminEmail: json.data.adminEmail,
+        tempPassword: json.data.tempPassword,
+        isActive: json.data.isActive,
+      })
+      toast.success(json.message || 'Tenant berhasil diprovision')
+      await loadApplications()
+    } catch {
+      toast.error('Gagal memprovision tenant')
+    } finally {
+      setIsProvisioning(false)
     }
   }
 
@@ -305,6 +354,15 @@ export default function TenantApplicationsPage() {
             >
               Approve
             </Button>
+            {selectedApplication?.status === 'APPROVED' ? (
+              <Button
+                onClick={handleProvision}
+                isLoading={isProvisioning}
+                leftIcon={<ShieldCheck size={16} />}
+              >
+                Provision Tenant
+              </Button>
+            ) : null}
           </div>
         }
       >
@@ -435,6 +493,28 @@ export default function TenantApplicationsPage() {
               <div className={styles.readyBox}>
                 <FileSearch size={18} />
                 <span>Aplikasi ini sudah approved dan siap dilanjutkan ke flow provisioning tenant.</span>
+              </div>
+            ) : null}
+
+            {selectedApplication.status === 'APPROVED' ? (
+              <label className={styles.field}>
+                <span>Slug tenant final</span>
+                <input
+                  className={shared.formInput}
+                  value={slugApproved}
+                  onChange={(e) => setSlugApproved(e.target.value)}
+                  placeholder="slug-tenant-final"
+                />
+              </label>
+            ) : null}
+
+            {provisionResult ? (
+              <div className={styles.notesBox}>
+                <strong>Hasil Provisioning</strong>
+                <span>Tenant slug: {provisionResult.tenantSlug}</span>
+                <span>Admin email: {provisionResult.adminEmail}</span>
+                <span>Password sementara: {provisionResult.tempPassword}</span>
+                <span>Status tenant: {provisionResult.isActive ? 'Aktif' : 'Perlu aktivasi manual'}</span>
               </div>
             ) : null}
           </div>

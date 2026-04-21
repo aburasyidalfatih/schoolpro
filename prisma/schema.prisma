@@ -230,6 +230,16 @@ model PlatformAuditLog {
   @@map("platform_audit_logs")
 }
 
+model PlatformSetting {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  value     Json
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("platform_settings")
+}
+
 model User {
   id                 String              @id @default(uuid())
   tenantId           String              @map("tenant_id")

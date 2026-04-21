@@ -1,0 +1,226 @@
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.summaryCard,
+.heroCard,
+.sectionCard {
+  border: 1px solid var(--border-color);
+  border-radius: var(--sp-radius-xl);
+  background: var(--bg-secondary);
+}
+
+.summaryCard {
+  padding: 1rem 1.1rem;
+}
+
+.summaryLabel {
+  color: var(--text-secondary);
+}
+
+.summaryValue {
+  margin-top: 0.35rem;
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: var(--text-primary);
+}
+
+.formLayout {
+  display: grid;
+  gap: 1rem;
+}
+
+.heroCard {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 1.15rem;
+}
+
+.heroBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.65rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  background: var(--primary-50);
+  color: var(--primary-700);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.heroTitle,
+.sectionTitle,
+.miniTitle {
+  color: var(--text-primary);
+}
+
+.heroTitle {
+  font-size: 1.15rem;
+  line-height: 1.45;
+}
+
+.heroDesc,
+.sectionDesc,
+.miniDesc {
+  color: var(--text-secondary);
+}
+
+.heroDesc {
+  margin-top: 0.45rem;
+  max-width: 70ch;
+}
+
+.heroActions {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+.sectionCard {
+  padding: 1.1rem 1.15rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.sectionHeader {
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+}
+
+.sectionIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.85rem;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.fieldGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.field span {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.textarea {
+  width: 100%;
+  min-height: 110px;
+  resize: vertical;
+  border: 1px solid var(--border-color);
+  border-radius: var(--sp-radius-lg);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  padding: 0.85rem 0.95rem;
+}
+
+.checkboxRow,
+.toggleGrid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.toggleGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--sp-radius-lg);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.checkboxLabel input {
+  margin-top: 0.2rem;
+}
+
+.featureSection {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.miniDesc {
+  margin-top: 0.2rem;
+}
+
+.featureGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.featureItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--sp-radius-lg);
+  background: var(--bg-primary);
+}
+
+.featureItem input {
+  margin-top: 0.2rem;
+}
+
+.featureItem strong {
+  display: block;
+  color: var(--text-primary);
+}
+
+.featureItem span {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  line-height: 1.4;
+}
+
+@media (max-width: 1100px) {
+  .summaryGrid,
+  .fieldGrid,
+  .toggleGrid,
+  .featureGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .summaryGrid,
+  .fieldGrid,
+  .toggleGrid,
+  .featureGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .heroCard {
+    flex-direction: column;
+  }
+
+  .heroActions {
+    justify-content: flex-start;
+  }
+}

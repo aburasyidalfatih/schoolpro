@@ -77,6 +77,7 @@
 - Super admin phase 1 sudah dimulai
 - Sudah ada route `/super-admin/dashboard` dan `/super-admin/tenants`
 - Sudah ada route `/super-admin/plans`, `/super-admin/feature-access`, dan `/super-admin/audit-logs`
+- Sudah ada route `/super-admin/settings` untuk default provisioning, billing manual, dan notifikasi operasional platform
 - Sudah ada guard middleware untuk memisahkan area platform dan area tenant
 - Tenant management dasar sudah tersedia untuk list dan edit cepat tenant
 - Plan management, feature access override, dan audit log dasar sudah tersedia di development
@@ -90,6 +91,7 @@
 - UI tenant `Langganan`, `Data Siswa`, dan dashboard tenant kini menampilkan warning kuota agar tenant tahu kondisi 80/90/100% sebelum menambah siswa aktif
 - UI tenant `Langganan` kini juga mendukung resubmit bukti pembayaran untuk order billing yang ditolak atau kedaluwarsa
 - UI tenant `Langganan` kini menampilkan label status order billing dan tipe order yang lebih human-readable
+- Halaman tenant `Pengaturan Notifikasi` kini mulai dipakai di development untuk menyimpan konfigurasi gateway SMTP Marketing dan StarSender per tenant
 - Sidebar tenant kini menampilkan indicator kuota pada menu `Pengaturan` dan `Langganan` saat tenant masuk level `WARNING_80`, `WARNING_90`, atau `FULL`
 - Empty state billing tenant dan label teknis utama seperti metode pembayaran serta billing period kini juga sudah dibuat lebih mudah dipahami tenant
 - Handoff kerja berikutnya: jika diperlukan, evaluasi perilaku indicator kuota sidebar pada mode mobile; selain itu billing tenant sudah siap masuk fase stabilisasi/QA
@@ -114,6 +116,8 @@
 - Extraction feature layer kini juga mulai menyentuh `ppdb` secara terbatas, dimulai dari server actions ke `src/features/ppdb/actions`
 - Batch refactor server-first untuk admin dan super admin kini juga sudah masuk di development: dashboard tenant, dashboard super admin, inbox `Subscription Orders`, halaman tenant `Langganan`, daftar tenant super admin, dan detail PPDB tertentu kini mengambil data awal di server, lalu menyerahkan interaksi lanjutan ke komponen client yang lebih sempit
 - Extraction feature layer kini diperluas ke domain `billing`, `keuangan`, `super-admin`, dan `data-master`, termasuk helper query bersama serta komponen modal/client khusus domain agar page dan API route lebih tipis
+- Super admin kini juga memiliki halaman `Platform Settings` di development sebagai source of truth konfigurasi global terbatas untuk default provisioning tenant baru, parameter billing manual, dan target notifikasi internal
+- Wiring awal `Platform Settings` kini juga sudah dipakai di development: tenant billing memakai rekening/instruksi pembayaran serta expiry order default dari platform settings, dan inbox `Tenant Applications` kini bisa memprovision tenant approved memakai slug final, plan default, trial default, feature default, dan status aktivasi dari platform settings
 - Route auth `src/app/api/auth/[...nextauth]` kini juga menormalkan callback cookie dan `location` redirect ke host publik aktif, sehingga callback auth tidak lagi memantul ke host `localhost` saat runtime multi-host dipakai
 - API `siswa` tenant kini mendukung pagination server-side untuk halaman list besar, tetapi tetap menjaga kompatibilitas consumer lama yang masih memanggil endpoint tanpa parameter pagination
 - Batch ini sudah lolos `npm run lint` dan `npm run build` di development, lalu sudah dipromosikan ke production pada `2026-04-17` melalui merge `origin/develop` ke `main`, build production, restart PM2, dan smoke check `schoolpro.id`, `demo.schoolpro.id/app/login`, serta `ops.schoolpro.id/app/login`

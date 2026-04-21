@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/db/prisma'
+import { getPlatformSettings } from '@/features/super-admin/lib/settings'
 
 export const TENANT_BILLING_ROLES = ['ADMIN', 'KEUANGAN', 'TU']
 
@@ -61,10 +62,18 @@ export type TenantBillingSubscriptionData = {
     currentPlan: { id: string; code: string; name: string } | null
     targetPlan: { id: string; code: string; name: string; studentCapacity: number }
   }>
+  billingDefaults: {
+    paymentBankName: string
+    paymentAccountName: string
+    paymentAccountNumber: string
+    paymentInstructions: string
+    orderExpiryDays: number
+    renewalReminderDays: number
+  }
 }
 
 export async function getTenantBillingSubscriptionData(tenantId: string): Promise<TenantBillingSubscriptionData | null> {
-  const [tenant, plans, orders, activeStudents] = await Promise.all([
+  const [tenant, plans, orders, activeStudents, platformSettings] = await Promise.all([
     prisma.tenant.findUnique({
       where: { id: tenantId },
       include: {
@@ -139,6 +148,7 @@ export async function getTenantBillingSubscriptionData(tenantId: string): Promis
         status: 'AKTIF',
       },
     }),
+    getPlatformSettings(),
   ])
 
   if (!tenant) return null
@@ -219,5 +229,13 @@ export async function getTenantBillingSubscriptionData(tenantId: string): Promis
       currentPlan: order.currentPlan,
       targetPlan: order.targetPlan,
     })),
+    billingDefaults: {
+      paymentBankName: platformSettings.billing.paymentBankName,
+      paymentAccountName: platformSettings.billing.paymentAccountName,
+      paymentAccountNumber: platformSettings.billing.paymentAccountNumber,
+      paymentInstructions: platformSettings.billing.paymentInstructions,
+      orderExpiryDays: platformSettings.billing.orderExpiryDays,
+      renewalReminderDays: platformSettings.billing.renewalReminderDays,
+    },
   }
 }
