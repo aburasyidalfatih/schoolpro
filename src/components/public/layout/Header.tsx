@@ -77,15 +77,15 @@ export default function Header({ schoolInfo }: { schoolInfo: SchoolInfoProps }) 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 flex-shrink-0 group">
+          <Link href="/" className="flex items-center gap-2 sm:gap-3 flex-shrink-0 min-w-0 group">
             <div
               className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl flex items-center justify-center shadow-lg transition-transform group-hover:scale-105"
               style={{ background: 'linear-gradient(135deg, var(--skin-primary), var(--skin-primary-light))' }}
             >
               <GraduationCap className="h-6 w-6 lg:h-7 lg:w-7 text-white" />
             </div>
-            <div className="flex flex-col">
-              <h1 className="text-xs sm:text-sm lg:text-base font-bold leading-tight line-clamp-1 sm:line-clamp-none max-w-[150px] sm:max-w-none" 
+            <div className="flex flex-col min-w-0">
+              <h1 className="text-[10px] sm:text-sm lg:text-base font-bold leading-tight line-clamp-1 sm:line-clamp-none max-w-[120px] sm:max-w-none" 
                 style={{ color: 'var(--skin-text-heading)' }}>
                 {schoolInfo.shortName}
               </h1>
@@ -93,7 +93,7 @@ export default function Header({ schoolInfo }: { schoolInfo: SchoolInfoProps }) 
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden lg:flex items-center gap-1" role="navigation" aria-label="Navigasi utama">
+          <nav className="hidden xl:flex items-center gap-1" role="navigation" aria-label="Navigasi utama">
             {navItems.map((item) =>
               item.children ? (
                 <div
@@ -180,7 +180,7 @@ export default function Header({ schoolInfo }: { schoolInfo: SchoolInfoProps }) 
             </Link>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden p-2 rounded-lg hover:bg-black/5 focus-visible:outline-2 focus-visible:outline-offset-2"
+              className="xl:hidden p-2 rounded-lg hover:bg-black/5 focus-visible:outline-2 focus-visible:outline-offset-2"
               aria-label={mobileOpen ? 'Tutup menu' : 'Buka menu'}
               aria-expanded={mobileOpen}
               style={{ outlineColor: 'var(--skin-primary)' }}
@@ -198,7 +198,7 @@ export default function Header({ schoolInfo }: { schoolInfo: SchoolInfoProps }) 
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden overflow-hidden border-t"
+            className="xl:hidden overflow-hidden border-t"
             style={{ borderColor: 'var(--skin-border)' }}
           >
             <nav className="px-4 py-4 space-y-1" style={{ background: 'var(--skin-surface)' }} role="navigation" aria-label="Navigasi mobile">
