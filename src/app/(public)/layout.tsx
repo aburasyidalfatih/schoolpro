@@ -49,7 +49,7 @@ export default async function WebsiteLayout({ children }: { children: React.Reac
 
   return (
     <SkinProvider>
-      <div className="flex flex-col min-h-screen" style={{ background: 'var(--skin-surface)' }}>
+      <div className="flex flex-col min-h-screen overflow-x-hidden" style={{ background: 'var(--skin-surface)' }}>
         <RunningText items={runningItems} />
         <Header schoolInfo={schoolInfo} />
         <main className="flex-1" id="main-content">{children}</main>

@@ -1,12 +1,12 @@
 import Link from 'next/link'
-import { Clock3, FileText } from 'lucide-react'
+import { Clock3, FileText, Zap } from 'lucide-react'
 import styles from '../landing/daftarkan-sekolah/page.module.css'
 import { TenantApplicationForm } from '../landing/daftarkan-sekolah/tenant-application-form'
 
 export const metadata = {
   title: 'Daftarkan Sekolah | SchoolPro',
   description:
-    'Ajukan sekolah Anda ke SchoolPro melalui formulir aplikasi tenant. Tim kami akan meninjau data sekolah sebelum tenant diprovision.',
+    'Daftarkan sekolah Anda ke SchoolPro dan mulai perjalanan digitalisasi. Gratis untuk memulai. Tim kami akan menghubungi Anda dalam 1–2 hari kerja.',
 }
 
 export default function TenantApplicationPage() {
@@ -60,8 +60,8 @@ export default function TenantApplicationPage() {
                 <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
               </svg>
             </button>
-            <Link href="/daftarkan-sekolah" className="btn btn-primary btn-sm">
-              Mulai Gratis
+            <Link href="/" className="btn btn-outline btn-sm">
+              ← Kembali
             </Link>
             <button className="navbar-toggle" id="navbar-toggle" aria-label="Toggle Menu" aria-expanded="false">
               <span />
@@ -77,28 +77,35 @@ export default function TenantApplicationPage() {
           <section className={styles.formIntro}>
             <div className={styles.introBadge}>
               <span className={styles.badgeDot} aria-hidden="true" />
-              Formulir Pendaftaran Sekolah
+              Gratis untuk memulai
             </div>
             <h1 className={styles.heroTitle}>
-              Daftarkan Sekolah Anda <br />
-              <span className={styles.gradientText}>ke SchoolPro</span>
+              Mulai Digitalisasi{' '}
+              <span className={styles.gradientText}>Sekolah Anda</span>
             </h1>
             <p className={styles.introDescription}>
-              Isi informasi berikut dengan data yang paling mudah dihubungi dan dipahami oleh tim sekolah Anda.
+              Isi formulir di bawah ini — hanya butuh 3–5 menit. Tim kami akan meninjau dan menghubungi Anda dalam 1–2 hari kerja.
             </p>
             <div className={styles.introMeta}>
               <div className={styles.metaItem}>
                 <Clock3 size={18} />
                 <div>
                   <span className={styles.metaLabel}>Waktu pengisian</span>
-                  <span className={styles.metaValue}>Sekitar 3-5 menit</span>
+                  <span className={styles.metaValue}>± 3–5 menit</span>
                 </div>
               </div>
               <div className={styles.metaItem}>
                 <FileText size={18} />
                 <div>
-                  <span className={styles.metaLabel}>Siapkan</span>
-                  <span className={styles.metaValue}>Kontak sekolah dan PIC</span>
+                  <span className={styles.metaLabel}>Yang perlu disiapkan</span>
+                  <span className={styles.metaValue}>Data sekolah & kontak PIC</span>
+                </div>
+              </div>
+              <div className={styles.metaItem}>
+                <Zap size={18} />
+                <div>
+                  <span className={styles.metaLabel}>Tindak lanjut</span>
+                  <span className={styles.metaValue}>1–2 hari kerja</span>
                 </div>
               </div>
             </div>
