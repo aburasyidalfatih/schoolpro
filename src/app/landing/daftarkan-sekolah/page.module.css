@@ -26,7 +26,7 @@
   --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.07), 0 2px 6px rgba(0, 0, 0, 0.04);
   --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.1);
   --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.1);
-  --container-max: 720px;
+  --form-container-max: 720px;
   --container-padding: 1.5rem;
   min-height: 100vh;
   background-color: var(--bg-primary);
@@ -68,7 +68,7 @@
 }
 
 .container {
-  max-width: var(--container-max);
+  max-width: var(--form-container-max);
   margin: 0 auto;
   padding: 0 var(--container-padding);
   position: relative;
@@ -151,7 +151,7 @@
 .formMain {
   position: relative;
   z-index: 1;
-  padding: 7rem 0 6rem;
+  padding: 4rem 0 6rem;
 }
 
 .formIntro {
@@ -690,7 +690,7 @@
 
 @media (max-width: 768px) {
   .formMain {
-    padding: 6.5rem 0 4rem;
+    padding: 2rem 0 4rem;
   }
 
   .formGrid {
@@ -707,19 +707,39 @@
     gap: 0.85rem;
   }
 
-  .inputSuffixWrapper input {
-    padding-right: 1rem;
+  .inputSuffix {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.75rem;
+    padding: 0 0.5rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    pointer-events: none;
   }
 
-  .inputSuffix {
-    position: static;
-    transform: none;
-    margin-top: 0.5rem;
-    width: fit-content;
+  .inputSuffixWrapper input {
+    padding-right: 6rem;
   }
 
   .nextSteps {
     padding: 1rem 1.1rem;
+  }
+
+  .formGroup input,
+  .formGroup select,
+  .formGroup textarea {
+    font-size: 16px; /* Prevents auto-zoom on iOS */
+    padding: 0.8rem 0.9rem;
+  }
+
+  .formGroup label {
+    font-size: 0.88rem;
+  }
+
+  .sectionHeader h2 {
+    font-size: 1.15rem;
   }
 }
 
