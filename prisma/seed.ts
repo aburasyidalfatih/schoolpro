@@ -331,7 +331,8 @@ async function main() {
   const guruData = [
     {
       nama: 'Budi Santoso, M.Pd.',
-      jabatan: 'Kepala Sekolah',
+      jabatan: 'kepsek',
+      jabatanLabel: 'Kepala Sekolah',
       bidang: 'Manajemen Pendidikan',
       pendidikan: 'S2 Manajemen Pendidikan',
       foto: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&q=80',
@@ -339,7 +340,8 @@ async function main() {
     },
     {
       nama: 'Siti Aminah, S.Pd.',
-      jabatan: 'Wakil Kepala Sekolah',
+      jabatan: 'wakasek',
+      jabatanLabel: 'Wakil Kepala Sekolah',
       bidang: 'Kurikulum',
       pendidikan: 'S1 Pendidikan Biologi',
       foto: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&q=80',
@@ -347,7 +349,8 @@ async function main() {
     },
     {
       nama: 'Andi Saputra, M.Kom.',
-      jabatan: 'Guru',
+      jabatan: 'guru',
+      jabatanLabel: 'Guru',
       bidang: 'Informatika',
       pendidikan: 'S2 Ilmu Komputer',
       foto: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80',
