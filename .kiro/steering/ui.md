@@ -125,3 +125,4 @@ Pakai `recharts` — BarChart, LineChart, PieChart, dll.
 - Untuk section homepage yang memakai tombol prev/next, jaga konsistensi posisi, ukuran, dan treatment visual kontrol
 - Hero website publik perlu padding horizontal yang aman agar heading, subtitle, dan kontrol tidak mepet viewport
 - Halaman publik bertipe form panjang seperti `/daftarkan-sekolah` sebaiknya memakai wrapper layout bersama yang rapi: header ringkas, summary/context card, lalu konten utama dua kolom yang jatuh ke satu kolom di mobile
+- Untuk form publik panjang seperti `/daftarkan-sekolah`, state sukses sebaiknya menampilkan nomor referensi yang mudah dibaca dan langkah berikutnya yang singkat agar ekspektasi follow-up pengguna tetap jelas
