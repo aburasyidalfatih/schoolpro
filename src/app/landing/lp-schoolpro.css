@@ -364,7 +364,7 @@ p {
 
 .navbar-brand {
   display: flex;
-  flex: 1 1 auto;
+  flex: none;
   align-items: center;
   gap: var(--space-sm);
   min-width: 0;
@@ -2374,7 +2374,6 @@ html:not([data-theme="light"]) .icon-sun {
 
   .pricing-card--featured {
     transform: none;
-    order: -1;
   }
 
   .pricing-card--featured:hover {

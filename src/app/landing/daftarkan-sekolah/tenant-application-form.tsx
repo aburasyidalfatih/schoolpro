@@ -123,7 +123,7 @@ export function TenantApplicationForm() {
           <div className={styles.sectionNumber}>1</div>
           <div>
             <h2>Data Sekolah</h2>
-            <p>Informasi dasar yang membantu kami memahami profil dan skala sekolah Anda.</p>
+
           </div>
         </div>
 
@@ -245,7 +245,7 @@ export function TenantApplicationForm() {
           <div className={styles.sectionNumber}>2</div>
           <div>
             <h2>Kontak Penanggung Jawab</h2>
-            <p>Siapa yang harus kami hubungi untuk proses onboarding dan tindak lanjut?</p>
+
           </div>
         </div>
 
@@ -292,7 +292,7 @@ export function TenantApplicationForm() {
           <div className={styles.sectionNumber}>3</div>
           <div>
             <h2>Kebutuhan & Subdomain</h2>
-            <p>Ceritakan kebutuhan utama sekolah Anda agar kami bisa menyiapkan solusi yang paling relevan.</p>
+
           </div>
         </div>
 
